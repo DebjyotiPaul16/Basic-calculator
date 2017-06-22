@@ -1,0 +1,142 @@
+body{
+	position: fixed;
+	left:0;
+	right:0;
+	bottom:0;
+	top:0;
+	overflow:hidden;
+}
+#calculator{
+	position: absolute;
+	right: 0;
+}
+#calc{
+	width:310px; 
+	display: inline-block;
+	    border: 1px solid #ccc;
+		    cursor: move;
+			    padding: 1px;
+	}
+#drag{
+	display:inline-block;
+}
+#calc .btn {
+    width: 60px;
+    height: 40px;
+    font-size: 16px;
+	    color: #333;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+#disp_sign{
+	width:5%; 
+	border:0;
+	float:left;
+	background-color:#fff;
+	}
+.disp_btn{
+	width:290px;
+	height:40px;
+	border:0 ;
+	background-color:#fff;
+	overflow:hidden
+	font-size: 16px;
+    color: #333;
+	}
+.disp_btn:focus{
+	outline:none;
+}
+#calc td{
+	padding:0;
+	/*border: 1px solid;*/
+	    border: 1px solid #fff;
+}
+#calc button{
+	/*background-color:#BFBFBF !important;
+	border-radius:5px;
+	line-height:0;
+	padding:0;
+	box-shadow: inset 0 0 0 2px #F9FDFE;
+	color: #000 !important;
+	font-family:areal !important;
+	text-transform:none;*/
+	}
+#calc button:hover{
+	    background-color: #337ab7;
+    border-color: #2e6da4;
+    cursor: pointer;
+    color: #fff;
+	}
+#calc .minimize, #calc .close-calculator{ 
+	background-color: #5E7A9C !important;
+	color: #fff !important;
+	padding: 1px 8px !important;
+	margin-right: 1px;
+	cursor: pointer;
+	height: 18px;
+	-webkit-appearance: none;
+	box-shadow: none;
+	border-radius:0;
+	border: none;
+	}
+#calc .minimize:hover, #calc .close-calculator:hover{color:#f00}
+
+ul{
+	position:absolute;
+	right:20px;
+}
+li{    
+	display: inline-block;
+	padding:15px;
+}
+#calc_icon, #calc-icon-tool{
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAN5SURBVFiFvZY/SCNBFMa/ye4G/2G0FE0CitmgBP9swC5go5AyggQMyB1nIx7hEOu0gljISarjQDxEBBsLQRvBQpATVAISEUSwsFuSgBjdTeaqHXfjmEwu4gdTzO77vfnm7dudJYODg27DML5TSr9RSoP4BBFCsoSQX4qi/EQgEPiRSqWoruvUMAxqGAY1TZONUqnERrlcZqNS9nt2xp7Lyq/rOk2lUjQQCPyQCSFz0WgUiqKgWCx+RgGgKAqi0Si2t7fnoKoqzeVyNJfLUZ/PRwEIDZ/Pxzi/3y/M+f1+xqmqSmVCCEqlEgBAkiQMDQ0J7aJQKDBOURRomibE5fN5xhFCIBNCYJomAKC9vV0oiRVrcR6PR5jzeDyMYwYsR5TSN8Dl5SUAcCtjcfXqTQWqGdjc3Hz33ocbsGtpaYk7X1lZqWrg4OCAu+jk5OT7BqxnwttlpewxFmfX/v5+zRxCPbC6ugoAWFxcdMztMbwKrK+v1zQg9Agqd8fbLY8T6Yu6mnB5eblmonolVIF6EjViwGU1oWmaSCQSoJQKjUQiwbh4PC68eDweZxwhBETTNJpOpwEAqqoKf9Xy+Tyur68b4ubn5yHbS3J1dSW8E7tOTk5we3srFNvb24uOjg42dxiYnp7Gw8ODUKKuri7s7OwAAGZmZrhvCU+yLGNvb89pwILb2tqET7VCocC4np4euN1uIe7l5cVh1lGBek9DixNd3Iq1vz0uy0DlK9Xa2opg8PUXcWBgAC0tLY4YHiciO+eogCVZljE1NYXOzk643W5IkoRIJAJd17G1tcXiqy2eTCYBAGtra1wDbC1eItM0kclkEIlEMD4+zq5nMhlHLM+AJEkAXs8Ea/4e52hCu87Pz9Hd3Y2+vj4AwM3NDS4uLt4YrdTCwsKba4CzEu82oV0jIyNscQDo7+/H8PCwwwSP45W8UjWbUJZlhEIhAMDR0RGOj48BAKFQiJWUx9mVTCZZH/AMVG1C0zSxu7sLr9eLbDYLAHh+fsbd3V3NHrBUrRI1mxAAHh8f2eIA/zP9Eaeo4xHEYjHhJLFYrGEOAEg4HP47Ozsbbm5uxsTEBLxer1Ci+/t7HB4eAsB/cU9PT9jY2Dgjo6OjX4LB4O+xsTE0NTUJ76QRFYtFnJ6eIpvNfiWapimU0oTL5ZqnlIY/wwAh5KxcLqcJIX/+AWenuYi/HVY0AAAAAElFTkSuQmCC");
+    width: 32px;
+    box-shadow: none;
+    height: 32px;
+    border: 0;
+	padding: 0 !important;
+}
+#calc_icon{
+	display:none;
+}
+
+#calc tr:first-child td {
+    background-color: #337ab7 !important;
+    padding: 10px 5px;
+}
+#calc tr:first-child td button {
+    background-color: transparent !important;
+    font-size: 16px;
+}
+
+#calc tr:nth-child(2) td span{font-family: arial; border: 1px solid #ccc;}
+#calc tr:nth-child(2) td span:first-child{    border-right: 0px;}
+#calc tr:nth-child(2) td span:last-child{    width: 305px;}
+
+
+#calc tr:nth-child(5) td:last-child button:before {
+    position: absolute;
+    content: "";
+    background-image: url(backarrow.png);
+    width: 25px;
+    height: 23px;
+    z-index: 4444;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: -12px;
+    margin-top: -8px;
+}
+#calc tr:nth-child(5) td:last-child button:hover:before {
+    background-image: url(backarrow-white.png);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
