@@ -96,6 +96,8 @@ export default class CalculatorManger {
                 calcobj.getResult();
             } else if (operation === "calculatePercentage") {
                 calcobj.calculatePercentage();
+            } else if (operation === "negate") {
+                calcobj.negateValue();
             } else {
                 calcobj.clearData($(this).val());
             }
@@ -173,11 +175,11 @@ export default class CalculatorManger {
                 document.getElementById("drag").style.top = (Math.abs($(document).height() - ($("#drag").height() + 15))) + 'px';
             }
         }
-        setTimeout(function () {
+        setTimeout(function() {
             $("#calc").attr('tabindex', '0').focus();
             console.log($("#calc"));
         }, 1000);
-        $("#calc").focusout(function () {
+        $("#calc").focusout(function() {
             $("#calc").removeAttr('tabindex');
         });
     }
