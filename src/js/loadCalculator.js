@@ -43,6 +43,7 @@ export default class LoadCalculator {
             }
         } else {
             self.createCalculator();
+            this.moveCalculator();
         }
     }
 
@@ -53,11 +54,9 @@ export default class LoadCalculator {
 
     clearCalculator() {
         this.basicCalculator.calcManager.calcobj.clearData("c");
-        console.log(this.basicCalculator.calcManager.calcElem.get(0));
     }
 
     hideCalculator() {
-        console.log(this.calcManager);
         if (this.getCalculatorState()) {
             this.basicCalculator.calcManager.calcElem.get(0).remove();
         } else {
@@ -70,8 +69,13 @@ export default class LoadCalculator {
     }
 
     showCalculator() {
-        this.basicCalculator = new LoadCalculator();
-        this.basicCalculator.loadDependencyAndCreate();
+        if(!!this.basicCalculator){
+            this.basicCalculator.calcManager.calcElem.css("display","block");
+        }else {
+            this.basicCalculator = new LoadCalculator();
+            this.basicCalculator.loadDependencyAndCreate();
+        }
+
     }
 
     validateLocation(top, left) {
@@ -104,12 +108,12 @@ export default class LoadCalculator {
     moveCalculator() {
         var self = this,
             keyMap = {
-                'up': 87,
-                'down': 90,
-                'left': 65,
-                'right': 83,
+                'up': 38,
+                'down': 40,
+                'left': 37,
+                'right': 39
             };
-        $(document).on("keydown", function(e) {
+        $(document).off("keydown").on("keydown", function(e) {
 
             var calcWidth = $("#drag").width(),
                 calcHeight = $("#drag").height(),
@@ -118,8 +122,6 @@ export default class LoadCalculator {
                 windowWidth = $(window).innerWidth(),
                 windowHeight = $(window).innerHeight(),
                 canMoveCalculator = self.hasValidParent(e.target);
-            console.log(canMoveCalculator);
-            console.log(e.which);
             switch (e.which) {
                 case keyMap.left: // left
                     if (calcPosX - 20 > 10 && calcPosY + calcHeight < windowHeight && canMoveCalculator) {

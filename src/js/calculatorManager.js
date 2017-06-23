@@ -8,7 +8,7 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator">
+            `<div id="calculator" role="application">
                 <div id="drag" tabindex="0">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
@@ -16,7 +16,7 @@ export default class CalculatorManger {
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
-                                <button class="close-calculator" aria-label="close">HIDE</button>
+                                <button class="close-calculator" aria-label="close">-</button>
                             </td>
                         </tr>
                         <tr>
@@ -192,12 +192,10 @@ export default class CalculatorManger {
     }
 
     closeCalculator() {
-        var display = document.getElementById('disp');
-        this.calcobj.clearData('c');
-        document.getElementById("calc").style.display = "none";
-        document.getElementById("drag").style.top = 0;
-        document.getElementById("drag").style.left = 0;
-        document.getElementById("calc-icon-tool").focus();
+       // var display = document.getElementById('disp');
+        document.getElementById("calculator").style.display = "none";
+        // document.getElementById("drag").style.top = 0;
+        // document.getElementById("drag").style.left = 0;
     }
 
 }
