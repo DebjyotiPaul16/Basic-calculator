@@ -49,7 +49,7 @@ body{
 #calc td{
 	padding:0;
 	/*border: 1px solid;*/
-	    border: 1px solid #fff;
+	    /*border: 1px solid #fff;*/
 }
 #calc button{
 	/*background-color:#BFBFBF !important;
@@ -110,12 +110,32 @@ li{
     font-size: 16px;
 }
 
-#calc tr:nth-child(2) td span{font-family: arial; border: 1px solid #ccc;}
-#calc tr:nth-child(2) td span:first-child{    border-right: 0px;}
-#calc tr:nth-child(2) td span:last-child{    width: 307px;}
+#calc tr:nth-child(2) td span, #calc tr:nth-child(3) td span{font-family: arial; border: 1px solid #ccc;}
+#calc tr:nth-child(2) td span:first-child, #calc tr:nth-child(3) td span:first-child{ text-indent: 10px;   }
+#calc tr:nth-child(2) td span:first-child {
+	padding-right: 5px;
+	margin-top: 4px;
+	margin-bottom: -1px;
+	border-bottom: 0px;
+	position: absolute;
+	width: 1000px !important;
+	text-align: right;
+	right: 0px;
+	border: 0px;
+	line-height: 32px;
+}
+#calc tr:nth-child(3) td span:first-child {
+	font-weight: bold;
+	font-size: 20px;
+	text-align: right;
+	border-top: 0px;
+	padding-right: 5px;
+	margin-bottom: 2px;
+}
+#calc tr:nth-child(2) td span:last-child, #calc tr:nth-child(3) td span:last-child{    width: 295px;}
 
 
-#calc tr:nth-child(3) td:first-child button:before {
+#calc tr:nth-child(4) td:first-child button:before {
     position: absolute;
     content: "";
     background-image:
@@ -132,7 +152,17 @@ li{
     background-image: url(backarrow-white.png);
 }*/
 
-#calc tr:nth-child(3) td button, #calc tr:nth-child(4) td:last-child button, #calc tr:nth-child(5) td:last-child button, #calc tr:nth-child(6) td:last-child button, #calc tr:nth-child(7) td:last-child button{ background-color: #337ab7; color: #fff; border: 1px solid #1b63a1;}
+#calc tr:nth-child(4) td button, #calc tr:nth-child(5) td:last-child button, #calc tr:nth-child(6) td:last-child button, #calc tr:nth-child(7) td:last-child button, #calc tr:nth-child(8) td:last-child button{ background-color: #337ab7; color: #fff; border: 1px solid #1b63a1;}
 
-
+.calcDiv{position: relative;
+	text-indent: 10px;
+	padding-right: 5px;
+	margin-top: 4px;
+	margin-bottom: -1px;
+	border-bottom: 0px;
+	width: 295px;
+	border: 1px solid #ccc;
+	height: 40px;
+	overflow: hidden;
+	border-bottom: 0px;}
 

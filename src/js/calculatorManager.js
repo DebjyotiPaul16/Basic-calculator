@@ -15,19 +15,17 @@ export default class CalculatorManger {
                     </div>
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td style="text-align: right;background-color: #1A2533" colspan="5">
-                                <button class="minimize" aria-label="minimize">&minus;</button>
-                                <button class="close-calculator" aria-label="close">x</button>
+                            <td style="text-align: right;background-color: #1A2533" colspan="4">
+                                <button class="close-calculator" aria-label="close">HIDE</button>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="5">
-                                <span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span>
+                            <td colspan="4">
+                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="5">
-                                <span id="disp_sign" style="height:40px; display:block"></span>
+                            <td colspan="4">
                                 <span class="disp_btn" id="disp" name="display" type="text" style="line-height:40px; display:block"></span>
                             </td>
                         </tr>
@@ -42,12 +40,12 @@ export default class CalculatorManger {
                 </div>
             </div>`;
 
-        let calcElem = this.attachCalculatorBody(calculatordiv);
-        let displayResult = calcElem.find("#disp").get(0);
-        let displayEqn = calcElem.find("#disp_eqn").get(0);
+        this.calcElem = this.attachCalculatorBody(calculatordiv);
+        let displayResult = this.calcElem.find("#disp").get(0);
+        let displayEqn = this.calcElem.find("#disp_eqn").get(0);
         this.calcobj = new Calculator(displayResult, displayEqn);
         this.operateCalculator(this.calcobj);
-        this.makeDraggable(calcElem);
+        this.makeDraggable(this.calcElem);
         this.handleWithKeyboard(this.calcobj);
         this.calculatorShowHide();
     }

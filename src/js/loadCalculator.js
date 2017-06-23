@@ -50,40 +50,28 @@ export default class LoadCalculator{
         this.calcManager = new CalculatorManger();
         this.calcManager.createCalculator();
     }
+
     clearCalculator() {
-        console.log(this.basicCalculator.calcManager);
-        // this.basicCalculator.calcManager.calcobj.clearData("c");
-        // this.basicCalculator.clearData("ce").bind(this.basicCalculator);
+        this.basicCalculator.calcManager.calcobj.clearData("c");
+        console.log(this.basicCalculator.calcManager.calcElem.get(0));
     }
 
     hideCalculator() {
         console.log(this.calcManager);
         if (this.getCalculatorState()) {
-            this.basicCalculator.calcManager.calculatordiv.remove();
+            this.basicCalculator.calcManager.calcElem.get(0).remove();
         } else {
             alert("calculator is already hidden");
         }
     }
 
     getCalculatorState() {
-        return !!this.basicCalculator.calcManager.calculatordiv;
+        return !!this.basicCalculator.calcManager.calcElem.get(0);
     }
 
     showCalculator() {
         this.basicCalculator = new LoadCalculator();
         this.basicCalculator.loadDependencyAndCreate();
-    }
-
-    showHideCalculator() {
-        this.calcDiv = document.getElementById("simple-calculator");
-        if (this.isOpen) {
-            this.calcDiv.setAttribute("hidden", "true");
-            this.isOpen = false;
-        } else {
-            this.showCalculator();
-            this.calcDiv.removeAttribute("hidden");
-            this.isOpen = true;
-        }
     }
 
     validateLocation(top, left) {
