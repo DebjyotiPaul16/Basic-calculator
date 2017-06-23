@@ -9,9 +9,9 @@ import {
 } from './calculatorConfig.js';
 export default class CalculatorManger {
     createCalculator() {
-        var calculatordiv, mainDiv, div, table, toolbar, toolbarTd, tr0, td01;
-        calculatordiv = document.createElement('div');
-        calculatordiv.setAttribute('id', 'calculator');
+        var mainDiv, div, table, toolbar, toolbarTd, tr0, td01;
+        this.calculatordiv = document.createElement('div');
+        this.calculatordiv.setAttribute('id', 'calculator');
         mainDiv = document.createElement('div');
         mainDiv.setAttribute('id', 'drag');
         div = this.createDiv();
@@ -38,11 +38,11 @@ export default class CalculatorManger {
 
         mainDiv.appendChild(div);
         mainDiv.appendChild(table);
-        calculatordiv.appendChild(mainDiv);
+        this.calculatordiv.appendChild(mainDiv);
         if ($("#simple-calculator").length) {
-            this.attachCalculatorTool(div, table, calculatordiv);
+            this.attachCalculatorTool(div, table, this.calculatordiv);
         } else {
-            this.attachCalculatorBody(div, table, calculatordiv);
+            this.attachCalculatorBody(div, table, this.calculatordiv);
         }
         var display = document.getElementById('disp');
         this.calcobj = new Calculator(display);
@@ -117,22 +117,22 @@ export default class CalculatorManger {
                     td.innerHTML = '<button role="button" class="btn opeationButton" ' + label + '  operation="calculatePercentage"  value="' + elemValue + '">' + calculator_data[row][col].name + '</button>';
                 } else if (elemValue === '=') {
                     td.innerHTML = '<button role="button"  class="btn opeationButton" ' + label + '  operation="getResult" value="' + elemValue + '" >' + calculator_data[row][col].name + '</button>';
+                } else if (elemValue === 'negate') {
+                    td.innerHTML = '<button role="button"  class="btn opeationButton" ' + label + '  operation="negate" value="' + elemValue + '" >' + calculator_data[row][col].name + '</button>';
                 } else {
                     td.innerHTML = '<button  role="button" class="btn opeationButton" ' + label + '  operation="setSign" value="' + elemValue + '">' + calculator_data[row][col].name + '</button>';
                 }
-
             } else if (memory_operations.indexOf(elemValue) !== -1) {
                 td.innerHTML = '<button role="button" class="btn opeationButton" ' + label + '  operation="memoryOperations" value="' + elemValue + '">' + calculator_data[row][col].name + '</button>';
             } else if (clear_operation.indexOf(elemValue) !== -1) {
                 td.innerHTML = '<button role="button" class="btn opeationButton" ' + label + '  operation="clearData" value="' + elemValue + '">' + calculator_data[row][col].name + '</button>';
             }
-
         }
         return td;
     }
 
     operateCalculator(calcobj) {
-        $(document).off().on('click', '.opeationButton', function () {
+        $(document).off().on('click', '.opeationButton', function() {
             var operation = $(this).attr('operation');
             if (operation === "setValue") {
                 calcobj.setValue($(this).val());
@@ -144,6 +144,8 @@ export default class CalculatorManger {
                 calcobj.getResult();
             } else if (operation === "calculatePercentage") {
                 calcobj.calculatePercentage();
+            } else if (operation === "negate") {
+                calcobj.negateValue();
             } else {
                 calcobj.clearData($(this).val());
             }
@@ -151,18 +153,62 @@ export default class CalculatorManger {
     }
 
     draggable() {
-        $("#calculator").css({ zIndex: 999999 });
-        $("#drag").draggable({
-            containment: 'body',
+        $("#calculator").css({
+            zIndex: 999999
+        });
+        $("#calculator").draggable({
+            // containment: 'body',
             scroll: true,
             scrollSpeed: 100,
             cursor: 'move',
             cancel: false,
-            start: function (event, ui) {
+            start: function(event, ui) {
                 $('#calc_icon').removeClass('maximize');
             },
-            stop: function (event, ui) {
-                setTimeout(function () {
+            drag: function(event, ui) {
+
+                //get mouse axis
+                var xMouse = event.pageX;
+                var yMouse = event.pageY;
+
+                //get mouse axis inside the div
+                xMouse = xMouse - ui.position.left;
+                yMouse = yMouse - ui.position.top;
+
+                //setting limit
+                var topLeftLimit = 25;
+                var bottomRightLimit = 50;
+
+                //get offsets
+                var contMinWidth = $('body').offset().left + topLeftLimit;
+                var contMaxWidth = $('body').width() + contMinWidth - bottomRightLimit;
+                var contMinHeight = $('body').offset().top + topLeftLimit;
+                var contMaxHeight = $('body').height() + contMinHeight - bottomRightLimit;
+
+                //if the cursor tries to get outside from the bottom
+                if (ui.position.top + yMouse > contMaxHeight) {
+                    //stop it there
+                    ui.position.top = contMaxHeight - yMouse;
+                }
+                //if the cursor tries to get outside from the top
+                else if (ui.position.top + yMouse < contMinHeight) {
+                    //stop it there
+                    ui.position.top = contMinHeight - yMouse;
+                }
+
+                //if the cursor tries to get outside from the right
+                if (ui.position.left + xMouse > contMaxWidth) {
+                    //stop it there
+                    ui.position.left = contMaxWidth - xMouse;
+                }
+                //if the cursor tries to get outside from the left
+                else if (ui.position.left + xMouse < contMinWidth) {
+                    //stop it there
+                    ui.position.left = contMinWidth - xMouse;
+                }
+            },
+            stop: function(event, ui) {
+                setTimeout(function() {
                     $('#calc_icon').addClass('maximize');
                 }, 200);
             }
@@ -171,8 +217,13 @@ export default class CalculatorManger {
     }
 
     handleWithKeyboard(calcobj) {
-        $(document).off('keyup').on('keyup', function (event) {
-            var operator = { 107: '+', 109: '-', 106: '*', 111: '/' };
+        $(document).off('keyup').on('keyup', function(event) {
+            var operator = {
+                107: '+',
+                109: '-',
+                106: '*',
+                111: '/'
+            };
             if (!isNaN(event.key) && event.keyCode !== 32) {
                 calcobj.setValue(event.key);
             } else if (event.keyCode === 110) {
@@ -189,16 +240,16 @@ export default class CalculatorManger {
 
     calculatorShowHide(th) {
         var self = this;
-        $(document).on('click', '.minimize', function () {
+        $(document).on('click', '.minimize', function() {
             $('#calc_icon').addClass('maximize').attr('aria-label', 'Maximize calculator');
             th.minimize();
             $(document).off("keyup");
         });
-        $(document).on('click', '.maximize', function () {
+        $(document).on('click', '.maximize', function() {
             self.handleWithKeyboard(self.calcobj);
             th.maximize();
         });
-        $(document).on('click', '.close-calculator', function () {
+        $(document).on('click', '.close-calculator', function() {
             th.closeCalculator();
             $(document).off("keyup");
         });
@@ -221,11 +272,11 @@ export default class CalculatorManger {
                 document.getElementById("drag").style.top = (Math.abs($(document).height() - ($("#drag").height() + 15))) + 'px';
             }
         }
-        setTimeout(function () {
+        setTimeout(function() {
             $("#calc").attr('tabindex', '0').focus();
             console.log($("#calc"));
         }, 1000);
-        $("#calc").focusout(function () {
+        $("#calc").focusout(function() {
             $("#calc").removeAttr('tabindex');
         });
     }

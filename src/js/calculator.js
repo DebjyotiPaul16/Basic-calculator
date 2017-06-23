@@ -64,6 +64,7 @@ export default class Calculator {
             this.getResult(sign);
         }
         this.displayOperator = (this.operator === '*') ? 'x' : this.operator;
+        this.displayOperator = (this.operator === '/') ? "&divide" : this.operator;
         var displayHtml = (this.initialValue) ? this.initialValue + this.displayOperator : this.displayOperator;
         this.display.innerHTML = (displayHtml.toString().length > 28) ? displayHtml.slice(-28) : displayHtml;
     }
@@ -81,6 +82,9 @@ export default class Calculator {
         if (!this.lastValue) {
             return;
         }
+        // if (this.operator === "\u00f7") {
+        //     this.operator = '/';
+        // }
         var result = this.initialValue,
             displayResult,
             signName;
@@ -95,7 +99,7 @@ export default class Calculator {
                 result = (this.initialValue) * (this.lastValue);
             }
         }
-        if (this.operator === '/') {
+        if (this.operator === "/") {
             this.divideByZeroHandler(this.initialValue, this.lastValue);
             if (this.lastValue !== '' && !this.isResultUndefined) {
                 result = (this.initialValue) / (this.lastValue);
@@ -113,7 +117,7 @@ export default class Calculator {
             }
             this.initialValue = displayResult;
             this.display.innerHTML = displayResult;
-            setTimeout(function () {
+            setTimeout(function() {
                 if (sign) {
                     signName = document.querySelectorAll('[value="' + sign + '"]')[0].getAttribute('aria-label').split(' ')[0];
                     $("#disp").attr('tabindex', '0').attr('aria-label', displayResult + signName).focus();
@@ -122,7 +126,7 @@ export default class Calculator {
                 }
 
             }, 200);
-            $("#disp").focusout(function () {
+            $("#disp").focusout(function() {
                 $("#disp").removeAttr("tabindex");
                 if (sign) {
                     document.querySelectorAll('[value="' + sign + '"]')[0].focus();
@@ -194,6 +198,7 @@ export default class Calculator {
             var currentval = this.display.innerHTML;
             if (this.lastValue) {
                 this.lastValue = parseFloat(this.lastValue.toString().slice(0, -1));
+                this.display.innerHTML = currentval.slice(0, -1);
             } else if (this.operator) {
                 this.operator = '';
                 this.displayOperator = '';
@@ -222,7 +227,17 @@ export default class Calculator {
         } else {
             console.info("invalid clear type");
         }
+    }
 
+    /*------------------- Negate last value --------------------*/
+    negateValue() {
+        if (this.lastValue) {
+            this.lastValue *= -1;
+            this.display.innerHTML = this.initialValue + this.displayOperator + this.lastValue;
+        } else {
+            this.initialValue *= -1;
+            this.display.innerHTML = this.initialValue
+        }
     }
 
 }

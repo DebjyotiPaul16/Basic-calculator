@@ -1,14 +1,20 @@
 import CalculatorManger from "./calculatorManager.js";
 import Calculator from "./calculator.js";
 
-export default class LoadCalculator extends Calculator{
+export default class LoadCalculator{
     constructor() {
-        super();
         this.isOpen = true;
         this.calcDiv = "";
         this.arrCount = 0;
-        this.BasicCalculator = null;
-        this.depArr = [{'jQuery': 'https://code.jquery.com/jquery-1.12.4.min.js'}, {'jQuery-ui': 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'}, {'jQuery-support-touch': 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js'}];
+        this.basicCalculator = null;
+        this.calcManager = null;
+        this.depArr = [{
+            'jQuery': 'https://code.jquery.com/jquery-1.12.4.min.js'
+        }, {
+            'jQuery-ui': 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js'
+        }, {
+            'jQuery-support-touch': 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js'
+        }];
     }
 
     loadDependencyAndCreate() {
@@ -41,50 +47,110 @@ export default class LoadCalculator extends Calculator{
     }
 
     createCalculator() {
-        var calculatorManger = new CalculatorManger();
-        calculatorManger.createCalculator();
+        this.calcManager = new CalculatorManger();
+        this.calcManager.createCalculator();
     }
-    clearCalculator(){
-        this.BasicCalculator.clearData("ce").bind(this.BasicCalculator);
+    clearCalculator() {
+        console.log(this.basicCalculator.calcManager);
+        // this.basicCalculator.calcManager.calcobj.clearData("c");
+        // this.basicCalculator.clearData("ce").bind(this.basicCalculator);
     }
 
-    hideCalculator(){
-        if(this.getCalculatorState()){
-            document.getElementById("calculator").remove();
-        }else {
+    hideCalculator() {
+        console.log(this.calcManager);
+        if (this.getCalculatorState()) {
+            this.basicCalculator.calcManager.calculatordiv.remove();
+        } else {
             alert("calculator is already hidden");
         }
     }
 
-    getCalculatorState(){
-        return !!document.getElementById("calculator");
+    getCalculatorState() {
+        return !!this.basicCalculator.calcManager.calculatordiv;
     }
 
-    showCalculator(){
-        this.BasicCalculator = new LoadCalculator();
-        this.BasicCalculator.loadDependencyAndCreate();
+    showCalculator() {
+        this.basicCalculator = new LoadCalculator();
+        this.basicCalculator.loadDependencyAndCreate();
     }
 
-    showHideCalculator(){
+    showHideCalculator() {
         this.calcDiv = document.getElementById("simple-calculator");
-        if(this.isOpen){
-            this.calcDiv.setAttribute("hidden","true");
+        if (this.isOpen) {
+            this.calcDiv.setAttribute("hidden", "true");
             this.isOpen = false;
-        }else {
+        } else {
             this.showCalculator();
             this.calcDiv.removeAttribute("hidden");
             this.isOpen = true;
         }
     }
+
+    validateLocation(top, left) {
+        var calcWidth = $("#calculator").width(),
+            calcHeight = $("#calculator").height(),
+            windowWidth = $(window).innerWidth(),
+            windowHeight = $(window).innerHeight();
+
+        if (left + calcWidth < windowWidth && top + calcHeight < windowHeight) {
+            console.log("open");
+            $("#calculator").css({
+                "top": top + "px",
+                "left": left + "px"
+            });
+        } else {
+            console.log("dont open");
+        }
+    }
+
+
+
+    moveCalculator() {
+
+        $(document).on("keydown", function(e) {
+
+            var calcWidth = $("#drag").width(),
+                calcHeight = $("#drag").height(),
+                calcPosX = parseFloat($("#calculator").css('left')),
+                calcPosY = parseFloat($("#calculator").css('top')),
+                windowWidth = $(window).innerWidth(),
+                windowHeight = $(window).innerHeight();
+
+            switch (e.which) {
+                case 37: // up
+                    if (calcPosX - 20 > 0 &&
+                        calcPosY + calcHeight < windowHeight) {
+                        $("#calculator").css('left', $("#calculator").offset().left - 20);
+                    }
+                    break;
+                case 38: // left
+                    if (calcPosX + calcWidth < windowWidth &&
+                        calcPosY - 20 > 0) {
+                        $("#calculator").css('top', $("#calculator").offset().top - 20);
+                    }
+                    break;
+                case 39: // right
+                    if (calcPosX + 10 + calcWidth < windowWidth &&
+                        calcPosY + calcHeight < windowHeight) {
+                        $("#calculator").css('left', $("#calculator").offset().left + 10);
+                    }
+                    break;
+                case 40: //down
+                    if (calcPosX + calcWidth < windowWidth &&
+                        calcPosY + 10 + calcHeight < windowHeight) {
+                        $("#calculator").css('top', $("#calculator").offset().top + 10);
+                    }
+                    break;
+            }
+        })
+    }
+
+
+
 }
 
-window.calculator = (function () {
-    return{
+window.calculator = (function() {
+    return {
         loadCalculator: LoadCalculator
     }
 }());
-
-
-
-
-
