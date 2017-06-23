@@ -22,6 +22,11 @@ export default class CalculatorManger {
                         </tr>
                         <tr>
                             <td colspan="5">
+                                <span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
                                 <span id="disp_sign" style="height:40px; display:block"></span>
                                 <span class="disp_btn" id="disp" name="display" type="text" style="line-height:40px; display:block"></span>
                             </td>
@@ -38,8 +43,9 @@ export default class CalculatorManger {
             </div>`;
 
         let calcElem = this.attachCalculatorBody(calculatordiv);
-        let display = calcElem.find("#disp").get(0);
-        this.calcobj = new Calculator(display);
+        let displayResult = calcElem.find("#disp").get(0);
+        let displayEqn = calcElem.find("#disp_eqn").get(0);
+        this.calcobj = new Calculator(displayResult, displayEqn);
         this.operateCalculator(this.calcobj);
         this.makeDraggable(calcElem);
         this.handleWithKeyboard(this.calcobj);
