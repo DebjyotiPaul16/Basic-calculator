@@ -103,16 +103,24 @@ export default class LoadCalculator {
         }
     }
 
-    isParent(target) {
-        if (target.id === "drag") {
-            return true
-        } else if (target.id === null) {
-            return false
-        } else this.isParent(target.parentElement)
+    hasValidParent(target) {
+        if (target === null) {
+            return false;
+        } else if (target.id && target.id === "drag") {
+            return true;
+        } else {
+            return true && this.hasValidParent(target.parentElement);
+        }
     }
 
     moveCalculator() {
-
+        var self = this,
+            keyMap = {
+                'up': 87,
+                'down': 90,
+                'left': 65,
+                'right': 83,
+            };
         $(document).on("keydown", function(e) {
 
             var calcWidth = $("#drag").width(),
@@ -120,31 +128,28 @@ export default class LoadCalculator {
                 calcPosX = parseFloat($("#calculator").css('left')),
                 calcPosY = parseFloat($("#calculator").css('top')),
                 windowWidth = $(window).innerWidth(),
-                windowHeight = $(window).innerHeight();
-                // hasParent = this.isParent(e.target);
-
+                windowHeight = $(window).innerHeight(),
+                canMoveCalculator = self.hasValidParent(e.target);
+            console.log(canMoveCalculator);
+            console.log(e.which);
             switch (e.which) {
-                case 37: // left
-                    if (calcPosX - 20 > 10 &&
-                        calcPosY + calcHeight < windowHeight && e.target.id === "drag") {
+                case keyMap.left: // left
+                    if (calcPosX - 20 > 10 && calcPosY + calcHeight < windowHeight && canMoveCalculator) {
                         $("#calculator").css('left', $("#calculator").offset().left - 20);
                     }
                     break;
-                case 38: // up
-                    if (calcPosX + calcWidth < windowWidth &&
-                        calcPosY - 20 > 10 && e.target.id === "drag") {
+                case keyMap.up: // up
+                    if (calcPosX + calcWidth < windowWidth && calcPosY - 20 > 10 && canMoveCalculator) {
                         $("#calculator").css('top', $("#calculator").offset().top - 20);
                     }
                     break;
-                case 39: // right
-                    if (calcPosX + 20 + calcWidth < windowWidth &&
-                        calcPosY + calcHeight < windowHeight && e.target.id === "drag") {
+                case keyMap.right: // right
+                    if (calcPosX + 20 + calcWidth < windowWidth && calcPosY + calcHeight < windowHeight && canMoveCalculator) {
                         $("#calculator").css('left', $("#calculator").offset().left + 10);
                     }
                     break;
-                case 40: //down
-                    if (calcPosX + calcWidth < windowWidth &&
-                        calcPosY + 20 + calcHeight < windowHeight && e.target.id === "drag") {
+                case keyMap.down: //down
+                    if (calcPosX + calcWidth < windowWidth && calcPosY + 20 + calcHeight < windowHeight && canMoveCalculator) {
                         $("#calculator").css('top', $("#calculator").offset().top + 10);
                     }
                     break;

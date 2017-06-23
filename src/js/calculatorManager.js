@@ -140,16 +140,16 @@ export default class CalculatorManger {
 
     calculatorShowHide() {
         var self = this;
-        $(document).off('click', '.minimize').on('click', '.minimize', function () {
+        $(document).off('click', '.minimize').on('click', '.minimize', function() {
             $('#calc_icon').addClass('maximize').attr('aria-label', 'Maximize calculator');
             self.minimize();
             $(document).off("keyup");
         });
-        $(document).off('click', '.maximize').on('click', '.maximize', function () {
+        $(document).off('click', '.maximize').on('click', '.maximize', function() {
             self.handleWithKeyboard(self.calcobj);
             self.maximize();
         });
-        $(document).off('click', '.close-calculator').on('click', '.close-calculator', function () {
+        $(document).off('click', '.close-calculator').on('click', '.close-calculator', function() {
             self.closeCalculator();
             $(document).off("keyup");
         });

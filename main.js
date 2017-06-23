@@ -11,6 +11,6 @@ btn.addEventListener("click", BasicCalculator.hideCalculator.bind(BasicCalculato
 btnShow.addEventListener("click", BasicCalculator.showCalculator.bind(BasicCalculator), false);
 clearCalc.addEventListener("click", BasicCalculator.clearCalculator.bind(BasicCalculator), false);
 spawnCalc.addEventListener("click", function() {
-    BasicCalculator.validateLocation(200, 500);
     BasicCalculator.moveCalculator();
+    BasicCalculator.validateLocation(100, 100);
 });
