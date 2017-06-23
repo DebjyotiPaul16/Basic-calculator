@@ -1,7 +1,7 @@
 import CalculatorManger from "./calculatorManager.js";
 import Calculator from "./calculator.js";
 
-export default class LoadCalculator{
+export default class LoadCalculator {
     constructor() {
         this.isOpen = true;
         this.calcDiv = "";
@@ -103,7 +103,13 @@ export default class LoadCalculator{
         }
     }
 
-
+    isParent(target) {
+        if (target.id === "drag") {
+            return true
+        } else if (target.id === null) {
+            return false
+        } else this.isParent(target.parentElement)
+    }
 
     moveCalculator() {
 
@@ -114,30 +120,31 @@ export default class LoadCalculator{
                 calcPosX = parseFloat($("#calculator").css('left')),
                 calcPosY = parseFloat($("#calculator").css('top')),
                 windowWidth = $(window).innerWidth(),
-                windowHeight = $(window).innerHeight();
+                windowHeight = $(window).innerHeight(),
+                hasParent = this.isParent(e.target);
 
             switch (e.which) {
-                case 37: // up
-                    if (calcPosX - 20 > 0 &&
-                        calcPosY + calcHeight < windowHeight) {
+                case 37: // left
+                    if (calcPosX - 20 > 10 &&
+                        calcPosY + calcHeight < windowHeight && e.target.id === "drag") {
                         $("#calculator").css('left', $("#calculator").offset().left - 20);
                     }
                     break;
-                case 38: // left
+                case 38: // up
                     if (calcPosX + calcWidth < windowWidth &&
-                        calcPosY - 20 > 0) {
+                        calcPosY - 20 > 10 && e.target.id === "drag") {
                         $("#calculator").css('top', $("#calculator").offset().top - 20);
                     }
                     break;
                 case 39: // right
-                    if (calcPosX + 10 + calcWidth < windowWidth &&
-                        calcPosY + calcHeight < windowHeight) {
+                    if (calcPosX + 20 + calcWidth < windowWidth &&
+                        calcPosY + calcHeight < windowHeight && e.target.id === "drag") {
                         $("#calculator").css('left', $("#calculator").offset().left + 10);
                     }
                     break;
                 case 40: //down
                     if (calcPosX + calcWidth < windowWidth &&
-                        calcPosY + 10 + calcHeight < windowHeight) {
+                        calcPosY + 20 + calcHeight < windowHeight && e.target.id === "drag") {
                         $("#calculator").css('top', $("#calculator").offset().top + 10);
                     }
                     break;

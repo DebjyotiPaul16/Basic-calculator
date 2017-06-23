@@ -9,7 +9,7 @@ export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
             `<div id="calculator">
-                <div id="drag">
+                <div id="drag" tabindex="0">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
                     </div>
@@ -32,7 +32,7 @@ export default class CalculatorManger {
                                 return `<td>${this.createCalculatorButton(columnData)}</td>`;
                             }).join("")}
                         </tr>`;
-                        }).join("")}    
+                        }).join("")}
                     </table>
                 </div>
             </div>`;
@@ -66,6 +66,9 @@ export default class CalculatorManger {
             }
             if (elemValue === '=') {
                 return '<button role="button"  class="btn opeationButton" ' + label + '  operation="getResult" value="' + elemValue + '" >' + columnData.name + '</button>';
+            }
+            if (elemValue === 'negate') {
+                return '<button role="button"  class="btn opeationButton" ' + label + '  operation="negate" value="' + elemValue + '" >' + columnData.name + '</button>';
             }
             return '<button  role="button" class="btn opeationButton" ' + label + '  operation="setSign" value="' + elemValue + '">' + columnData.name + '</button>';
         }
