@@ -120,8 +120,8 @@ export default class LoadCalculator {
                 calcPosX = parseFloat($("#calculator").css('left')),
                 calcPosY = parseFloat($("#calculator").css('top')),
                 windowWidth = $(window).innerWidth(),
-                windowHeight = $(window).innerHeight(),
-                hasParent = this.isParent(e.target);
+                windowHeight = $(window).innerHeight();
+                // hasParent = this.isParent(e.target);
 
             switch (e.which) {
                 case 37: // left
