@@ -106,8 +106,8 @@ export default class CalculatorManger {
     }
 
     makeDraggable(calcElem) {
-        calcElem.find("#calculator").css({zIndex: 999999});
-        calcElem.find("#drag").draggable({
+        calcElem.css({zIndex: 999999});
+        calcElem.draggable({
             containment: 'body',
             scroll: true,
             scrollSpeed: 100,
