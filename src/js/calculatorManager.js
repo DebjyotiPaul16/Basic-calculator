@@ -9,7 +9,7 @@ export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
             `<div id="calculator">
-                <div id="drag">
+                <div id="drag" tabindex="0">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
                     </div>
@@ -35,7 +35,7 @@ export default class CalculatorManger {
                                 return `<td>${this.createCalculatorButton(columnData)}</td>`;
                             }).join("")}
                         </tr>`;
-                        }).join("")}    
+                        }).join("")}
                     </table>
                 </div>
             </div>`;
@@ -144,16 +144,16 @@ export default class CalculatorManger {
 
     calculatorShowHide() {
         var self = this;
-        $(document).off('click', '.minimize').on('click', '.minimize', function () {
+        $(document).off('click', '.minimize').on('click', '.minimize', function() {
             $('#calc_icon').addClass('maximize').attr('aria-label', 'Maximize calculator');
             self.minimize();
             $(document).off("keyup");
         });
-        $(document).off('click', '.maximize').on('click', '.maximize', function () {
+        $(document).off('click', '.maximize').on('click', '.maximize', function() {
             self.handleWithKeyboard(self.calcobj);
             self.maximize();
         });
-        $(document).off('click', '.close-calculator').on('click', '.close-calculator', function () {
+        $(document).off('click', '.close-calculator').on('click', '.close-calculator', function() {
             self.closeCalculator();
             $(document).off("keyup");
         });

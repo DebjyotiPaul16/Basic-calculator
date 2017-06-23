@@ -1,7 +1,7 @@
 import CalculatorManger from "./calculatorManager.js";
 import Calculator from "./calculator.js";
 
-export default class LoadCalculator{
+export default class LoadCalculator {
     constructor() {
         this.isOpen = true;
         this.calcDiv = "";
@@ -91,10 +91,24 @@ export default class LoadCalculator{
         }
     }
 
-
+    hasValidParent(target) {
+        if (target === null) {
+            return false;
+        } else if (target.id && target.id === "drag") {
+            return true;
+        } else {
+            return true && this.hasValidParent(target.parentElement);
+        }
+    }
 
     moveCalculator() {
-
+        var self = this,
+            keyMap = {
+                'up': 87,
+                'down': 90,
+                'left': 65,
+                'right': 83,
+            };
         $(document).on("keydown", function(e) {
 
             var calcWidth = $("#drag").width(),
@@ -102,30 +116,28 @@ export default class LoadCalculator{
                 calcPosX = parseFloat($("#calculator").css('left')),
                 calcPosY = parseFloat($("#calculator").css('top')),
                 windowWidth = $(window).innerWidth(),
-                windowHeight = $(window).innerHeight();
-
+                windowHeight = $(window).innerHeight(),
+                canMoveCalculator = self.hasValidParent(e.target);
+            console.log(canMoveCalculator);
+            console.log(e.which);
             switch (e.which) {
-                case 37: // up
-                    if (calcPosX - 20 > 0 &&
-                        calcPosY + calcHeight < windowHeight) {
+                case keyMap.left: // left
+                    if (calcPosX - 20 > 10 && calcPosY + calcHeight < windowHeight && canMoveCalculator) {
                         $("#calculator").css('left', $("#calculator").offset().left - 20);
                     }
                     break;
-                case 38: // left
-                    if (calcPosX + calcWidth < windowWidth &&
-                        calcPosY - 20 > 0) {
+                case keyMap.up: // up
+                    if (calcPosX + calcWidth < windowWidth && calcPosY - 20 > 10 && canMoveCalculator) {
                         $("#calculator").css('top', $("#calculator").offset().top - 20);
                     }
                     break;
-                case 39: // right
-                    if (calcPosX + 10 + calcWidth < windowWidth &&
-                        calcPosY + calcHeight < windowHeight) {
+                case keyMap.right: // right
+                    if (calcPosX + 20 + calcWidth < windowWidth && calcPosY + calcHeight < windowHeight && canMoveCalculator) {
                         $("#calculator").css('left', $("#calculator").offset().left + 10);
                     }
                     break;
-                case 40: //down
-                    if (calcPosX + calcWidth < windowWidth &&
-                        calcPosY + 10 + calcHeight < windowHeight) {
+                case keyMap.down: //down
+                    if (calcPosX + calcWidth < windowWidth && calcPosY + 20 + calcHeight < windowHeight && canMoveCalculator) {
                         $("#calculator").css('top', $("#calculator").offset().top + 10);
                     }
                     break;
