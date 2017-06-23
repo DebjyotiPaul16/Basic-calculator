@@ -14,7 +14,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if(this._isResultUndefined){
+        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1)) {
             return;
         }
         if(this._isEqualPressed){
@@ -46,21 +46,24 @@ export default class Calculator {
             this._isResultUndefined = true;
             return;
         }
-        var str = this._eqnArr.join("");
-        var numbers = str.replace(/ /g, '').split(/[-+*\/]/g);
-        var operators = str.replace(/ /g, '').split(/\d*/g);
-        operators.shift();
+        let numbers = this._eqnArr.filter((v, i)=> {
+            return !(i % 2);
+        });
+        let operators = this._eqnArr.filter((v, i)=> {
+            return i % 2;
+        });
 
-        var result = +numbers[0];
+        var result = numbers[0];
 
-        for (var i = 0; i < operators.length - 1; i++) {
+        for (let i = 0; i < operators.length; i++) {
             result = eval( result + operators[i] + numbers[i + 1] );
         }
+
         this._result = String(result);
         this._displayResultDiv.innerHTML = this._result;
     }
     _renderEqn(){
-        this._displayEqnDiv.innerHTML = this._eqnArr.join("");
+        this._displayEqnDiv.innerHTML = this._eqnArr.join(" ").replace(/\//g, "\u00F7").replace(/\*/g, "\u2715");
     }
 
     /*--------- Set operator sign to calculate --------------*/
@@ -72,7 +75,9 @@ export default class Calculator {
             this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
         }else{
-            this._eqnArr.push(this._result);
+            this._eqnArr.push(
+                this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
+            );
             this._evalResult();
             this._eqnArr.push(sign);
             this._renderEqn();
@@ -111,11 +116,21 @@ export default class Calculator {
         if(this._isResultUndefined){
             return;
         }
-        this._eqnArr.push(this._result);
+        this._eqnArr.push(
+            this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
+        );
         this._evalResult();
         this._eqnArr = [];
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
+    }
+
+    negateValue() {
+        if (this._result === '0') {
+            return;
+        }
+        this._result = String(+(this._result) * -1);
+        this._renderResult();
     }
 }

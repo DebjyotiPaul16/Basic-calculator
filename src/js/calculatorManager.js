@@ -71,6 +71,9 @@ export default class CalculatorManger {
             if (elemValue === '=') {
                 return '<button role="button"  class="btn opeationButton" ' + label + '  operation="getResult" value="' + elemValue + '" >' + columnData.name + '</button>';
             }
+            if (elemValue === 'negate') {
+                return '<button  role="button" class="btn opeationButton" ' + label + '  operation="negate" value="' + elemValue + '">' + columnData.name + '</button>'
+            }
             return '<button  role="button" class="btn opeationButton" ' + label + '  operation="setSign" value="' + elemValue + '">' + columnData.name + '</button>';
         }
         if (memory_operations.indexOf(elemValue) !== -1) {
