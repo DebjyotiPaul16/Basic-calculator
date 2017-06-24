@@ -112,13 +112,55 @@ export default class CalculatorManger {
 			zIndex: 999999
 		} );
 		calcElem.draggable( {
-			containment: 'body',
+			// containment: 'body',
 			scroll: true,
 			scrollSpeed: 100,
 			cursor: 'move',
 			cancel: false,
 			start: function ( event, ui ) {
 				calcElem.find( '#calc_icon' ).removeClass( 'maximize' );
+			},
+			drag: function ( event, ui ) {
+
+				//get mouse axis
+				var xMouse = event.pageX;
+				var yMouse = event.pageY;
+
+				//get mouse axis inside the div
+				xMouse = xMouse - ui.position.left;
+				yMouse = yMouse - ui.position.top;
+
+				//setting limit
+				var topLeftLimit = 25;
+				var bottomRightLimit = this.offsetHeight / 4;
+
+				//get offsets
+				var contMinWidth = $( 'body' ).offset().left + topLeftLimit;
+				var contMaxWidth = $( 'body' ).width() + contMinWidth - bottomRightLimit;
+				var contMinHeight = $( 'body' ).offset().top + topLeftLimit;
+				var contMaxHeight = $( 'body' ).height() + contMinHeight - bottomRightLimit;
+
+				//if the cursor tries to get outside from the bottom
+				if ( ui.position.top + yMouse > contMaxHeight ) {
+					//stop it there
+					ui.position.top = contMaxHeight - yMouse;
+				}
+				//if the cursor tries to get outside from the top
+				else if ( ui.position.top + yMouse < contMinHeight ) {
+					//stop it there
+					ui.position.top = contMinHeight - yMouse;
+				}
+
+				//if the cursor tries to get outside from the right
+				if ( ui.position.left + xMouse > contMaxWidth ) {
+					//stop it there
+					ui.position.left = contMaxWidth - xMouse;
+				}
+				//if the cursor tries to get outside from the left
+				else if ( ui.position.left + xMouse < contMinWidth ) {
+					//stop it there
+					ui.position.left = contMinWidth - xMouse;
+				}
 			},
 			stop: function ( event, ui ) {
 				setTimeout( function () {
