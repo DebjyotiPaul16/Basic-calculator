@@ -8,21 +8,24 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator">
+            `<div id="calculator" role="application">
                 <div id="drag" tabindex="0">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
                     </div>
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td style="text-align: right;background-color: #1A2533" colspan="5">
-                                <button class="minimize" aria-label="minimize">&minus;</button>
-                                <button class="close-calculator" aria-label="close">x</button>
+                            <td style="text-align: right;background-color: #1A2533" colspan="4">
+                                <button class="close-calculator" aria-label="close">-</button>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="5">
-                                <span id="disp_sign" style="height:40px; display:block"></span>
+                            <td colspan="4">
+                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
                                 <span class="disp_btn" id="disp" name="display" type="text" style="line-height:40px; display:block"></span>
                             </td>
                         </tr>
@@ -37,11 +40,12 @@ export default class CalculatorManger {
                 </div>
             </div>`;
 
-        let calcElem = this.attachCalculatorBody(calculatordiv);
-        let display = calcElem.find("#disp").get(0);
-        this.calcobj = new Calculator(display);
+        this.calcElem = this.attachCalculatorBody(calculatordiv);
+        let displayResult = this.calcElem.find("#disp").get(0);
+        let displayEqn = this.calcElem.find("#disp_eqn").get(0);
+        this.calcobj = new Calculator(displayResult, displayEqn);
         this.operateCalculator(this.calcobj);
-        this.makeDraggable(calcElem);
+        this.makeDraggable(this.calcElem);
         this.handleWithKeyboard(this.calcobj);
         this.calculatorShowHide();
     }
@@ -68,7 +72,7 @@ export default class CalculatorManger {
                 return '<button role="button"  class="btn opeationButton" ' + label + '  operation="getResult" value="' + elemValue + '" >' + columnData.name + '</button>';
             }
             if (elemValue === 'negate') {
-                return '<button role="button"  class="btn opeationButton" ' + label + '  operation="negate" value="' + elemValue + '" >' + columnData.name + '</button>';
+                return '<button  role="button" class="btn opeationButton" ' + label + '  operation="negate" value="' + elemValue + '">' + columnData.name + '</button>'
             }
             return '<button  role="button" class="btn opeationButton" ' + label + '  operation="setSign" value="' + elemValue + '">' + columnData.name + '</button>';
         }
@@ -102,8 +106,8 @@ export default class CalculatorManger {
     }
 
     makeDraggable(calcElem) {
-        calcElem.find("#calculator").css({zIndex: 999999});
-        calcElem.find("#drag").draggable({
+        calcElem.css({zIndex: 999999});
+        calcElem.draggable({
             containment: 'body',
             scroll: true,
             scrollSpeed: 100,
@@ -188,12 +192,10 @@ export default class CalculatorManger {
     }
 
     closeCalculator() {
-        var display = document.getElementById('disp');
-        this.calcobj.clearData('c');
-        document.getElementById("calc").style.display = "none";
-        document.getElementById("drag").style.top = 0;
-        document.getElementById("drag").style.left = 0;
-        document.getElementById("calc-icon-tool").focus();
+       // var display = document.getElementById('disp');
+        document.getElementById("calculator").style.display = "none";
+        // document.getElementById("drag").style.top = 0;
+        // document.getElementById("drag").style.left = 0;
     }
 
 }
