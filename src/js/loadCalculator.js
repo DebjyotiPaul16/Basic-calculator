@@ -116,31 +116,39 @@ export default class LoadCalculator {
 			};
 		$( document ).off( "keydown" ).on( "keydown", function ( e ) {
 
-			var calcWidth = $( "#drag" ).width(),
-				calcHeight = $( "#drag" ).height(),
-				calcPosX = parseFloat( $( "#calculator" ).css( 'left' ) ),
-				calcPosY = parseFloat( $( "#calculator" ).css( 'top' ) ),
+			var calcWidth = self.calcManager.calcElem.width(),
+				calcHeight = self.calcManager.calcElem.height(),
+				calcPosX = parseFloat( self.calcManager.calcElem.css( 'left' ) ),
+				calcPosY = parseFloat( self.calcManager.calcElem.css( 'top' ) ),
 				windowWidth = $( window ).innerWidth(),
 				windowHeight = $( window ).innerHeight(),
 				canMoveCalculator = self.hasValidParent( e.target );
 			switch ( e.which ) {
 			case keyMap.left: // left
-				if ( calcPosX - 20 > 10 && calcPosY + calcHeight < windowHeight && canMoveCalculator ) {
+				if ( calcPosX - 20 > -calcWidth / 2 &&
+					calcPosY + calcHeight < windowHeight + calcHeight / 2 &&
+					canMoveCalculator ) {
 					$( "#calculator" ).css( 'left', $( "#calculator" ).offset().left - 20 );
 				}
 				break;
 			case keyMap.up: // up
-				if ( calcPosX + calcWidth < windowWidth && calcPosY - 20 > 10 && canMoveCalculator ) {
+				if ( calcPosX + calcWidth < windowWidth + calcWidth / 2 &&
+					calcPosY - 20 > -calcHeight / 2 &&
+					canMoveCalculator ) {
 					$( "#calculator" ).css( 'top', $( "#calculator" ).offset().top - 20 );
 				}
 				break;
 			case keyMap.right: // right
-				if ( calcPosX + 20 + calcWidth < windowWidth && calcPosY + calcHeight < windowHeight && canMoveCalculator ) {
+				if ( calcPosX + 20 + calcWidth < windowWidth + calcWidth / 2 &&
+					calcPosY + calcHeight < windowHeight + calcHeight / 2 &&
+					canMoveCalculator ) {
 					$( "#calculator" ).css( 'left', $( "#calculator" ).offset().left + 10 );
 				}
 				break;
 			case keyMap.down: //down
-				if ( calcPosX + calcWidth < windowWidth && calcPosY + 20 + calcHeight < windowHeight && canMoveCalculator ) {
+				if ( calcPosX + calcWidth < windowWidth + calcWidth / 2 &&
+					calcPosY + 20 + calcHeight < windowHeight + calcHeight / 2 &&
+					canMoveCalculator ) {
 					$( "#calculator" ).css( 'top', $( "#calculator" ).offset().top + 10 );
 				}
 				break;
