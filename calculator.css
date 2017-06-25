@@ -175,6 +175,7 @@ li {
     margin-top: -11px;
 }
 
+
 /*#calc tr:nth-child(5) td:last-child button:hover:before {
     background-image: url(backarrow-white.png);
 }*/
@@ -199,3 +200,18 @@ li {
     border-bottom: 0px;
 }
 
+.seek {
+    position: absolute;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 20px;
+    top: 15%;
+}
+
+.seek.seekLeft {
+    left: 10px;
+}
+
+.seek.seekRight {
+    right: 10px;
+}
