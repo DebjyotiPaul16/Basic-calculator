@@ -2,15 +2,15 @@
 import operator from "./calculatorConfig";
 export default class Calculator {
 
-	constructor( displayResultDiv, displayEqnDiv ) {
-		this._result = '0';
-		this._displayResultDiv = displayResultDiv;
-		this._displayEqnDiv = displayEqnDiv;
-		this._eqnArr = [];
-		this._isOperatorInserted = false;
-		this._isResultUndefined = false;
-		this._isEqualPressed = false;
-	}
+    constructor(displayResultDiv, displayEqnDiv) {
+        this._result = '0';
+        this._displayResultDiv = displayResultDiv;
+        this._displayEqnDiv = displayEqnDiv;
+        this._eqnArr = [];
+        this._isOperatorInserted = false;
+        this._isResultUndefined = false;
+        this._isEqualPressed = false;
+    }
 
 	/*--------- Set value to calculate --------------*/
 	setValue( val ) {

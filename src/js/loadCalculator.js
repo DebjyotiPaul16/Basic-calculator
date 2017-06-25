@@ -3,11 +3,10 @@ import Calculator from "./calculator.js";
 
 export default class LoadCalculator {
 	constructor() {
-		this.isOpen = true;
-		this.calcDiv = "";
 		this.arrCount = 0;
-		this.basicCalculator = null;
 		this.calcManager = null;
+		this.top = null;
+		this.left = null;
 		this.depArr = [ {
 			'jQuery': 'https://code.jquery.com/jquery-1.12.4.min.js'
         }, {
@@ -15,6 +14,8 @@ export default class LoadCalculator {
         }, {
 			'jQuery-support-touch': 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js'
         } ];
+		this.loadDependencyAndCreate();
+
 	}
 
 	loadDependencyAndCreate() {
@@ -44,6 +45,9 @@ export default class LoadCalculator {
 		} else {
 			self.createCalculator();
 			this.moveCalculator();
+			this.calcManager.calcElem.css( "display", "none" );
+			this.validateLocation(100, 100);
+
 		}
 	}
 
@@ -53,30 +57,21 @@ export default class LoadCalculator {
 	}
 
 	clearCalculator() {
-		this.basicCalculator.calcManager.calcobj.clearData( "c" );
+		this.calcManager.calcobj.clearData( "c" );
 	}
 
-	hideCalculator() {
-		if ( this.getCalculatorState() ) {
-			this.basicCalculator.calcManager.calcElem.get( 0 ).remove();
-		} else {
-			alert( "calculator is already hidden" );
-		}
-	}
-
-	getCalculatorState() {
-		return !!this.basicCalculator.calcManager.calcElem.get( 0 );
-	}
 
 	showCalculator() {
-		if ( !!this.basicCalculator ) {
-			this.basicCalculator.calcManager.calcElem.css( "display", "block" );
-			this.basicCalculator.calcManager.calcElem.focus();
-		} else {
-			this.basicCalculator = new LoadCalculator();
-			this.basicCalculator.loadDependencyAndCreate();
+		if ( !!this.calcManager ) {
+			if(this.top && this.left){
+				this.validateLocation(this.top,this.left);
+			}
+			this.calcManager.handleWithKeyboard(this.calcManager.calcobj);
+			this.calcManager.calcElem.css( "display", "block" );
+			this.calcManager.calcElem.focus();
+		}else {
+			console.error("not possible to open calculator");
 		}
-
 	}
 
 	validateLocation( top, left ) {
@@ -87,6 +82,8 @@ export default class LoadCalculator {
 
 		if ( left + calcWidth < windowWidth && top + calcHeight < windowHeight ) {
 			console.log( "open" );
+			this.top = top;
+			this.left = left;
 			$( "#calculator" ).css( {
 				"top": top + "px",
 				"left": left + "px"
@@ -155,9 +152,6 @@ export default class LoadCalculator {
 			}
 		} )
 	}
-
-
-
 }
 
 window.calculator = ( function () {
