@@ -8,8 +8,8 @@ import {
 export default class CalculatorManger {
 	createCalculator() {
 		let calculatordiv =
-			`<div id="calculator" role="application">
-                <div id="drag"  tabindex="0">
+			`<div id="calculator" role="application" tabindex="0">
+                <div id="drag">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
                     </div>
@@ -21,7 +21,7 @@ export default class CalculatorManger {
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>
+                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>																
                             </td>
                         </tr>
                         <tr>
@@ -49,7 +49,7 @@ export default class CalculatorManger {
 		this.handleWithKeyboard( this.calcobj );
 		this.calculatorShowHide();
 		this.handleCalculatorFocus();
-		this.calcElem.children().focus();
+		this.calcElem.focus();
 	}
 
 	attachCalculatorBody( calculatorStr ) {
