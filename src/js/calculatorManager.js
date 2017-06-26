@@ -21,7 +21,9 @@ export default class CalculatorManger {
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>																
+                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>
+																<div class="seek seekLeft"></div>
+																<div class="seek seekRight"></div>
                             </td>
                         </tr>
                         <tr>
@@ -49,6 +51,7 @@ export default class CalculatorManger {
 		this.handleWithKeyboard( this.calcobj );
 		this.calculatorShowHide();
 		this.handleCalculatorFocus();
+		this.seekEquation();
 		this.calcElem.focus();
 	}
 
@@ -213,15 +216,15 @@ export default class CalculatorManger {
 
 	handleCalculatorFocus() {
 		//focus handling
-
-		$( ".close-calculator" ).on( "keydown", function ( event ) {
+		var self = this;
+		self.calcElem.find( ".close-calculator" ).off( "keydown" ).on( "keydown", function ( event ) {
 			if ( event.shiftKey && event.keyCode === 9 ) {
 				$( "[value='=']" ).focus();
 				event.preventDefault();
 			}
 		} );
 
-		$( "[value='=']" ).off( "keydown" ).on( "keydown", function ( event ) {
+		self.calcElem.find( "[value='=']" ).off( "keydown" ).on( "keydown", function ( event ) {
 			if ( !event.shiftKey && event.keyCode === 9 ) {
 				$( ".close-calculator" ).focus();
 				event.preventDefault();
@@ -229,6 +232,38 @@ export default class CalculatorManger {
 		} );
 
 	}
+
+	seekEquation() {
+		var self = this;
+		$( ".seekLeft" ).off( "click" ).on( "click", function () {
+			$( "#disp_eqn" ).css( {
+				"right": parseFloat( $( "#disp_eqn" ).css( "right" ) ) - 30 + "px"
+			} );
+			self.checkSeekStatus();
+		} );
+		$( ".seekRight" ).off( "click" ).on( "click", function () {
+			$( "#disp_eqn" ).css( {
+				"right": parseFloat( $( "#disp_eqn" ).css( "right" ) ) + 30 + "px"
+			} );
+			self.checkSeekStatus();
+		} );
+	}
+
+	checkSeekStatus() {
+		if ( parseFloat( this.calcobj._displayEqnDiv.style.right ) < 0 ) {
+			$( ".seekRight" ).css( "display", "inline-block" );
+		} else {
+			$( ".seekRight" ).css( "display", "none" );
+		}
+
+		if ( parseFloat( this.calcobj._displayEqnDiv.style.right ) >=
+			-( this.calcobj._displayEqnDiv.innerText.length * 7 - this.calcobj._displayEqnDiv.parentElement.offsetWidth / 1.5 ) ) {
+			$( ".seekLeft" ).css( "display", "inline-block" );
+		} else {
+			$( ".seekLeft" ).css( "display", "none" );
+		}
+	}
+
 
 	maximize() {
 		$( ".meta_tool_wrapper" ).css( 'visibility', 'hidden' );
