@@ -237,13 +237,13 @@ export default class CalculatorManger {
 		var self = this;
 		$( ".seekLeft" ).off( "click" ).on( "click", function () {
 			$( "#disp_eqn" ).css( {
-				"right": parseFloat( $( "#disp_eqn" ).css( "right" ) ) - 30 + "px"
+				"right": parseFloat( $( "#disp_eqn" ).css( "right" ) ) - 40 + "px"
 			} );
 			self.checkSeekStatus();
 		} );
 		$( ".seekRight" ).off( "click" ).on( "click", function () {
 			$( "#disp_eqn" ).css( {
-				"right": parseFloat( $( "#disp_eqn" ).css( "right" ) ) + 30 + "px"
+				"right": parseFloat( $( "#disp_eqn" ).css( "right" ) ) + 40 + "px"
 			} );
 			self.checkSeekStatus();
 		} );
