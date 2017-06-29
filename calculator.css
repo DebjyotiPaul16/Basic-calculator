@@ -180,7 +180,7 @@ li {
     background-image: url(backarrow-white.png);
 }*/
 
-#calc tr:nth-child(4) td button, #calc tr:nth-child(5) td:last-child button, #calc tr:nth-child(6) td:last-child button, #calc tr:nth-child(7) td:last-child button, #calc tr:nth-child(8) td:last-child button {
+#calc tr:nth-child(4) td button, #calc tr:nth-child(5) td:last-child button, #calc tr:nth-child(6) td:last-child button, #calc tr:nth-child(7) td:last-child button, #calc tr:nth-child(8) td:first-child button, #calc tr:nth-child(8) td:last-child button {
     background-color: #337ab7;
     color: #fff;
     border: 1px solid #1b63a1;

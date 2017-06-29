@@ -6,13 +6,13 @@ export const calculator_data = [
         value: 'bs',
         label: "Back Space button"
     }, {
-        name: 'C',
-        value: 'c',
-        label: "Clear button"
-    }, {
         name: 'CE',
         value: 'ce',
         label: "Clear Entry button"
+    }, {
+        name: 'C',
+        value: 'c',
+        label: "Clear button"
     }, {
         name: '&divide',
         value: '/',
