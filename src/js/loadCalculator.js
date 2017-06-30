@@ -61,18 +61,39 @@ export default class LoadCalculator {
         this.calcManager.calcobj.clearData("c");
     }
 
+    getElements() {
+        var items = $('[aria-label]'),
+            text = "";
+        for (var i = 0; i < items.length; i++) {
+            text += items[i].getAttribute("aria-label");
+            text += " button ";
+        }
+        return text;
+    }
 
     showCalculator() {
-			  var self=this;
+        var self = this;
         if (!!this.calcManager) {
             if (this.top && this.left) {
                 this.validateLocation(this.top, this.left);
             }
             this.calcManager.handleWithKeyboard(this.calcManager.calcobj);
             this.calcManager.calcElem.css("display", "block");
-            document.getElementById("calc_state").innerText = "calculator maximized";
-            document.getElementById("calc_state").focus();
+            // document.getElementById("sr-text").innerHTML = $("#calculator").text().replace(/\s+/g, " ");
+            if (self.firstTimeOpen) {
+                document.getElementById("sr-text").innerHTML = "Calculator Maximized " + this.getElements();
+            } else {
+                document.getElementById("sr-text").innerHTML = "Calculator Maximized ";
+            }
+
+            document.getElementById("sr-text").setAttribute("tab-index", "0");
+            document.getElementById("sr-text").focus();
+            // document.getElementById("calc_state").innerText = "calculator maximized";
+            // document.getElementById("calc_state").style.display = "inline-block";
+            // document.getElementById("calc_state").focus();
             setTimeout(function() {
+                // document.getElementById("calc_state").style.display = "none";
+                document.getElementById("sr-text").removeAttribute("tab-index");
                 if (self.firstTimeOpen) {
                     self.calcManager.calcElem.focus();
                     self.firstTimeOpen = false;
@@ -80,6 +101,9 @@ export default class LoadCalculator {
                     self.calcManager.calcElem.find('[aria-label="minimize"]').focus();
                 }
             }, 500);
+            setTimeout(function() {
+                $("#calculator").removeAttr("aria-hidden");
+            }, 800);
 
         } else {
             console.error("not possible to open calculator");
@@ -129,8 +153,8 @@ export default class LoadCalculator {
                 calcHeight = self.calcManager.calcElem.height(),
                 calcPosX = parseFloat(self.calcManager.calcElem.css('left')),
                 calcPosY = parseFloat(self.calcManager.calcElem.css('top')),
-                windowWidth = $(window).innerWidth(),
-                windowHeight = $(window).innerHeight(),
+                windowWidth = $('body').offset().left + $('body').width(),
+                windowHeight = $('body').offset().top + $('body').height(),
                 canMoveCalculator = self.hasValidParent(e.target);
             switch (e.which) {
                 case keyMap.left: // left

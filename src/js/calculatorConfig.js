@@ -4,87 +4,87 @@ export const calculator_data = [
     [{
         name: '',
         value: 'bs',
-        label: "Back Space button"
+        label: "Back Space"
     }, {
         name: 'CE',
         value: 'ce',
-        label: "Clear Entry button"
+        label: "Clear Entry"
     }, {
         name: 'C',
         value: 'c',
-        label: "Clear button"
+        label: "Clear"
     }, {
         name: '&divide',
         value: '/',
-        label: 'Division button'
+        label: 'Division'
     }],
     [{
         name: 7,
         value: 7,
-        label: "7 button"
+        label: "7"
     }, {
         name: 8,
         value: 8,
-        label: "8 button"
+        label: "8"
     }, {
         name: 9,
         value: 9,
-        label: "9 button"
+        label: "9"
     }, {
         name: 'x',
         value: "*",
-        label: 'Multiplication button'
+        label: 'Multiplication'
     }],
     [{
         name: 4,
         value: 4,
-        label: "4 button"
+        label: "4"
     }, {
         name: 5,
         value: 5,
-        label: "5 button"
+        label: "5"
     }, {
         name: 6,
         value: 6,
-        label: "6 button"
+        label: "6"
     }, {
         name: '-',
         value: "-",
-        label: 'Minus button'
+        label: 'Minus'
     }],
     [{
         name: 1,
         value: 1,
-        label: "1 button"
+        label: "1"
     }, {
         name: 2,
         value: 2,
-        label: "2 button"
+        label: "2"
     }, {
         name: 3,
         value: 3,
-        label: "3 button"
+        label: "3"
     }, {
         name: '+',
         value: "+",
-        label: 'Plus button'
+        label: 'Plus'
     }],
     [{
         name: '+/-',
         value: 'negate',
-        label: "Sign Button"
+        label: "Sign"
     }, {
         name: 0,
         value: 0,
-        label: "0 button"
+        label: "0"
     }, {
         name: '.',
         value: ".",
-        label: 'Point button'
+        label: 'Point'
     }, {
         name: '=',
         value: '=',
-        label: 'Equals button'
+        label: 'Equals'
     }]
 ];
 export const operator = ['+', '-', '*', '/', '%', '=', 'negate'];

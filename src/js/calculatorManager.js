@@ -8,7 +8,7 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator" role="application" tabindex="0">
+            `<div id="calculator" role="application" aria-hidden="true" tabindex="0">
                 <div id="drag">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
@@ -16,8 +16,8 @@ export default class CalculatorManger {
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
+																<label tabindex="-1" id="calc_state" style="position:fixed; left:-99%; display:none" ></label>
                                 <button  class="close-calculator" aria-label="minimize">-</button>
-																<label tabindex="-1" id="calc_state" style="position:fixed; left:-99%;" ></label>
                             </td>
                         </tr>
                         <tr>
@@ -326,13 +326,19 @@ export default class CalculatorManger {
 
     closeCalculator() {
         // var display = document.getElementById('disp');
-        document.getElementById("calculator").style.display = "none";
 				// document.getElementById("calc_state").innerText = "calculator minimized";
-				// document.getElementById("calc_state").focus();
-				setTimeout(function(){
-
-					document.getElementById("show-calc").focus();
-				},1000);
+        // document.getElementById("calc_state").style.display = "inline-block";
+        // document.getElementById("calc_state").focus();
+				document.getElementById("calculator").style.display = "none";
+				document.getElementById("calculator").setAttribute("aria-hidden","true");
+				document.getElementById("sr-text").innerHTML = "Calculator Minimized ";
+				document.getElementById("sr-text").setAttribute("tab-index", "0");
+				document.getElementById("sr-text").focus();
+        setTimeout(function() {
+            // document.getElementById("calc_state").style.display = "none";
+						document.getElementById("sr-text").setAttribute("tab-index", "0");
+            document.getElementById("show-calc").focus();
+        }, 1500);
 
         // document.getElementById("drag").style.top = 0;
         // document.getElementById("drag").style.left = 0;
