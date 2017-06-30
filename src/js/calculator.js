@@ -14,68 +14,87 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        
+
         if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._result.length === 16) {
             return;
         }
-        if(this._isEqualPressed){
+        if (this._isEqualPressed) {
             this._result = val;
             this._renderResult();
             this._isOperatorInserted = false;
             this._isEqualPressed = false;
             return;
         }
-        if(!this._eqnArr.length || !this._isOperatorInserted){
-            this._result = (this._result === '0') ? '' + val : this._result+val;
-        }else{
-            this._result = val;           
+        if (!this._eqnArr.length || !this._isOperatorInserted) {
+            this._result = (this._result === '0') ? '' + val : this._result + val;
+        } else {
+            this._result = val;
         }
         this._renderResult();
         this._isOperatorInserted = false;
         this._isEqualPressed = false;
     }
 
-    _renderResult(){
-        this._displayResultDiv.innerHTML = this._result;
+    _readResult() {
+        var self = this;
+        self._displayResultDiv.setAttribute("tabindex", 0);
+        self._displayResultDiv.focus();
+        $(self._displayResultDiv).off("focusout").on("focusout", function() {
+            $("[value='=']").focus();
+            self._displayResultDiv.removeAttribute("tabindex");
+        });
     }
-    _evalResult(){
-        if(this._eqnArr[this._eqnArr.length-1]==='0'
-            && this._eqnArr[this._eqnArr.length-2]
-            && this._eqnArr[this._eqnArr.length-2] === '/' ){
+
+    _renderResult() {
+        this._displayResultDiv.innerHTML = this._result;
+        console.log("shown");;
+    }
+    _evalResult() {
+        if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
+            this._eqnArr[this._eqnArr.length - 2] &&
+            this._eqnArr[this._eqnArr.length - 2] === '/') {
             this._result = 'Can not divide by zero';
             this._displayResultDiv.innerHTML = this._result;
             this._isResultUndefined = true;
             return;
         }
-        let numbers = this._eqnArr.filter((v, i)=> {
+        let numbers = this._eqnArr.filter((v, i) => {
             return !(i % 2);
         });
-        let operators = this._eqnArr.filter((v, i)=> {
+        let operators = this._eqnArr.filter((v, i) => {
             return i % 2;
         });
 
         var result = numbers[0];
 
         for (let i = 0; i < operators.length; i++) {
-            result = eval( result + operators[i] + numbers[i + 1] );
+            result = eval(result + operators[i] + numbers[i + 1]);
         }
 
         this._result = String(result);
         this._displayResultDiv.innerHTML = this._result;
     }
-    _renderEqn(){
+
+    _renderEqn() {
         this._displayEqnDiv.innerHTML = this._eqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
+        this.checkOverflow();
+    }
+
+    checkOverflow() {
+        if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
+            $(".seekLeft").css("display", "inline-block");
+        }
     }
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if(this._isResultUndefined){
+        if (this._isResultUndefined) {
             return;
         }
-        if(this._isOperatorInserted){
+        if (this._isOperatorInserted) {
             this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
-        }else{
+        } else {
             this._eqnArr.push(
                 this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
             );
@@ -95,11 +114,11 @@ export default class Calculator {
             this._renderResult();
             this._isResultUndefined = false;
         } else if (cleartype === "bs") {
-            if(this._result === '0' || this._isEqualPressed || this._isResultUndefined){
+            if (this._result === '0' || this._isEqualPressed || this._isResultUndefined) {
                 return;
             }
-            this._result = this._result.slice(0,-1);
-            if(this._result.length === 0){
+            this._result = this._result.slice(0, -1);
+            if (this._result.length === 0) {
                 this._result = '0'
             }
             this._renderResult();
@@ -113,8 +132,8 @@ export default class Calculator {
 
     }
 
-    getResult(){
-        if(this._isResultUndefined){
+    getResult() {
+        if (this._isResultUndefined) {
             return;
         }
         this._eqnArr.push(
@@ -125,6 +144,7 @@ export default class Calculator {
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
+        this._readResult();
     }
 
     negateValue() {
