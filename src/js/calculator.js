@@ -14,7 +14,6 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-
         if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._result.length === 16) {
             return;
         }
@@ -47,7 +46,6 @@ export default class Calculator {
 
     _renderResult() {
         this._displayResultDiv.innerHTML = this._result;
-        console.log("shown");;
     }
     _evalResult() {
         if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
@@ -108,6 +106,7 @@ export default class Calculator {
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
+            this.resetArrows();
             this._result = '0';
             this._eqnArr = [];
             this._renderEqn();
@@ -131,7 +130,11 @@ export default class Calculator {
         }
 
     }
-
+    resetArrows(){
+        $(this._displayEqnDiv).parent().find(".seekLeft").css("display","none");
+        $(this._displayEqnDiv).parent().find(".seekRight").css("display","none");
+        $(this._displayEqnDiv).css("right","0px");
+    }
     getResult() {
         if (this._isResultUndefined) {
             return;
@@ -145,6 +148,7 @@ export default class Calculator {
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
         this._readResult();
+        this.resetArrows();
     }
 
     negateValue() {
