@@ -22,9 +22,12 @@ export default class CalculatorManger {
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <div class="calcDiv"><span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block"></span></div>
-																<div class="seek seekLeft"></div>
-																<div class="seek seekRight"></div>
+                                <div class="calcDiv">
+                                <span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block">
+								</span>
+								 <div class="seek seekLeft"></div>
+								 <div class="seek seekRight"></div>
+								</div>									
                             </td>
                         </tr>
                         <tr>
