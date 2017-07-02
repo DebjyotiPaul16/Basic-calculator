@@ -1,9 +1,6 @@
 import Calculator from "./calculator.js";
 import {
-    calculator_data,
-    operator,
-    memory_operations,
-    clear_operation
+    calculator_data
 } from './calculatorConfig.js';
 export default class CalculatorManger {
     createCalculator() {
@@ -35,115 +32,94 @@ export default class CalculatorManger {
                                 <span class="disp_btn" id="disp" name="display" type="text" style="line-height:40px; display:block"></span>
                             </td>
                         </tr>
-                        ${calculator_data.map((rowData) =>{
-                        return `<tr>
-                          ${rowData.map((columnData) =>{
-                                return `<td>${this.createCalculatorButton(columnData)}</td>`;
-                            }).join("")}
+                        ${calculator_data.map((rowData) => {
+                return `<tr>
+                          ${rowData.map((columnData) => {
+                    return `<td>${this._createCalculatorButton(columnData)}</td>`;
+                }).join("")}
                         </tr>`;
-                        }).join("")}
+            }).join("")}
                     </table>
                 </div>
             </div>`;
 
-        this.calcElem = this.attachCalculatorBody(calculatordiv);
-        let displayResult = this.calcElem.find("#disp").get(0);
-        let displayEqn = this.calcElem.find("#disp_eqn").get(0);
-        this.calcobj = new Calculator(displayResult, displayEqn);
-        this.operateCalculator(this.calcobj);
-        this.makeDraggable(this.calcElem);
+        this.calcElem = this._attachCalculatorBody(calculatordiv);
+        let _displayResult = this.calcElem.find("#disp").get(0),
+            _displayEqn = this.calcElem.find("#disp_eqn").get(0);
+        this.calcobj = new Calculator(_displayResult, _displayEqn);
+        this._operateCalculator(this.calcobj);
+        this._makeDraggable(this.calcElem);
         this.handleWithKeyboard(this.calcobj);
-        this.calculatorShowHide();
-        this.handleCalculatorFocus();
-        this.seekEquation();
+        this._calculatorShowHide();
+        this._handleCalculatorFocus();
+        this._seekEquation();
         this.calcElem.focus();
     }
 
-    attachCalculatorBody(calculatorStr) {
+    _attachCalculatorBody(calculatorStr) {
         let calculatorElm = $(calculatorStr);
         calculatorElm.find('table').css('display', 'block');
         $('body').prepend(calculatorElm);
         return calculatorElm;
     }
 
-    createCalculatorButton(columnData) {
-        var elemValue = columnData.value;
-        var label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '';
-
-        if (!isNaN(elemValue) || elemValue === ".") {
-            return '<button role="button" class="btn opeationButton" ' + label + ' operation="setValue"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
-        }
-        if (operator.indexOf(elemValue) !== -1) {
-            if (elemValue === '%') {
-                return '<button role="button" class="btn opeationButton" ' + label + '  operation="calculatePercentage"  value="' + elemValue + '">' + columnData.name + '</button>';
-            }
-            if (elemValue === '=') {
-                return '<button role="button"  class="btn opeationButton" ' + label + '  operation="getResult" value="' + elemValue + '" >' + columnData.name + '</button>';
-            }
-            if (elemValue === 'negate') {
-                return '<button  role="button" class="btn opeationButton" ' + label + '  operation="negate" value="' + elemValue + '">' + columnData.name + '</button>'
-            }
-            return '<button  role="button" class="btn opeationButton" ' + label + '  operation="setSign" value="' + elemValue + '">' + columnData.name + '</button>';
-        }
-        if (memory_operations.indexOf(elemValue) !== -1) {
-            return '<button role="button" class="btn opeationButton" ' + label + '  operation="memoryOperations" value="' + elemValue + '">' + columnData.name + '</button>';
-        }
-        if (clear_operation.indexOf(elemValue) !== -1) {
-            return '<button role="button" class="btn opeationButton" ' + label + '  operation="clearData" value="' + elemValue + '">' + columnData.name + '</button>';
-        }
+    _createCalculatorButton(columnData) {
+        let elemValue = columnData.value,
+            label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
+            operation = columnData.operation;
+        return '<button role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
     }
 
-    operateCalculator(calcobj) {
-        $(document).off('click', '.opeationButton').on('click', '.opeationButton', function() {
-            var operation = $(this).attr('operation');
+    _operateCalculator(calcobj) {
+        $(document).off('click', '.opeationButton').on('click', '.opeationButton', (e) => {
+            let $this = $(e.currentTarget),
+                operation = $this.attr('operation');
             if (operation === "setValue") {
-                calcobj.setValue($(this).val());
-            } else if (operation === "memoryOperations") {
-                calcobj.memoryOperations($(this).val());
+                calcobj.setValue($this.val());
             } else if (operation === "setSign") {
-                calcobj.setSign($(this).val());
+                calcobj.setSign($this.val());
             } else if (operation === "getResult") {
                 calcobj.getResult();
-            } else if (operation === "calculatePercentage") {
-                calcobj.calculatePercentage();
             } else if (operation === "negate") {
                 calcobj.negateValue();
             } else {
-                calcobj.clearData($(this).val());
+                calcobj.clearData($this.val());
             }
-        })
+            e.stopPropagation();
+        });
     }
 
-    makeDraggable(calcElem) {
+    _makeDraggable(calcElem) {
         calcElem.css({
             zIndex: 999999
         });
         calcElem.draggable({
-            // containment: 'body',
             scroll: true,
             scrollSpeed: 100,
             cursor: 'move',
             cancel: false,
-            start: function(event, ui) {
+            start: () => {
                 calcElem.find('#calc_icon').removeClass('maximize');
             },
-            drag: function(event, ui) {
+            drag: (event, ui) => {
 
                 //get mouse axis
-                var xMouse = event.pageX;
-                var yMouse = event.pageY;
+                let xMouse = event.pageX,
+                    yMouse = event.pageY,
+                    $this = event.target,
+                    //get offsets
+                    bodySelector = $('body'),
+                    contMinWidth = bodySelector.offset().left,
+                    contMaxWidth = bodySelector.width() + contMinWidth,
+                    contMinHeight = bodySelector.offset().top,
+                    contMaxHeight = bodySelector.height() + contMinHeight,
+                    calcWidth = $this.offsetWidth,
+                    calcHeight = $this.offsetHeight;
 
                 //get mouse axis inside the div
                 xMouse = xMouse - ui.position.left;
                 yMouse = yMouse - ui.position.top;
 
-                //get offsets
-                var contMinWidth = $('body').offset().left,
-                    contMaxWidth = $('body').width() + contMinWidth,
-                    contMinHeight = $('body').offset().top,
-                    contMaxHeight = $('body').height() + contMinHeight,
-                    calcWidth = this.offsetWidth,
-                    calcHeight = this.offsetHeight;
 
                 // mouse cursor restrictions
 
@@ -191,8 +167,8 @@ export default class CalculatorManger {
                     ui.position.left = -calcWidth / 2;
                 }
             },
-            stop: function(event, ui) {
-                setTimeout(function() {
+            stop: () => {
+                setTimeout(function () {
                     calcElem.find('#calc_icon').addClass('maximize');
                 }, 200);
             }
@@ -201,8 +177,8 @@ export default class CalculatorManger {
     }
 
     handleWithKeyboard(calcobj) {
-        $(document).off('keyup').on('keyup', function(event) {
-            var operator = {
+        $(document).off('keyup').on('keyup', (event) => {
+            let operator = {
                 107: '+',
                 109: '-',
                 106: '*',
@@ -226,125 +202,80 @@ export default class CalculatorManger {
         });
     }
 
-    calculatorShowHide() {
-        var self = this;
-        $(document).off('click', '.minimize').on('click', '.minimize', function() {
-            $('#calc_icon').addClass('maximize').attr('aria-label', 'Maximize calculator');
-            self.minimize();
-            $(document).off("keyup");
-        });
-        $(document).off('click', '.maximize').on('click', '.maximize', function() {
-            self.handleWithKeyboard(self.calcobj);
-            self.maximize();
-        });
-        $(document).off('click', '.close-calculator').on('click', '.close-calculator', function() {
-            self.closeCalculator();
+    _calculatorShowHide() {
+        let self = this;
+        $(document).off('click', '.close-calculator').on('click', '.close-calculator', () => {
+            self._closeCalculator();
             $(document).off("keyup");
         });
     }
 
 
-    handleCalculatorFocus() {
-        //focus handling
-        // var self = this;
-        this.calcElem.find(".close-calculator").off("keydown").on("keydown", function(event) {
+    _handleCalculatorFocus() {
+        this._getElement(".close-calculator").off("keydown").on("keydown", (event) => {
             if (event.shiftKey && event.keyCode === 9) {
                 $("[value='=']").focus();
                 event.preventDefault();
             }
         });
 
-        this.calcElem.find("[value='=']").off("keydown").on("keydown", function(event) {
+        this._getElement("[value='=']").off("keydown").on("keydown", (event) => {
             if (!event.shiftKey && event.keyCode === 9) {
-                $(".close-calculator").focus();
+                this._getElement(".close-calculator", true).focus();
                 event.preventDefault();
             }
         });
-
     }
 
-    seekEquation() {
-        var self = this;
-        $(".seekLeft").off("click").on("click", function() {
-            $("#disp_eqn").css({
-                "right": parseFloat($("#disp_eqn").css("right")) - 40 + "px"
+    _getElement(selector, shouldWrap) {
+        return !!shouldWrap ? $(this.calcElem.find(selector)) : this.calcElem.find(selector);
+    }
+
+
+    _seekEquation() {
+        let self = this,
+            eqnDiv = $(self.calcobj._displayEqnDiv);
+        this._getElement(".seekLeft", true).off("click").on("click", () => {
+            eqnDiv.css({
+                "right": parseFloat(eqnDiv.css("right")) - 40 + "px"
             });
-            self.checkSeekStatus();
+            self._checkSeekStatus();
         });
-        $(".seekRight").off("click").on("click", function() {
-            $("#disp_eqn").css({
-                "right": parseFloat($("#disp_eqn").css("right")) + 40 + "px"
+        this._getElement(".seekRight", true).off("click").on("click", () => {
+            eqnDiv.css({
+                "right": parseFloat(eqnDiv.css("right")) + 40 + "px"
             });
-            self.checkSeekStatus();
+            self._checkSeekStatus();
         });
     }
 
-    checkSeekStatus() {
+    _checkSeekStatus() {
         if (parseFloat(this.calcobj._displayEqnDiv.style.right) < 0) {
-            $(".seekRight").css("display", "inline-block");
+            this._getElement(".seekRight", true).css("display", "inline-block");
         } else {
-            $(".seekRight").css("display", "none");
+            this._getElement(".seekRight", true).css("display", "none");
         }
 
-        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >=
-            -(this.calcobj._displayEqnDiv.innerText.length * 7 - this.calcobj._displayEqnDiv.parentElement.offsetWidth / 1.5)) {
-            $(".seekLeft").css("display", "inline-block");
+        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >= -(this.calcobj._displayEqnDiv.innerText.length * 7 - this.calcobj._displayEqnDiv.parentElement.offsetWidth / 1.5)) {
+            this._getElement(".seekLeft", true).css("display", "inline-block");
         } else {
-            $(".seekLeft").css("display", "none");
+            this._getElement(".seekLeft", true).css("display", "none");
         }
     }
 
 
-    maximize() {
-        $(".meta_tool_wrapper").css('visibility', 'hidden');
-        document.getElementById("calc_icon").style.display = "none";
-        document.getElementById("calc").style.display = "block";
+    //TODO needs to be refactored
 
-        if (document.getElementById("drag").getBoundingClientRect().left < 0) {
-            document.getElementById("drag").style.left = (document.getElementById("drag").offsetLeft - document.getElementById("drag").getBoundingClientRect().left) + 'px';
-        }
-        if ($("#simple-calculator").length) {
-            if ($(document).height() < Math.abs($("#drag").position().top + $("#drag").height() + $("#simple-calculator").offset().top + 15)) {
-                document.getElementById("drag").style.top = (Math.abs($(document).height() - ($("#drag").height() + $("#simple-calculator").offset().top + 15))) + 'px';
-            }
-        } else {
-            if ($(document).height() < Math.abs($("#drag").position().top + $("#drag").height() + 15)) {
-                document.getElementById("drag").style.top = (Math.abs($(document).height() - ($("#drag").height() + 15))) + 'px';
-            }
-        }
-        setTimeout(function() {
-            $("#calc").attr('tabindex', '0').focus();
-            console.log($("#calc"));
-        }, 1000);
-        $("#calc").focusout(function() {
-            $("#calc").removeAttr('tabindex');
-        });
-    }
-
-    minimize() {
-        document.getElementById("calc").style.display = "none";
-        document.getElementById("calc_icon").style.display = "block";
-        document.getElementById("calc_icon").focus();
-    }
-
-    closeCalculator() {
-        // var display = document.getElementById('disp');
-				// document.getElementById("calc_state").innerText = "calculator minimized";
-        // document.getElementById("calc_state").style.display = "inline-block";
-        // document.getElementById("calc_state").focus();
-				document.getElementById("calculator").style.display = "none";
-				document.getElementById("calculator").setAttribute("aria-hidden","true");
-				document.getElementById("sr-text").innerHTML = "Calculator Minimized ";
-				document.getElementById("sr-text").setAttribute("tab-index", "0");
-				document.getElementById("sr-text").focus();
-        setTimeout(function() {
-            // document.getElementById("calc_state").style.display = "none";
-						document.getElementById("sr-text").setAttribute("tab-index", "0");
+    _closeCalculator() {
+        this.calcElem.get(0).style.display = "none";
+        this.calcElem.get(0).setAttribute("aria-hidden", "true");
+        document.getElementById("sr-text").innerHTML = "Calculator Minimized ";
+        document.getElementById("sr-text").setAttribute("tab-index", "0");
+        document.getElementById("sr-text").focus();
+        setTimeout(function () {
+            document.getElementById("sr-text").setAttribute("tab-index", "0");
             document.getElementById("show-calc").focus();
         }, 1500);
-
-        // document.getElementById("drag").style.top = 0;
-        // document.getElementById("drag").style.left = 0;
     }
 
 }
