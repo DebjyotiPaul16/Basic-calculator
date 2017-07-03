@@ -4,6 +4,7 @@ export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {
         this._result = '0';
+        this._lastFocus = "";
         this._displayResultDiv = displayResultDiv;
         this._displayEqnDiv = displayEqnDiv;
         this._eqnArr = [];
@@ -35,35 +36,46 @@ export default class Calculator {
     }
 
     _readResult() {
-        var self = this;
+        let self = this;
         self._displayResultDiv.setAttribute("tabindex", 0);
         self._displayResultDiv.focus();
-        $(self._displayResultDiv).off("focusout").on("focusout", function() {
-            $("[value='=']").focus();
+        setTimeout(function() {
+            // $(self._displayResultDiv).off("focusout").on("focusout", () => {
+            self._lastFocus.focus();
             self._displayResultDiv.removeAttribute("tabindex");
-        });
+            // });
+        }, 400);
+
     }
 
     _renderResult() {
         this._displayResultDiv.innerHTML = this._result;
+        // this._lastFocus = document.activeElement;
+        // this._readResult();
     }
+
     _evalResult() {
+        let numbers,
+            operators,
+            result;
         if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
             this._result = 'Can not divide by zero';
             this._displayResultDiv.innerHTML = this._result;
             this._isResultUndefined = true;
+            this._lastFocus = document.activeElement;
+            this._readResult();
             return;
         }
-        let numbers = this._eqnArr.filter((v, i) => {
+        numbers = this._eqnArr.filter((v, i) => {
             return !(i % 2);
         });
-        let operators = this._eqnArr.filter((v, i) => {
+        operators = this._eqnArr.filter((v, i) => {
             return i % 2;
         });
 
-        var result = numbers[0];
+        result = numbers[0];
 
         for (let i = 0; i < operators.length; i++) {
             result = eval(result + operators[i] + numbers[i + 1]);
@@ -71,6 +83,8 @@ export default class Calculator {
 
         this._result = String(result);
         this._displayResultDiv.innerHTML = this._result;
+        this._lastFocus = document.activeElement;
+        this._readResult();
     }
 
     _renderEqn() {
@@ -103,10 +117,11 @@ export default class Calculator {
         }
         this._isEqualPressed = false;
     }
+
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
-            this.resetArrows();
+            this._resetArrows();
             this._result = '0';
             this._eqnArr = [];
             this._renderEqn();
@@ -130,11 +145,13 @@ export default class Calculator {
         }
 
     }
-    resetArrows(){
-        $(this._displayEqnDiv).parent().find(".seekLeft").css("display","none");
-        $(this._displayEqnDiv).parent().find(".seekRight").css("display","none");
-        $(this._displayEqnDiv).css("right","0px");
+
+    _resetArrows() {
+        $(this._displayEqnDiv).parent().find(".seekLeft").css("display", "none");
+        $(this._displayEqnDiv).parent().find(".seekRight").css("display", "none");
+        $(this._displayEqnDiv).css("right", "0px");
     }
+
     getResult() {
         if (this._isResultUndefined) {
             return;
@@ -147,12 +164,13 @@ export default class Calculator {
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
-        this._readResult();
-        this.resetArrows();
+        // this._lastFocus = document.activeElement;
+        // this._readResult();
+        this._resetArrows();
     }
 
     negateValue() {
-        if (this._result === '0') {
+        if (this._result === '0' || this._isResultUndefined) {
             return;
         }
         this._result = String(+(this._result) * -1);
