@@ -1,6 +1,6 @@
 import Calculator from "../js/calculator.js";
 
-describe("test suite for calculator.js", ()=> {
+xdescribe("test suite for calculator.js", ()=> {
     let calcObj;
     beforeEach(()=> {
         calcObj = new Calculator();
