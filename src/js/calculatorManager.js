@@ -14,7 +14,7 @@ export default class CalculatorManger {
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
 																<label id="calc_state" class="sr-only" aria-hidden="true"></label>
-                                <button  class="close-calculator" aria-label="minimize">-</button>
+                                <button  class="close-calculator" aria-label="minimize button">-</button>
                             </td>
                         </tr>
                         <tr>
@@ -54,6 +54,7 @@ export default class CalculatorManger {
         this._handleCalculatorFocus();
         this._seekEquation();
         this.calcElem.focus();
+        this._calcInitialOpen = false;
     }
 
     _attachCalculatorBody(calculatorStr) {
@@ -67,7 +68,7 @@ export default class CalculatorManger {
         let elemValue = columnData.value,
             label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
             operation = columnData.operation;
-        return '<button role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+        return '<button class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
     }
 
     _operateCalculator(calcobj) {
@@ -211,6 +212,8 @@ export default class CalculatorManger {
 
 
     _handleCalculatorFocus() {
+        // var xDown;
+
         this._getElement(".close-calculator").off("keydown").on("keydown", (event) => {
             if (event.shiftKey && event.keyCode === 9) {
                 $("[value='=']").focus();
@@ -225,31 +228,63 @@ export default class CalculatorManger {
             }
         });
 
-        this.calcElem.off("click").on("click", function(event) {
-            if (event.target.getAttribute("aria-label")) {
+        this.calcElem.off("click").on("click", (event) => {
+            if (event.target.tagName == "BUTTON") {
                 event.target.focus();
             }
         });
-    }
 
+        this.calcElem.off("keydown").on("keydown", () => {
+            if (this._calcInitialOpen) {
+                this.changeLabel();
+                this._calcInitialOpen = false;
+            }
+        });
+        this.calcElem.off("click").on("click", () => {
+            if (this._calcInitialOpen) {
+                this.changeLabel();
+                this._calcInitialOpen = false;
+            }
+        });
+
+        document.addEventListener("touchstart", function(event) {
+            if (document.activeElement.getAttribute("aria-label") === "Equals") {
+                xDown = event.touches[0].clientX;
+            }
+        });
+
+        document.addEventListener("touchend", function(event) {
+            if (!xDown) {
+                return;
+            }
+            let xUp = event.changedTouches[0].clientX;
+            let xDiff = Math.ceil(xDown - xUp);
+            if (xDiff < 0) { /*checks if a right swipe has been made*/
+                alert(xDiff);
+                event.preventDefault();
+                this._getElement(".close-calculator", true).focus();
+            }
+            /* reset values */
+            xDown = null;
+        });
+    }
 
     _getElement(selector, shouldWrap) {
         return !!shouldWrap ? $(this.calcElem.find(selector)) : this.calcElem.find(selector);
     }
-
 
     _seekEquation() {
         let self = this,
             eqnDiv = $(self.calcobj._displayEqnDiv);
         this._getElement(".seekLeft", true).off("click").on("click", () => {
             eqnDiv.css({
-                "right": parseFloat(eqnDiv.css("right")) - 40 + "px"
+                "right": parseFloat(eqnDiv.css("right")) - 80 + "px"
             });
             self._checkSeekStatus();
         });
         this._getElement(".seekRight", true).off("click").on("click", () => {
             eqnDiv.css({
-                "right": parseFloat(eqnDiv.css("right")) + 40 + "px"
+                "right": parseFloat(eqnDiv.css("right")) + 80 + "px"
             });
             self._checkSeekStatus();
         });
@@ -262,28 +297,44 @@ export default class CalculatorManger {
             this._getElement(".seekRight", true).css("display", "none");
         }
 
-        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >= -(this.calcobj._displayEqnDiv.innerText.length * 7 - this.calcobj._displayEqnDiv.parentElement.offsetWidth / 1.5)) {
+        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >=
+            -(this.calcobj._displayEqnDiv.innerText.length * 8 - this.calcobj._displayEqnDiv.parentElement.offsetWidth)) {
             this._getElement(".seekLeft", true).css("display", "inline-block");
         } else {
             this._getElement(".seekLeft", true).css("display", "none");
         }
     }
 
+    changeLabel() {
+        let buttons = this._getElement("button[aria-label]"),
+            label;
+        for (let i = 0; i < buttons.length-1; i++) {
+            if (buttons[i].getAttribute("aria-label").indexOf("button") < 0) {
+                label = buttons[i].getAttribute("aria-label").split("button")[0].trim() + " button";
+                buttons[i].setAttribute("aria-label", label);
+            } else {
+                label = buttons[i].getAttribute("aria-label").split("button")[0].trim();
+                buttons[i].setAttribute("aria-label", label);
+            }
+        }
+    }
 
     //TODO needs to be refactored
 
     _closeCalculator() {
         let self = this;
-        this.calcElem.find("#calc_state")[0].removeAttribute("aria-hidden");
-        this.calcElem.find("#calc_state")[0].setAttribute("tabindex", "0");
-        this.calcElem.find("#calc_state")[0].innerText = "Calculator Minimized ";
-        this.calcElem.find("#calc_state").focus();
+        this._getElement("#calc_state")[0].removeAttribute("aria-hidden");
+        this._getElement("#calc_state")[0].setAttribute("tabindex", "0");
+        this._getElement("#calc_state")[0].innerText = "Calculator Minimized ";
+        this._getElement("#calc_state").focus();
         setTimeout(function() {
-            self.calcElem.find("#calc_state")[0].setAttribute("aria-hidden", "true");
-            self.calcElem.find("#calc_state")[0].removeAttribute("tabindex");
+            self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
+            self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";
             document.getElementById("show-calc").focus();
-        }, 400);
+            self.changeLabel();
+            this._calcInitialOpen = true;
+        }, 800);
     }
 
 }

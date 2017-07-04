@@ -44,14 +44,14 @@ export default class Calculator {
             self._lastFocus.focus();
             self._displayResultDiv.removeAttribute("tabindex");
             // });
-        }, 400);
+        }, 800);
 
     }
 
     _renderResult() {
         this._displayResultDiv.innerHTML = this._result;
-        // this._lastFocus = document.activeElement;
-        // this._readResult();
+        this._lastFocus = document.activeElement;
+        this._readResult();
     }
 
     _evalResult() {
@@ -64,8 +64,8 @@ export default class Calculator {
             this._result = 'Can not divide by zero';
             this._displayResultDiv.innerHTML = this._result;
             this._isResultUndefined = true;
-            this._lastFocus = document.activeElement;
-            this._readResult();
+            // this._lastFocus = document.activeElement;
+            // this._readResult();
             return;
         }
         numbers = this._eqnArr.filter((v, i) => {
@@ -164,8 +164,8 @@ export default class Calculator {
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
-        // this._lastFocus = document.activeElement;
-        // this._readResult();
+        this._lastFocus = document.activeElement;
+        this._readResult();
         this._resetArrows();
     }
 
