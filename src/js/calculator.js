@@ -14,7 +14,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._result.length === 16) {
+        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._restrictResult() === this._result.length) {
             return;
         }
         if (this._isEqualPressed) {
@@ -34,11 +34,15 @@ export default class Calculator {
         this._isEqualPressed = false;
     }
 
+    _restrictResult() {
+        return (this._result.indexOf(".") !== -1 || this._result.indexOf("-") !== -1) ? (this._result.indexOf(".") !== -1 && this._result.indexOf("-") !== -1) ? 12 : 11 : 10;
+    }
+
     _readResult() {
-        var self = this;
+        let self = this;
         self._displayResultDiv.setAttribute("tabindex", 0);
         self._displayResultDiv.focus();
-        $(self._displayResultDiv).off("focusout").on("focusout", function() {
+        $(self._displayResultDiv).off("focusout").on("focusout", () => {
             $("[value='=']").focus();
             self._displayResultDiv.removeAttribute("tabindex");
         });
@@ -47,7 +51,11 @@ export default class Calculator {
     _renderResult() {
         this._displayResultDiv.innerHTML = this._result;
     }
+
     _evalResult() {
+        let numbers,
+            operators,
+            result;
         if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
@@ -56,29 +64,28 @@ export default class Calculator {
             this._isResultUndefined = true;
             return;
         }
-        let numbers = this._eqnArr.filter((v, i) => {
+        numbers = this._eqnArr.filter((v, i) => {
             return !(i % 2);
         });
-        let operators = this._eqnArr.filter((v, i) => {
+        operators = this._eqnArr.filter((v, i) => {
             return i % 2;
         });
 
-        var result = numbers[0];
+        result = numbers[0];
 
         for (let i = 0; i < operators.length; i++) {
             result = eval(result + operators[i] + numbers[i + 1]);
         }
-
         this._result = String(result);
         this._displayResultDiv.innerHTML = this._result;
     }
 
     _renderEqn() {
         this._displayEqnDiv.innerHTML = this._eqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
-        this.checkOverflow();
+        this._checkOverflow();
     }
 
-    checkOverflow() {
+    _checkOverflow() {
         if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
             $(".seekLeft").css("display", "inline-block");
         }
@@ -103,10 +110,11 @@ export default class Calculator {
         }
         this._isEqualPressed = false;
     }
+
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
-            this.resetArrows();
+            this._resetArrows();
             this._result = '0';
             this._eqnArr = [];
             this._renderEqn();
@@ -130,11 +138,13 @@ export default class Calculator {
         }
 
     }
-    resetArrows(){
-        $(this._displayEqnDiv).parent().find(".seekLeft").css("display","none");
-        $(this._displayEqnDiv).parent().find(".seekRight").css("display","none");
-        $(this._displayEqnDiv).css("right","0px");
+
+    _resetArrows() {
+        $(this._displayEqnDiv).parent().find(".seekLeft").css("display", "none");
+        $(this._displayEqnDiv).parent().find(".seekRight").css("display", "none");
+        $(this._displayEqnDiv).css("right", "0px");
     }
+
     getResult() {
         if (this._isResultUndefined) {
             return;
@@ -148,11 +158,11 @@ export default class Calculator {
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
         this._readResult();
-        this.resetArrows();
+        this._resetArrows();
     }
 
     negateValue() {
-        if (this._result === '0') {
+        if (this._result === '0' || this._isResultUndefined) {
             return;
         }
         this._result = String(+(this._result) * -1);

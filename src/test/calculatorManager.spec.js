@@ -2,7 +2,7 @@ import CalculatorManger from "../js/calculatorManager.js";
 import Calculator from "../js/calculator.js";
 
 var jq;
-describe("test suite for calculatorManager", function () {
+xdescribe("test suite for calculatorManager", function () {
     var calcMgrObj, createElmObj, getElemObj, cssObj, onObj, calObj, getClassObj;
     beforeEach(function () {
         jq = window.$.fn;
