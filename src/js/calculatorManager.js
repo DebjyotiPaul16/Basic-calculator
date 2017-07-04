@@ -14,7 +14,7 @@ export default class CalculatorManger {
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
 																<label id="calc_state" class="sr-only" aria-hidden="true"></label>
-                                <button  class="close-calculator" aria-label="minimize button">-</button>
+                                <button  class="close-calculator" aria-label="minimize button">Hide</button>
                             </td>
                         </tr>
                         <tr>
@@ -108,7 +108,7 @@ export default class CalculatorManger {
                 let xMouse = event.pageX,
                     yMouse = event.pageY,
                     $this = event.target,
-                    //get offsets
+                //get offsets
                     bodySelector = $('body'),
                     contMinWidth = bodySelector.offset().left,
                     contMaxWidth = bodySelector.width() + contMinWidth,
@@ -213,7 +213,6 @@ export default class CalculatorManger {
 
 
     _handleCalculatorFocus() {
-        // var xDown;
 
         this._getElement(".close-calculator").off("keydown").on("keydown", (event) => {
             if (event.shiftKey && event.keyCode === 9) {
@@ -248,6 +247,7 @@ export default class CalculatorManger {
             }
         });
 
+    }
 
     _getElement(selector, shouldWrap) {
         return !!shouldWrap ? $(this.calcElem.find(selector)) : this.calcElem.find(selector);
@@ -277,8 +277,7 @@ export default class CalculatorManger {
             this._getElement(".seekRight", true).css("display", "none");
         }
 
-        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >=
-            -(this.calcobj._displayEqnDiv.innerText.length * 8 - this.calcobj._displayEqnDiv.parentElement.offsetWidth)) {
+        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >= -(this.calcobj._displayEqnDiv.innerText.length * 8 - this.calcobj._displayEqnDiv.parentElement.offsetWidth)) {
             this._getElement(".seekLeft", true).css("display", "inline-block");
         } else {
             this._getElement(".seekLeft", true).css("display", "none");
@@ -288,7 +287,7 @@ export default class CalculatorManger {
     changeLabel() {
         let buttons = this._getElement("button[aria-label]"),
             label;
-        for (let i = 0; i < buttons.length-1; i++) {
+        for (let i = 0; i < buttons.length - 1; i++) {
             if (buttons[i].getAttribute("aria-label").indexOf("button") < 0) {
                 label = buttons[i].getAttribute("aria-label").split("button")[0].trim() + " button";
                 buttons[i].setAttribute("aria-label", label);
@@ -307,7 +306,7 @@ export default class CalculatorManger {
         this._getElement("#calc_state")[0].setAttribute("tabindex", "0");
         this._getElement("#calc_state")[0].innerText = "Calculator Minimized ";
         this._getElement("#calc_state").focus();
-        setTimeout(function() {
+        setTimeout(function () {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";
