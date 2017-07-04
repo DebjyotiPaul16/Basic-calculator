@@ -91,47 +91,63 @@ export default class LoadCalculator {
         }
     }
 
+    _getMovementDirection(e) {
+        let direction,
+            keyMap = {
+                'left': 37,
+                'up': 38,
+                'right': 39,
+                'down': 40
+            };
+        if (e.which === keyMap.left || e.ctrlKey && e.which === 188) {
+            direction = "left";
+        } else if (e.which === keyMap.up || e.ctrlKey && e.which === 77) {
+            direction = "up";
+        } else if (e.which === keyMap.right || e.ctrlKey && e.which === 190) {
+            direction = "right";
+        } else if (e.which === keyMap.down || e.ctrlKey && e.which === 191) {
+            direction = "down";
+        }
+        return direction;
+    }
+
     _moveCalculator() {
         let self = this,
-            keyMap = {
-                'up': 38,
-                'down': 40,
-                'left': 37,
-                'right': 39
-            },
-            calc = $(this._calcManager.calcElem);
-        $(document).off("keydown").on("keydown", function (e) {
+            calc = $(this._calcManager.calcElem),
+            calcWidth = calc.width(),
+            calcHeight = calc.height(),
+            windowWidth = $('body').offset().left + $('body').width(),
+            windowHeight = $('body').offset().top + $('body').height();
 
-            var calcWidth = self._calcManager.calcElem.width(),
-                calcHeight = self._calcManager.calcElem.height(),
-                calcPosX = parseFloat(self._calcManager.calcElem.css('left')),
-                calcPosY = parseFloat(self._calcManager.calcElem.css('top')),
-                windowWidth = $('body').offset().left + $('body').width(),
-                windowHeight = $('body').offset().top + $('body').height(),
-                canMoveCalculator = self._hasValidParent(e.target);
-            switch (e.which) {
-                case keyMap.left: // left
+        calc.off("keydown").on("keydown", function(e) {
+
+            let calcPosX = parseFloat(calc.css('left')),
+                calcPosY = parseFloat(calc.css('top')),
+                canMoveCalculator = self._hasValidParent(e.target),
+                direction = self._getMovementDirection(e);
+            switch (direction) {
+                case "left": // left
                     if (calcPosX - 20 > -calcWidth / 2 &&
                         calcPosY + calcHeight < windowHeight + calcHeight / 2 &&
                         canMoveCalculator) {
                         calc.css('left', calc.offset().left - 20);
                     }
                     break;
-                case keyMap.up: // up
+                case "up": // up
                     if (calcPosX + calcWidth < windowWidth + calcWidth / 2 &&
                         calcPosY - 20 > -calcHeight / 2 &&
                         canMoveCalculator) {
                         calc.css('top', calc.offset().top - 20);
                     }
                     break;
-                case keyMap.right: // right
+                case "right": // right
                     if (calcPosX + 20 + calcWidth < windowWidth + calcWidth / 2 &&
                         calcPosY + calcHeight < windowHeight + calcHeight / 2 &&
                         canMoveCalculator) {
                         calc.css('left', calc.offset().left + 10);
                     }
                     break;
-                case keyMap.down: //down
+                case "down": //down
                     if (calcPosX + calcWidth < windowWidth + calcWidth / 2 &&
                         calcPosY + 20 + calcHeight < windowHeight + calcHeight / 2 &&
                         canMoveCalculator) {
@@ -146,20 +162,9 @@ export default class LoadCalculator {
 
     // TODO needs to be changed
 
-    getElements() {
-        var items = $('[aria-label]'),
-            text = "";
-        for (var i = 0; i < items.length; i++) {
-            text += items[i].getAttribute("aria-label");
-            text += " button ";
-        }
-        return text;
-    }
-
-    // TODO needs to be changed
-
     showCalculator() {
         var self = this;
+        this._calcManager._calcInitialOpen = true;
         if (!!this._calcManager) {
             if (this._top && this._left) {
                 this.validateLocation(this._top, this._left);

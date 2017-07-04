@@ -96,17 +96,19 @@ body {
 }
 
 
-#calc tr > td > button:hover, #calc tr > td > button:focus {
+#calc tr>td>button:hover, #calc tr>td>button:focus {
     background-color: #337ab7;
     border-color: #2e6da4;
     cursor: pointer;
     color: #fff;
 }
-#calc tr > td > div > button{
+
+#calc tr>td>div>button {
     background-color: transparent;
     border: none;
     cursor: pointer;
 }
+
 #calc .minimize, #calc .close-calculator {
     background-color: #5E7A9C !important;
     color: #fff !important;
