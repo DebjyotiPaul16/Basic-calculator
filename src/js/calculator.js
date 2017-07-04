@@ -14,7 +14,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._result.length === 16) {
+        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._restrictResult() === this._result.length) {
             return;
         }
         if (this._isEqualPressed) {
@@ -32,6 +32,10 @@ export default class Calculator {
         this._renderResult();
         this._isOperatorInserted = false;
         this._isEqualPressed = false;
+    }
+
+    _restrictResult() {
+        return (this._result.indexOf(".") !== -1 || this._result.indexOf("-") !== -1) ? (this._result.indexOf(".") !== -1 && this._result.indexOf("-") !== -1) ? 12 : 11 : 10;
     }
 
     _readResult() {
@@ -72,17 +76,16 @@ export default class Calculator {
         for (let i = 0; i < operators.length; i++) {
             result = eval(result + operators[i] + numbers[i + 1]);
         }
-
         this._result = String(result);
         this._displayResultDiv.innerHTML = this._result;
     }
 
     _renderEqn() {
         this._displayEqnDiv.innerHTML = this._eqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
-        this.checkOverflow();
+        this._checkOverflow();
     }
 
-    checkOverflow() {
+    _checkOverflow() {
         if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
             $(".seekLeft").css("display", "inline-block");
         }

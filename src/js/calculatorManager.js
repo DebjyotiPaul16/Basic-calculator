@@ -14,7 +14,7 @@ export default class CalculatorManger {
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
 																<label tabindex="-1" id="calc_state" style="position:fixed; left:-99%; display:none" ></label>
-                                <button  class="close-calculator" aria-label="minimize">-</button>
+                                <button  class="close-calculator" aria-label="minimize">Hide</button>
                             </td>
                         </tr>
                         <tr>
