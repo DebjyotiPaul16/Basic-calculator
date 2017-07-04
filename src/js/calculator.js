@@ -48,10 +48,8 @@ export default class Calculator {
         self._displayResultDiv.setAttribute("tabindex", 0);
         self._displayResultDiv.focus();
         setTimeout(function() {
-            // $(self._displayResultDiv).off("focusout").on("focusout", () => {
             self._lastFocus.focus();
             self._displayResultDiv.removeAttribute("tabindex");
-            // });
         }, 400);
 
     }
