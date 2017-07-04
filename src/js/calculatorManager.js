@@ -5,7 +5,7 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator" role="application" aria-hidden="true" tabindex="0">
+            `<div id="calculator" tabindex="0">
                 <div id="drag">
                     <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
                         <button id="calc_icon"></button>
@@ -21,15 +21,15 @@ export default class CalculatorManger {
                             <td colspan="4">
                                 <div class="calcDiv">
                                 <span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block">
-								</span>
-								 <button class="seek seekLeft"></button>
-								 <button class="seek seekRight"></button>
-								</div>									
+                								</span>
+                								 <button class="seek seekLeft"></button>
+                								 <button class="seek seekRight"></button>
+                								</div>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <span class="disp_btn" id="disp" name="display" type="text" style="line-height:40px; display:block"></span>
+                                <span class="disp_btn" id="disp" type="text" style="line-height:40px; display:block"></span>
                             </td>
                         </tr>
                         ${calculator_data.map((rowData) => {
@@ -267,15 +267,17 @@ export default class CalculatorManger {
     //TODO needs to be refactored
 
     _closeCalculator() {
-        this.calcElem.get(0).style.display = "none";
-        this.calcElem.get(0).setAttribute("aria-hidden", "true");
-        document.getElementById("sr-text").innerHTML = "Calculator Minimized ";
-        document.getElementById("sr-text").setAttribute("tab-index", "0");
-        document.getElementById("sr-text").focus();
-        setTimeout(function () {
-            document.getElementById("sr-text").setAttribute("tab-index", "0");
+        let self = this;
+        this.calcElem.find("#calc_state")[0].removeAttribute("aria-hidden");
+        this.calcElem.find("#calc_state")[0].setAttribute("tabindex", "0");
+        this.calcElem.find("#calc_state")[0].innerText = "Calculator Minimized ";
+        this.calcElem.find("#calc_state").focus();
+        setTimeout(function() {
+            self.calcElem.find("#calc_state")[0].setAttribute("aria-hidden", "true");
+            self.calcElem.find("#calc_state")[0].removeAttribute("tabindex");
+            self.calcElem.get(0).style.display = "none";
             document.getElementById("show-calc").focus();
-        }, 1500);
+        }, 400);
     }
 
 }

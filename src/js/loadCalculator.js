@@ -64,8 +64,8 @@ export default class LoadCalculator {
         let calc = $(this._calcManager.calcElem),
             calcWidth = calc.width(),
             calcHeight = calc.height(),
-            windowWidth = $(window).innerWidth(),
-            windowHeight = $(window).innerHeight();
+            windowWidth = $('body').offset().left + $('body').width(),
+            windowHeight = $('body').offset().top + $('body').height();
 
         if (left + calcWidth < windowWidth && top + calcHeight < windowHeight) {
             console.log("open");
@@ -142,8 +142,8 @@ export default class LoadCalculator {
         })
     }
 
-    
-    
+
+
     // TODO needs to be changed
 
     getElements() {
@@ -166,26 +166,22 @@ export default class LoadCalculator {
             }
             this._calcManager.handleWithKeyboard(this._calcManager.calcobj);
             this._calcManager.calcElem.css("display", "block");
-            if (self._firstTimeOpen) {
-                document.getElementById("sr-text").innerHTML = "Calculator Maximized " + this.getElements();
-            } else {
-                document.getElementById("sr-text").innerHTML = "Calculator Maximized ";
-            }
-
-            document.getElementById("sr-text").setAttribute("tab-index", "0");
-            document.getElementById("sr-text").focus();
-            setTimeout(function () {
-                document.getElementById("sr-text").removeAttribute("tab-index");
+            this._calcManager.calcElem.find("#calc_state")[0].removeAttribute("aria-hidden");
+            this._calcManager.calcElem.find("#calc_state")[0].setAttribute("tabindex", "0");
+            this._calcManager.calcElem.find("#calc_state")[0].innerText = "Calculator Maximized ";
+            this._calcManager.calcElem.find("#calc_state").focus();
+            setTimeout(function() {
+                self._calcManager.calcElem.find("#calc_state")[0].setAttribute("aria-hidden", "true");
+                self._calcManager.calcElem.find("#calc_state")[0].removeAttribute("tabindex");
+                self._calcManager.calcElem.focus();
                 if (self._firstTimeOpen) {
-                    self._calcManager.calcElem.focus();
                     self._firstTimeOpen = false;
                 } else {
-                    self._calcManager.calcElem.find('[aria-label="minimize"]').focus();
+                    setTimeout(function() {
+                        self._calcManager.calcElem.find('[aria-label="minimize"]').focus();
+                    }, 400);
                 }
-            }, 500);
-            setTimeout(function () {
-                $("#calculator").removeAttr("aria-hidden");
-            }, 800);
+            }, 400);
 
         } else {
             console.error("not possible to open calculator");
