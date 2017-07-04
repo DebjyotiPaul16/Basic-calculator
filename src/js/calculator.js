@@ -10,11 +10,12 @@ export default class Calculator {
         this._isOperatorInserted = false;
         this._isResultUndefined = false;
         this._isEqualPressed = false;
+        this._resultLimit = false;
     }
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._restrictResult() === this._result.length) {
+        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit) {
             return;
         }
         if (this._isEqualPressed) {
@@ -32,6 +33,9 @@ export default class Calculator {
         this._renderResult();
         this._isOperatorInserted = false;
         this._isEqualPressed = false;
+        if (this._result.length === this._restrictResult()) {
+            this._resultLimit = true;
+        }
     }
 
     _restrictResult() {
@@ -49,6 +53,9 @@ export default class Calculator {
     }
 
     _renderResult() {
+        if (this._result.length === this._restrictResult()) {
+            this._result = this._result.slice(0, this._restrictResult());
+        }
         this._displayResultDiv.innerHTML = this._result;
     }
 
@@ -77,6 +84,10 @@ export default class Calculator {
             result = eval(result + operators[i] + numbers[i + 1]);
         }
         this._result = String(result);
+        this._resultLimit = false;
+        if (this._result.length > this._restrictResult()) {
+            this._result = this._result.slice(0, this._restrictResult());
+        }
         this._displayResultDiv.innerHTML = this._result;
     }
 
@@ -87,7 +98,7 @@ export default class Calculator {
 
     _checkOverflow() {
         if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
-            $(".seekLeft").css("display", "inline-block");
+            this._displayEqnDiv.parentElement.querySelector(".seekLeft").style.display = 'inline-block';
         }
     }
 
@@ -99,6 +110,7 @@ export default class Calculator {
         if (this._isOperatorInserted) {
             this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
+            this._isEqualPressed = false;
         } else {
             this._eqnArr.push(
                 this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
@@ -107,8 +119,8 @@ export default class Calculator {
             this._eqnArr.push(sign);
             this._renderEqn();
             this._isOperatorInserted = true;
+            this._isEqualPressed = true;
         }
-        this._isEqualPressed = false;
     }
 
     /*------------------- Clear recent display data --------------------*/
@@ -140,9 +152,9 @@ export default class Calculator {
     }
 
     _resetArrows() {
-        $(this._displayEqnDiv).parent().find(".seekLeft").css("display", "none");
-        $(this._displayEqnDiv).parent().find(".seekRight").css("display", "none");
-        $(this._displayEqnDiv).css("right", "0px");
+        this._displayEqnDiv.parentElement.querySelector(".seekLeft").style.display = "none";
+        this._displayEqnDiv.parentElement.querySelector(".seekRight").style.display = "none";
+        this._displayEqnDiv.style.right = "0px";
     }
 
     getResult() {
