@@ -311,7 +311,7 @@ export default class CalculatorManger {
             document.getElementById("show-calc").focus();
             self.changeLabel();
             this._calcInitialOpen = true;
-        }, 800);
+        }, 400);
     }
 
 }
