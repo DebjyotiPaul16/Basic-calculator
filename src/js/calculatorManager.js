@@ -14,7 +14,7 @@ export default class CalculatorManger {
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
 																<label id="calc_state" class="sr-only" aria-hidden="true"></label>
-                                <button  class="close-calculator" aria-label="minimize button">Hide</button>
+                                <button  class="close-calculator" aria-label="Hide button">Hide</button>
                             </td>
                         </tr>
                         <tr>
@@ -232,21 +232,19 @@ export default class CalculatorManger {
             if (event.target.tagName == "BUTTON") {
                 event.target.focus();
             }
-        });
 
-        this.calcElem.off("keydown").on("keydown", () => {
-            if (this._calcInitialOpen) {
-                this.changeLabel();
-                this._calcInitialOpen = false;
-            }
-        });
-        this.calcElem.off("click").on("click", () => {
             if (this._calcInitialOpen) {
                 this.changeLabel();
                 this._calcInitialOpen = false;
             }
         });
 
+        $(document).off("keydown").on("keydown", () => {
+            if (this._calcInitialOpen) {
+                this.changeLabel();
+                this._calcInitialOpen = false;
+            }
+        });
     }
 
     _getElement(selector, shouldWrap) {
@@ -304,7 +302,7 @@ export default class CalculatorManger {
         let self = this;
         this._getElement("#calc_state")[0].removeAttribute("aria-hidden");
         this._getElement("#calc_state")[0].setAttribute("tabindex", "0");
-        this._getElement("#calc_state")[0].innerText = "Calculator Minimized ";
+        this._getElement("#calc_state")[0].innerText = "Calculator Hidden";
         this._getElement("#calc_state").focus();
         setTimeout(function () {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");

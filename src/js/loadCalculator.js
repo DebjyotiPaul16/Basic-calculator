@@ -86,8 +86,7 @@ export default class LoadCalculator {
         } else if (target.id && target.id === this._calcManager.calcElem[0].id) {
             return true;
         } else {
-            //what is this
-            return true && this._hasValidParent(target.parentElement);
+            return this._hasValidParent(target.parentElement);
         }
     }
 
@@ -157,11 +156,7 @@ export default class LoadCalculator {
             }
         })
     }
-
-
-
-    // TODO needs to be changed
-
+    
     showCalculator() {
         var self = this;
         this._calcManager._calcInitialOpen = true;
@@ -183,7 +178,7 @@ export default class LoadCalculator {
                     self._firstTimeOpen = false;
                 } else {
                     setTimeout(function() {
-                        self._calcManager.calcElem.find('[aria-label="minimize"]').focus();
+                        self._calcManager.calcElem.find('[aria-label="Hide button"]').focus();
                     }, 400);
                 }
             }, 400);
