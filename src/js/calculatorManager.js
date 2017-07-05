@@ -13,7 +13,7 @@ export default class CalculatorManger {
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
-																<label id="calc_state" class="sr-only" aria-hidden="true"></label>
+																<span id="calc_state" class="sr-only" aria-hidden="true"></span>
                                 <button  class="close-calculator" aria-label="Hide button">Hide</button>
                             </td>
                         </tr>
@@ -261,8 +261,8 @@ export default class CalculatorManger {
         for (let i = 0; i < containsActive.length; i++) {
             containsActive[i].classList.remove("active");
         }
-        if(elem.tagName == "BUTTON"){
-          elem.classList.add("active");
+        if (elem.tagName == "BUTTON") {
+            elem.classList.add("active");
         }
     }
 
@@ -319,18 +319,20 @@ export default class CalculatorManger {
 
     _closeCalculator() {
         let self = this;
-        this._getElement("#calc_state")[0].removeAttribute("aria-hidden");
-        this._getElement("#calc_state")[0].setAttribute("tabindex", "0");
-        this._getElement("#calc_state")[0].innerText = "Calculator Hidden";
-        this._getElement("#calc_state").focus();
+        self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
+        self._getElement("#calc_state")[0].setAttribute("tabindex", "0");
+        self._getElement("#calc_state")[0].innerText = "Calculator Hidden";
+        setTimeout(function() {
+            self._getElement("#calc_state")[0].focus();
+        }, 400);
         setTimeout(function() {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";
             document.getElementById("show-calc").focus();
             self.changeLabel();
-            this._calcInitialOpen = true;
-        }, 400);
+            self._calcInitialOpen = true;
+        }, 1500);
     }
 
 }
