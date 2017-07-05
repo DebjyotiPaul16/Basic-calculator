@@ -108,7 +108,7 @@ export default class CalculatorManger {
                 let xMouse = event.pageX,
                     yMouse = event.pageY,
                     $this = event.target,
-                //get offsets
+                    //get offsets
                     bodySelector = $('body'),
                     contMinWidth = bodySelector.offset().left,
                     contMaxWidth = bodySelector.width() + contMinWidth,
@@ -169,7 +169,7 @@ export default class CalculatorManger {
                 }
             },
             stop: () => {
-                setTimeout(function () {
+                setTimeout(function() {
                     calcElem.find('#calc_icon').addClass('maximize');
                 }, 200);
             }
@@ -232,7 +232,6 @@ export default class CalculatorManger {
             if (event.target.tagName == "BUTTON") {
                 event.target.focus();
             }
-
             if (this._calcInitialOpen) {
                 this.changeLabel();
                 this._calcInitialOpen = false;
@@ -245,6 +244,26 @@ export default class CalculatorManger {
                 this._calcInitialOpen = false;
             }
         });
+
+        this.calcElem.children().on("focusin", (event) => {
+            console.log("focus in");
+            this._setActive(event.target);
+        });
+
+        this.calcElem.children().on("mouseover", (event) => {
+            console.log("mouse on");
+            this._setActive(event.target);
+        });
+    }
+
+    _setActive(elem) {
+        let containsActive = this._getElement(".active");
+        for (let i = 0; i < containsActive.length; i++) {
+            containsActive[i].classList.remove("active");
+        }
+        if(elem.tagName == "BUTTON"){
+          elem.classList.add("active");
+        }
     }
 
     _getElement(selector, shouldWrap) {
@@ -304,7 +323,7 @@ export default class CalculatorManger {
         this._getElement("#calc_state")[0].setAttribute("tabindex", "0");
         this._getElement("#calc_state")[0].innerText = "Calculator Hidden";
         this._getElement("#calc_state").focus();
-        setTimeout(function () {
+        setTimeout(function() {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";
