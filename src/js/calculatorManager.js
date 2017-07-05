@@ -60,7 +60,7 @@ export default class CalculatorManger {
     _attachCalculatorBody(calculatorStr) {
         let calculatorElm = $(calculatorStr);
         calculatorElm.find('table').css('display', 'block');
-        $('body').prepend(calculatorElm);
+        $('body').append(calculatorElm);
         return calculatorElm;
     }
 
