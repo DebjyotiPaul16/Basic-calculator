@@ -246,12 +246,10 @@ export default class CalculatorManger {
         });
 
         this.calcElem.children().on("focusin", (event) => {
-            console.log("focus in");
             this._setActive(event.target);
         });
 
-        this.calcElem.children().on("mouseover", (event) => {
-            console.log("mouse on");
+        this.calcElem.children().on("mouseover", (event) => {            
             this._setActive(event.target);
         });
     }
