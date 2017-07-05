@@ -6,6 +6,7 @@ var btnShow = document.getElementById("show-calc"),
     small = document.getElementById("small"),
     medium = document.getElementById("medium"),
     large = document.getElementById("large");
+    // setPos = document.getElementById("setPosition");
 
 
 
@@ -37,3 +38,7 @@ medium.addEventListener("click", function () {
 large.addEventListener("click", function () {
     BasicCalculator.setSize("large");
 }, false);
+
+// setPos.addEventListener("click", function () {
+//     BasicCalculator.validateLocation(100,100);
+// }, false);

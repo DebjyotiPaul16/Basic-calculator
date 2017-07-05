@@ -46,7 +46,6 @@ export default class LoadCalculator {
             self._createCalculator();
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
-            this.setSize("small");
             this.validateLocation(100, 100);
         }
     }
@@ -185,13 +184,6 @@ export default class LoadCalculator {
             let label = self._calcManager.calcElem.find(".close-calculator")[0].getAttribute("aria-label"),
                 newLabel = "Calculator Maximized " + label;
             this._calcManager.calcElem.find(".close-calculator")[0].setAttribute("aria-label", newLabel);
-            // this._calcManager.calcElem.find("#calc_state")[0].removeAttribute("aria-hidden");
-            // this._calcManager.calcElem.find("#calc_state")[0].setAttribute("tabindex", "0");
-            // this._calcManager.calcElem.find("#calc_state")[0].innerText = "Calculator Maximized ";
-            // this._calcManager.calcElem.find("#calc_state").focus();
-            // setTimeout(function() {
-            // self._calcManager.calcElem.find("#calc_state")[0].setAttribute("aria-hidden", "true");
-            // self._calcManager.calcElem.find("#calc_state")[0].removeAttribute("tabindex");
             this._calcManager.calcElem.focus();
             if (self._firstTimeOpen) {
                 self._firstTimeOpen = false;
@@ -203,9 +195,6 @@ export default class LoadCalculator {
             setTimeout(function() {
                 self._calcManager.calcElem.find(".close-calculator")[0].setAttribute("aria-label", label);
             }, 400);
-
-            // }, 400);
-
         } else {
             console.error("not possible to open calculator");
         }

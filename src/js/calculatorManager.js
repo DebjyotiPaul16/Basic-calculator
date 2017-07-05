@@ -229,7 +229,7 @@ export default class CalculatorManger {
         });
 
         this.calcElem.off("click").on("click", (event) => {
-            if (event.target.tagName == "BUTTON") {
+            if (event.target.tagName === "BUTTON") {
                 event.target.focus();
             }
             if (this._calcInitialOpen) {
@@ -246,12 +246,10 @@ export default class CalculatorManger {
         });
 
         this.calcElem.children().on("focusin", (event) => {
-            console.log("focus in");
             this._setActive(event.target);
         });
 
         this.calcElem.children().on("mouseover", (event) => {
-            console.log("mouse on");
             this._setActive(event.target);
         });
     }
@@ -316,16 +314,12 @@ export default class CalculatorManger {
         }
     }
 
-    //TODO needs to be refactored
-
     closeCalculator() {
         let self = this;
         self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
         self._getElement("#calc_state")[0].setAttribute("tabindex", "0");
         self._getElement("#calc_state")[0].innerText = "Calculator Hidden";
-        setTimeout(function() {
-            self._getElement("#calc_state")[0].focus();
-        }, 400);
+        self._getElement("#calc_state")[0].focus();
         setTimeout(function() {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
