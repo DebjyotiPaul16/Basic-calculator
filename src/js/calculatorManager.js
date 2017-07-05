@@ -249,7 +249,7 @@ export default class CalculatorManger {
             this._setActive(event.target);
         });
 
-        this.calcElem.children().on("mouseover", (event) => {            
+        this.calcElem.children().on("mouseover", (event) => {
             this._setActive(event.target);
         });
     }
@@ -318,11 +318,12 @@ export default class CalculatorManger {
     _closeCalculator() {
         let self = this;
         self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
+        self._getElement("#calc_state").css("display","inline-block");
         self._getElement("#calc_state")[0].setAttribute("tabindex", "0");
         self._getElement("#calc_state")[0].innerText = "Calculator Hidden";
-        setTimeout(function() {
-            self._getElement("#calc_state")[0].focus();
-        }, 400);
+        // setTimeout(function() {
+        self._getElement("#calc_state")[0].focus();
+        // }, 400);
         setTimeout(function() {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");

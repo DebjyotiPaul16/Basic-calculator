@@ -50,7 +50,7 @@ export default class Calculator {
         setTimeout(function() {
             self._lastFocus.focus();
             self._displayResultDiv.removeAttribute("tabindex");
-        }, 400);
+        }, 800);
 
     }
 
@@ -94,9 +94,16 @@ export default class Calculator {
         if (this._result.length > this._restrictResult()) {
             this._result = this._result.slice(0, this._restrictResult());
         }
+        //call decimal roundup function
+        this._result = this._roundup(this._result, 8);
         this._displayResultDiv.innerHTML = this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
+    }
+
+    _roundup(value, precision) {
+        let pow = Math.pow(10, precision); //10^9
+        return (Math.ceil(pow * value) + Math.ceil(pow * value - Math.ceil(pow * value))) / pow;
     }
 
     _renderEqn() {
