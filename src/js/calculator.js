@@ -56,6 +56,7 @@ export default class Calculator {
 
     _renderResult() {
         if (this._result.length === this._restrictResult()) {
+           // this._result = this._roundup(this._result, 10).toString();
             this._result = this._result.slice(0, this._restrictResult());
         }
         this._displayResultDiv.innerHTML = this._result;
@@ -70,11 +71,9 @@ export default class Calculator {
         if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
-            this._result = 'Can not divide by zero';
+            this._result = 'Cannot divide by zero';
             this._displayResultDiv.innerHTML = this._result;
             this._isResultUndefined = true;
-            // this._lastFocus = document.activeElement;
-            // this._readResult();
             return;
         }
         numbers = this._eqnArr.filter((v, i) => {
@@ -92,10 +91,10 @@ export default class Calculator {
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
+           // this._result = this._roundup(this._result, 10).toString();
             this._result = this._result.slice(0, this._restrictResult());
         }
         //call decimal roundup function
-        this._result = this._roundup(this._result, 8);
         this._displayResultDiv.innerHTML = this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
