@@ -12,18 +12,15 @@ body {
 }
 
 #calc {
-  /*width:310px; */
-	display: inline-block;
-	   /* border: 1px solid #ccc;*/
-		   /*border: 1px solid red;*/
+    display: inline-block;
     cursor: move;
     padding: 4px;
-	background-color: #fff;
+    background-color: #fff;
 }
 
 #drag {
     display: inline-block;
-	    height: 388px;
+    height: 388px;
     width: 230px;
     border: 1px solid #ccc;
 }
@@ -38,6 +35,13 @@ body {
     background-color: #fff;
 }
 
+#calc .btn.active {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    cursor: pointer;
+    color: #fff;
+}
+
 #disp_sign {
     width: 5%;
     border: 0;
@@ -46,7 +50,7 @@ body {
 }
 
 .disp_btn {
-   /* width: 290px;*/
+    /* width: 290px;*/
     height: 40px;
     border: 0;
     background-color: #fff;
@@ -61,7 +65,7 @@ body {
 
 #calc td {
     padding: 0;
-	    width: 100px;
+    width: 100px;
     /*border: 1px solid;*/
     /*border: 1px solid #fff;*/
 }
@@ -75,33 +79,37 @@ body {
     color: #000 !important;
     font-family:areal !important;
     text-transform:none;*/
-	height: 48px;
+    height: 48px;
     width: 100%;
 }
+
 #drag #calc tr:first-child td button {
     width: auto;
     height: 20px;
     background: #115b9b !important;
     margin-top: -9px;
 }
+
 #drag #calc button {
-       width: 54px;
+    width: 54px;
     height: 48px;
 }
+
 #drag table#calc tr td:nth-child(1), #drag table#calc tr td:nth-child(2), #drag table#calc tr td:nth-child(3) {
-       padding-right: 2px;
+    padding-right: 2px;
 }
-#drag table#calc tr:nth-child(2) td, #drag table#calc tr:nth-child(3) td{
+
+#drag table#calc tr:nth-child(2) td, #drag table#calc tr:nth-child(3) td {
     padding: 0px;
 }
 
 
-#calc tr>td>button:hover, #calc tr>td>button:focus {
+/*#calc tr>td>button:hover, #calc tr>td>button:focus {
     background-color: #337ab7;
     border-color: #2e6da4;
     cursor: pointer;
     color: #fff;
-}
+}*/
 
 #calc tr>td>div>button {
     background-color: transparent;
@@ -226,9 +234,11 @@ li {
     color: #fff;
     border: 1px solid #1b63a1;
 }
+
 #drag table#calc tr:first-child td button:hover {
     background: #1466ac !important;
 }
+
 .calcDiv {
     position: relative;
     text-indent: 10px;
@@ -283,9 +293,11 @@ li {
     border: 0;
 }
 
+
 /*====For Small Devices====*/
+
 #drag.small table#calc {
-	display: inline-block;
+    display: inline-block;
     cursor: move;
     padding: 4px;
 }
@@ -293,41 +305,59 @@ li {
 #drag.small table#calc td {
     width: 60px;
 }
+
 #drag.small table#calc tr td:nth-child(1), #drag.small table#calc tr td:nth-child(2), #drag.small table#calc tr td:nth-child(3) {
-       padding-right: 2px;
+    padding-right: 2px;
 }
+
 #drag.small table#calc tr:nth-child(1) td {
     padding: 10px 2px !important;
     padding-right: 0px !important;
     height: 20px;
 }
-#drag.small table#calc tr:nth-child(2) td, #drag.small table#calc tr:nth-child(3) td{
+
+#drag.small table#calc tr:nth-child(2) td, #drag.small table#calc tr:nth-child(3) td {
     padding: 0px;
 }
+
 #drag.small table#calc tr:first-child td button {
     width: auto;
     height: 20px;
     background: #115b9b !important;
     margin-top: -9px;
 }
+
 #drag.small table#calc button {
     width: 100%;
-	height: 48px;
+    height: 48px;
 }
-#drag.small{height: 388px; width: 230px; border: 1px solid #ccc;}
-#drag.small table#calc .disp_btn {height: 48px;}
+
+#drag.small {
+    height: 388px;
+    width: 230px;
+    border: 1px solid #ccc;
+}
+
+#drag.small table#calc .disp_btn {
+    height: 48px;
+}
+
 #drag.small table#calc tr:nth-child(2) td span:last-child, #drag.small table#calc tr:nth-child(3) td span:last-child {
     line-height: 54px !important;
 }
+
 #drag.small table#calc tr:first-child td button:hover {
     background-color: #1466ac !important;
 }
+
+
 /*====Ends For Small Devices====*/
 
 
 /*====For Medium Devices====*/
+
 #drag.medium table#calc {
-	display: inline-block;
+    display: inline-block;
     cursor: move;
     padding: 4px;
 }
@@ -335,41 +365,69 @@ li {
 #drag.medium table#calc td {
     width: 86px;
 }
+
 #drag.medium table#calc tr td:nth-child(1), #drag.medium table#calc tr td:nth-child(2), #drag.medium table#calc tr td:nth-child(3) {
-       padding-right: 2px;
+    padding-right: 2px;
 }
+
 #drag.medium table#calc tr:nth-child(1) td {
     padding: 0px 2px !important;
     height: 45px;
     padding-right: 0px !important;
 }
-#drag.medium table#calc tr:nth-child(2) td, #drag.medium table#calc tr:nth-child(3) td{
+
+#drag.medium table#calc tr:nth-child(2) td, #drag.medium table#calc tr:nth-child(3) td {
     padding: 0px;
 }
-#drag.medium table#calc tr:first-child td button{ width: auto;}
+
+#drag.medium table#calc tr:first-child td button {
+    width: auto;
+}
+
 #drag.medium table#calc button {
     width: 100%;
-	height: 85px;
+    height: 85px;
 }
-#drag.medium{width: 358px;height: 606px;border: 1px solid #ccc;}
+
+#drag.medium {
+    width: 358px;
+    height: 606px;
+    border: 1px solid #ccc;
+}
+
 #drag.medium table#calc tr:first-child td button {
     font-size: 18px;
     height: 34px;
     background: #115b9b !important;
     margin-top: -9px;
 }
-#drag.medium table#calc .btn {font-size: 18px;}
-#drag.medium table#calc tr:nth-child(3) td span:first-child {font-size: 22px;line-height: 75px !important;}
-#drag.medium table#calc .disp_btn {font-size: 18px;height: 67px;}
+
+#drag.medium table#calc .btn {
+    font-size: 18px;
+}
+
+#drag.medium table#calc tr:nth-child(3) td span:first-child {
+    font-size: 22px;
+    line-height: 75px !important;
+}
+
+#drag.medium table#calc .disp_btn {
+    font-size: 18px;
+    height: 67px;
+}
+
 #drag.medium table#calc tr:first-child td button:hover {
     background-color: #1466ac !important;
 }
+
+
 /*====Ends For Medium Devices====*/
 
 
 /*====For Large Devices====*/
+
 #drag.large table#calc {
-	display: inline-block;
+    display: inline-block;
     cursor: move;
     padding: 4px;
 }
@@ -377,33 +435,60 @@ li {
 #drag.large table#calc td {
     width: 125px;
 }
+
 #drag.large table#calc tr td:nth-child(1), #drag.large table#calc tr td:nth-child(2), #drag.large table#calc tr td:nth-child(3) {
-       padding-right: 2px;
+    padding-right: 2px;
 }
+
 #drag.large table#calc tr:nth-child(1) td {
     padding: 0px 2px !important;
-	    height: 60px;
-		padding-right: 0px !important;
+    height: 60px;
+    padding-right: 0px !important;
 }
-#drag.large table#calc tr:nth-child(2) td, #drag.large table#calc tr:nth-child(3) td{
+
+#drag.large table#calc tr:nth-child(2) td, #drag.large table#calc tr:nth-child(3) td {
     padding: 0px;
 }
-#drag.large table#calc tr:first-child td button{ width: auto;}
+
+#drag.large table#calc tr:first-child td button {
+    width: auto;
+}
+
 #drag.large table#calc button {
     width: 100%;
-	height: 128px;
+    height: 128px;
 }
-#drag.large{width: 512px;height: 866px;border: 1px solid #ccc;}
+
+#drag.large {
+    width: 512px;
+    height: 866px;
+    border: 1px solid #ccc;
+}
+
 #drag.large table#calc tr:first-child td button {
     font-size: 22px;
     height: 47px;
     background: #115b9b !important;
     margin-top: -11px;
 }
-#drag.large table#calc .btn {font-size: 18px;}
-#drag.large table#calc tr:nth-child(3) td span:first-child {font-size: 24px; line-height: 100px !important;}
-#drag.large table#calc .disp_btn {font-size: 18px;height: 95px;}
+
+#drag.large table#calc .btn {
+    font-size: 18px;
+}
+
+#drag.large table#calc tr:nth-child(3) td span:first-child {
+    font-size: 24px;
+    line-height: 100px !important;
+}
+
+#drag.large table#calc .disp_btn {
+    font-size: 18px;
+    height: 95px;
+}
+
 #drag.large table#calc tr:first-child td button:hover {
     background-color: #1466ac !important;
 }
+
+
 /*====Ends For Large Devices====*/
