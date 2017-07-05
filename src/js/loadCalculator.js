@@ -46,8 +46,8 @@ export default class LoadCalculator {
             self._createCalculator();
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
+            this.setSize("small");
             this.validateLocation(100, 100);
-
         }
     }
 
@@ -56,9 +56,25 @@ export default class LoadCalculator {
         this._calcManager.createCalculator();
     }
 
+    getDisplayState(){
+        return this._calcManager.calcElem.css('display') === 'none' ? "hidden" : "visible";
+    }
+
     clearCalculator() {
         this._calcManager.calcobj.clearData("c");
     }
+
+    setSize(size) {
+        this._calcManager.calcElem.find("#drag").attr("class",size);
+    }
+
+    hideCalculator(){
+        this._calcManager.closeCalculator();
+    }
+
+    getPosition(){
+        return this._calcManager.calcElem.offset();
+    };
 
     validateLocation(top, left) {
         let calc = $(this._calcManager.calcElem),
@@ -118,7 +134,7 @@ export default class LoadCalculator {
             windowWidth = $('body').offset().left + $('body').width(),
             windowHeight = $('body').offset().top + $('body').height();
 
-        calc.off("keydown").on("keydown", function(e) {
+        calc.off("keydown").on("keydown", function (e) {
 
             let calcPosX = parseFloat(calc.css('left')),
                 calcPosY = parseFloat(calc.css('top')),
@@ -156,7 +172,7 @@ export default class LoadCalculator {
             }
         })
     }
-    
+
     showCalculator() {
         var self = this;
         this._calcManager._calcInitialOpen = true;
@@ -170,14 +186,14 @@ export default class LoadCalculator {
             this._calcManager.calcElem.find("#calc_state")[0].setAttribute("tabindex", "0");
             this._calcManager.calcElem.find("#calc_state")[0].innerText = "Calculator Maximized ";
             this._calcManager.calcElem.find("#calc_state").focus();
-            setTimeout(function() {
+            setTimeout(function () {
                 self._calcManager.calcElem.find("#calc_state")[0].setAttribute("aria-hidden", "true");
                 self._calcManager.calcElem.find("#calc_state")[0].removeAttribute("tabindex");
                 self._calcManager.calcElem.focus();
                 if (self._firstTimeOpen) {
                     self._firstTimeOpen = false;
                 } else {
-                    setTimeout(function() {
+                    setTimeout(function () {
                         self._calcManager.calcElem.find('[aria-label="Hide button"]').focus();
                     }, 400);
                 }
@@ -191,6 +207,6 @@ export default class LoadCalculator {
 
 window.calculator = (function () {
     return {
-        loadCalculator: LoadCalculator
+        LoadCalculator: LoadCalculator
     }
 }());

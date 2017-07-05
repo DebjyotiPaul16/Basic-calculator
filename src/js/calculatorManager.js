@@ -206,7 +206,7 @@ export default class CalculatorManger {
     _calculatorShowHide() {
         let self = this;
         $(document).off('click', '.close-calculator').on('click', '.close-calculator', () => {
-            self._closeCalculator();
+            self.closeCalculator();
             $(document).off("keyup");
         });
     }
@@ -271,6 +271,7 @@ export default class CalculatorManger {
     _checkSeekStatus() {
         if (parseFloat(this.calcobj._displayEqnDiv.style.right) < 0) {
             this._getElement(".seekRight", true).css("display", "inline-block");
+            this._getElement(".seekRight", true).attr("aria-label", "right");
         } else {
             this._getElement(".seekRight", true).css("display", "none");
         }
@@ -298,7 +299,7 @@ export default class CalculatorManger {
 
     //TODO needs to be refactored
 
-    _closeCalculator() {
+    closeCalculator() {
         let self = this;
         this._getElement("#calc_state")[0].removeAttribute("aria-hidden");
         this._getElement("#calc_state")[0].setAttribute("tabindex", "0");

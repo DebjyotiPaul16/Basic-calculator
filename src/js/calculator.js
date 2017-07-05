@@ -107,6 +107,7 @@ export default class Calculator {
     _checkOverflow() {
         if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
             this._displayEqnDiv.parentElement.querySelector(".seekLeft").style.display = 'inline-block';
+            this._displayEqnDiv.parentElement.querySelector(".seekLeft").setAttribute("aria-label","Left");
         }
     }
 
