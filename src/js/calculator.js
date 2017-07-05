@@ -56,10 +56,11 @@ export default class Calculator {
 
     _renderResult() {
         if (this._result.length === this._restrictResult()) {
-           // this._result = this._roundup(this._result, 10).toString();
-            this._result = this._result.slice(0, this._restrictResult());
+            this._displayResultDiv.innerHTML = this._roundup(this._result, 10).toString();
+            //this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
+        }else {
+            this._displayResultDiv.innerHTML = this._result;
         }
-        this._displayResultDiv.innerHTML = this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
     }
@@ -91,11 +92,10 @@ export default class Calculator {
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
-           // this._result = this._roundup(this._result, 10).toString();
-            this._result = this._result.slice(0, this._restrictResult());
+            this._displayResultDiv.innerHTML = this._roundup(this._result, 10).toString();
+        }else{
+            this._displayResultDiv.innerHTML = this._result;
         }
-        //call decimal roundup function
-        this._displayResultDiv.innerHTML = this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
     }
