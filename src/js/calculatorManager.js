@@ -317,6 +317,7 @@ export default class CalculatorManger {
     closeCalculator() {
         let self = this;
         self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
+        self._getElement("#calc_state").css("display","inline-block");
         self._getElement("#calc_state")[0].setAttribute("tabindex", "0");
         self._getElement("#calc_state")[0].innerText = "Calculator Hidden";
         self._getElement("#calc_state")[0].focus();
