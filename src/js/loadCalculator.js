@@ -182,13 +182,13 @@ export default class LoadCalculator {
             }
             this._calcManager.handleWithKeyboard(this._calcManager.calcobj);
             this._calcManager.calcElem.css("display", "block");
-            this._calcManager.calcElem.find("#calc_state")[0].removeAttribute("aria-hidden");
-            this._calcManager.calcElem.find("#calc_state")[0].setAttribute("tabindex", "0");
-            this._calcManager.calcElem.find("#calc_state")[0].innerText = "Calculator Maximized ";
+            this._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("aria-hidden");
+            this._calcManager.calcElem.find("#calc_state").get(0).setAttribute("tabindex", "0");
+            this._calcManager.calcElem.find("#calc_state").get(0).innerText = "Calculator Maximized ";
             this._calcManager.calcElem.find("#calc_state").focus();
             setTimeout(function() {
-                self._calcManager.calcElem.find("#calc_state")[0].setAttribute("aria-hidden", "true");
-                self._calcManager.calcElem.find("#calc_state")[0].removeAttribute("tabindex");
+                self._calcManager.calcElem.find("#calc_state").get(0).setAttribute("aria-hidden", "true");
+                self._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("tabindex");
                 self._calcManager.calcElem.find("#calc_state").css("display","none");
                 self._calcManager.calcElem.focus();
                 if (self._firstTimeOpen) {
