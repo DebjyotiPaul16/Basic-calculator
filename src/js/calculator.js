@@ -49,7 +49,6 @@ export default class Calculator {
         self._displayResultDiv.focus();
         setTimeout(function () {
             self._lastFocus.focus();
-            self._displayResultDiv.removeAttribute("tabindex");
         }, 800);
     }
 
