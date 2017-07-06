@@ -1,6 +1,6 @@
 import Calculator from "../js/calculator.js";
 
-fdescribe("test suite for calculator.js", ()=> {
+describe("test suite for calculator.js", ()=> {
     let calcObj, displayResultDiv, displayEqnDiv;
     beforeEach(()=> {
         displayResultDiv = {
@@ -80,12 +80,12 @@ fdescribe("test suite for calculator.js", ()=> {
         it("should display result properly when decimal is included", ()=> {
             calcObj._eqnArr = ["1", "/", "3"];
             calcObj._evalResult();
-            expect(calcObj._displayResultDiv.innerHTML).toBe('0.3333333334');
+            expect(calcObj._displayResultDiv.innerHTML).toBe('0.333333333');
         });
         it("should display result properly when decimal is included", ()=> {
             calcObj._eqnArr = ["14", "/", "3"];
             calcObj._evalResult();
-            expect(calcObj._displayResultDiv.innerHTML).toBe('4.6666666667');
+            expect(calcObj._displayResultDiv.innerHTML).toBe('4.666666667');
         });
     });
 
