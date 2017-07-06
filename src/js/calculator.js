@@ -4,7 +4,6 @@ export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {
         this._result = '0';
-        this._precision = 8;
         this._lastFocus = "";
         this._displayResultDiv = displayResultDiv;
         this._displayEqnDiv = displayEqnDiv;
@@ -48,18 +47,14 @@ export default class Calculator {
         let self = this;
         self._displayResultDiv.setAttribute("tabindex", 0);
         self._displayResultDiv.focus();
-        setTimeout(function() {
+        setTimeout(function () {
             self._lastFocus.focus();
-            self._displayResultDiv.removeAttribute("tabindex");
+            // self._displayResultDiv.removeAttribute("tabindex");
         }, 800);
-
     }
 
     _renderResult() {
-        if (this._result.length === this._restrictResult()) {
-            this._result = this._result.slice(0, this._restrictResult());
-        }
-        this._displayResultDiv.innerHTML = this._result;
+        this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         this._lastFocus = document.activeElement;
         this._readResult();
     }
@@ -71,11 +66,9 @@ export default class Calculator {
         if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
-            this._result = 'Can not divide by zero';
+            this._result = 'Cannot divide by zero';
             this._displayResultDiv.innerHTML = this._result;
             this._isResultUndefined = true;
-            // this._lastFocus = document.activeElement;
-            // this._readResult();
             return;
         }
         numbers = this._eqnArr.filter((v, i) => {
@@ -93,19 +86,30 @@ export default class Calculator {
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
-            this._result = this._result.slice(0, this._restrictResult());
+            this._displayResultDiv.innerHTML = this._roundup(this._result, 2);
+        } else {
+            this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         }
-        //call decimal roundup function
-        this._result = this._roundup(this._result, this._precision);
-        this._displayResultDiv.innerHTML = this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
     }
 
     _roundup(value, precision) {
-        let pow = Math.pow(10, precision);
-        let res = (Math.ceil(pow * value) + Math.ceil(pow * value - Math.ceil(pow * value))) / pow;
-        return res.toString();
+        return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult());
+        // let val,
+        //     isNegative = false,
+        //     pow,
+        //     roundVal;
+        // if (value.indexOf("-") !== -1) {
+        //     val = Math.abs(value);
+        //     isNegative = true;
+        // } else {
+        //     val = value;
+        // }
+        // pow = Math.pow(10, precision); //10^9
+        // roundVal = ((Math.ceil(pow * val) + Math.ceil(pow * val - Math.ceil(pow * val))) / pow).toString().slice(0, this._restrictResult());
+        // roundVal = ((Math.ceil(pow * val) + Math.ceil(pow * val - Math.ceil(pow * val))) / pow).toString().slice(0, this._restrictResult());
+        // return isNegative ? "-" + roundVal : roundVal;
     }
 
     _renderEqn() {
@@ -116,6 +120,7 @@ export default class Calculator {
     _checkOverflow() {
         if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
             this._displayEqnDiv.parentElement.querySelector(".seekLeft").style.display = 'inline-block';
+            this._displayEqnDiv.parentElement.querySelector(".seekLeft").setAttribute("aria-label", "Left");
         }
     }
 
@@ -165,7 +170,7 @@ export default class Calculator {
         } else {
             console.info("invalid clear type");
         }
-
+        this._resultLimit = false;
     }
 
     _resetArrows() {

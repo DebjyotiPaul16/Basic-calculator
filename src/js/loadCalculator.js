@@ -159,8 +159,9 @@ export default class LoadCalculator {
 
     showCalculator() {
         var self = this;
-        this._calcManager._calcInitialOpen = true;
         if (!!this._calcManager) {
+          this._calcManager._calcInitialOpen = true;
+
             if (this._top && this._left) {
                 this.validateLocation(this._top, this._left);
             }
@@ -182,8 +183,12 @@ export default class LoadCalculator {
                     self._firstTimeOpen = false;
                 } else {
                     setTimeout(function() {
-                        self._calcManager.calcElem.find('[aria-label="Hide button"]').focus();
+                        self._calcManager.calcElem.find('[aria-label="Hide button"]').attr("aria-label","Hide");
+                        self._calcManager.calcElem.find('[aria-label="Hide"]').focus();
                     }, 400);
+                    setTimeout(function(){
+                      self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label","Hide button");
+                    },500);
                 }
                 // setTimeout(function() {
                 //     self._calcManager.calcElem.find(".close-calculator")[0].setAttribute("aria-label", label);
