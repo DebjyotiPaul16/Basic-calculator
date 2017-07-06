@@ -1,61 +1,75 @@
 import Calculator from "../js/calculator.js";
 
-describe("test suite for calculator.js", ()=> {
-    let calcObj;
+fdescribe("test suite for calculator.js", ()=> {
+    let calcObj, displayResultDiv, displayEqnDiv;
     beforeEach(()=> {
-        calcObj = new Calculator();
-        calcObj.display = {
-            innerHTML: "demoHtml"
-        }
+        displayResultDiv = {
+            innerHTML: "result"
+        };
+        displayEqnDiv = {
+            innerHTML: "eqn"
+        };
+        calcObj = new Calculator(displayResultDiv, displayEqnDiv);
     });
-    describe("test suite for calculator constructor", function () {
-        it("should test constructor", ()=> {
-            expect(calcObj.initialValue).toBe("");
-            expect(calcObj.lastValue).toBe("");
-            expect(calcObj.operator).toBe("");
-            expect(calcObj.dispResult).toBe(false);
-            expect(calcObj.valAndSign).toEqual([]);
-            expect(calcObj.displayOperator).toBe("");
+    it("test suite for calculator constructor", function () {
+        expect(calcObj._result).toEqual('0');
+        expect(calcObj._displayResultDiv).toEqual(displayResultDiv);
+        expect(calcObj._displayEqnDiv).toEqual(displayEqnDiv);
+        expect(calcObj._eqnArr).toEqual([]);
+        expect(calcObj._isOperatorInserted).toEqual(false);
+        expect(calcObj._isResultUndefined).toEqual(false);
+        expect(calcObj._isEqualPressed).toEqual(false);
+    });
+
+    describe("setValue method", ()=> {
+        it("should return if result is undefined", ()=> {
+            calcObj._isResultUndefined = true;
+            expect(calcObj.setValue()).toEqual(undefined);
+        });
+        it("should return if decimal already exists in result", ()=> {
+            calcObj._result = "1.23";
+            expect(calcObj.setValue(".")).toEqual(undefined);
+        });
+        it("should directly alter the result value if equals after already pressed", ()=> {
+            calcObj._isEqualPressed = true;
+            calcObj._result = "1.234";
+            calcObj.setValue("2.345");
+            expect(calcObj._result).toBe("2.345");
+        });
+        it("should directly set the value if operator is added", ()=> {
+            calcObj._eqnArr = ["1", "+"];
+            calcObj._isOperatorInserted = true;
+            calcObj._result = "1.234";
+            calcObj.setValue("2.345");
+            expect(calcObj._result).toBe("2.345");
+        });
+        describe("initial flow", ()=> {
+            it("should alter result directly, if result is set to zero", ()=> {
+                calcObj.setValue("2.345");
+                expect(calcObj._result).toBe("2.345");
+            });
+            it("should append value with result , if result is not zero", ()=> {
+                calcObj._result = "1";
+                calcObj.setValue("2.345");
+                expect(calcObj._result).toBe("12.345");
+            });
         });
     });
 
-    describe("should test calculatePercentage", function () {
-        beforeEach(() => {
-            spyOn(calcObj, "getResult");
-        });
-        it("calculatePercentage spec when lastValue is true", () => {
-            calcObj.lastValue = 1;
-            calcObj.initialValue = 2;
-            calcObj.calculatePercentage();
-            expect(calcObj.getResult).toHaveBeenCalled();
-            expect(calcObj.lastValue).toBe(0.02);
-        });
-        it("calculatePercentage spec when lastValue is false", () => {
-            calcObj.lastValue = false;
-            calcObj.calculatePercentage();
-            expect(calcObj.getResult).not.toHaveBeenCalled();
+    it("_renderResult should add result to html", ()=> {
+        calcObj._result = "5";
+        calcObj._renderResult();
+        expect(calcObj._displayResultDiv.innerHTML).toBe("5");
+    });
+
+    describe("_evalResult method", ()=> {
+        it("should prevent dividing by zero", ()=> {
+            this._eqnArr = ["7", "/", "0"];
+            expect(calcObj._displayResultDiv.innerHTML).toBe("5");
         });
     });
 
-    describe("setSign test suite", () => {
-        beforeEach(()=> {
-            spyOn(calcObj, "getResult");
-        });
-        it("should test when !this.operator and sign = '*'", ()=> {
-            calcObj.operator = "";
-            calcObj.setSign("*");
-            expect(calcObj.operator).toBe("*");
-            expect(calcObj.displayOperator).toBe("x");
-            expect(calcObj.display.innerHTML).toBe("x");
-        });
-        it("should test when this.operator is true", ()=> {
-            calcObj.operator = "abcdefghijklmnopqrstuvwxyzabcdefghijkl";
-            calcObj.setSign("-");
-            expect(calcObj.getResult).toHaveBeenCalledWith("-");
-            expect(calcObj.displayOperator).toBe("abcdefghijklmnopqrstuvwxyzabcdefghijkl");
-            expect(calcObj.display.innerHTML).toBe("klmnopqrstuvwxyzabcdefghijkl");
-        });
-    });
+
     describe("clearData test suite", ()=> {
         it("should test it when cleartype = c", ()=> {
             calcObj.clearData("c");
