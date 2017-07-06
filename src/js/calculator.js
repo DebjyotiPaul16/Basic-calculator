@@ -47,20 +47,14 @@ export default class Calculator {
         let self = this;
         self._displayResultDiv.setAttribute("tabindex", 0);
         self._displayResultDiv.focus();
-        setTimeout(function() {
+        setTimeout(function () {
             self._lastFocus.focus();
             self._displayResultDiv.removeAttribute("tabindex");
         }, 800);
-
     }
 
     _renderResult() {
-        if (this._result.length === this._restrictResult()) {
-            this._displayResultDiv.innerHTML = this._roundup(this._result, 10).toString();
-            //this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
-        }else {
-            this._displayResultDiv.innerHTML = this._result;
-        }
+        this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         this._lastFocus = document.activeElement;
         this._readResult();
     }
@@ -92,17 +86,20 @@ export default class Calculator {
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
-            this._displayResultDiv.innerHTML = this._roundup(this._result, 10).toString();
-        }else{
-            this._displayResultDiv.innerHTML = this._result;
+            this._displayResultDiv.innerHTML = this._roundup(this._result, 9);
+        } else {
+            this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         }
         this._lastFocus = document.activeElement;
         this._readResult();
     }
 
     _roundup(value, precision) {
-        let pow = Math.pow(10, precision); //10^9
-        return (Math.ceil(pow * value) + Math.ceil(pow * value - Math.ceil(pow * value))) / pow;
+        if(value.indexOf(".") !== -1){
+            return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult());
+        }else {
+            return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(9).toString();
+        }
     }
 
     _renderEqn() {
@@ -113,7 +110,7 @@ export default class Calculator {
     _checkOverflow() {
         if (this._displayEqnDiv.innerText.length * 7.5 > this._displayResultDiv.offsetWidth) {
             this._displayEqnDiv.parentElement.querySelector(".seekLeft").style.display = 'inline-block';
-            this._displayEqnDiv.parentElement.querySelector(".seekLeft").setAttribute("aria-label","Left");
+            this._displayEqnDiv.parentElement.querySelector(".seekLeft").setAttribute("aria-label", "Left");
         }
     }
 
@@ -163,7 +160,7 @@ export default class Calculator {
         } else {
             console.info("invalid clear type");
         }
-
+        this._resultLimit = false;
     }
 
     _resetArrows() {
