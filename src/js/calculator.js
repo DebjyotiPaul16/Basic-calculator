@@ -4,6 +4,7 @@ export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {
         this._result = '0';
+        this._precision = 8;
         this._lastFocus = "";
         this._displayResultDiv = displayResultDiv;
         this._displayEqnDiv = displayEqnDiv;
@@ -95,14 +96,14 @@ export default class Calculator {
             this._result = this._result.slice(0, this._restrictResult());
         }
         //call decimal roundup function
-        this._result = this._roundup(this._result, 8);
+        this._result = this._roundup(this._result, this._precision);
         this._displayResultDiv.innerHTML = this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
     }
 
     _roundup(value, precision) {
-        let pow = Math.pow(10, precision); //10^9
+        let pow = Math.pow(10, precision);
         let res = (Math.ceil(pow * value) + Math.ceil(pow * value - Math.ceil(pow * value))) / pow;
         return res.toString();
     }
