@@ -103,7 +103,8 @@ export default class Calculator {
 
     _roundup(value, precision) {
         let pow = Math.pow(10, precision); //10^9
-        return (Math.ceil(pow * value) + Math.ceil(pow * value - Math.ceil(pow * value))) / pow;
+        let res = (Math.ceil(pow * value) + Math.ceil(pow * value - Math.ceil(pow * value))) / pow;
+        return res.toString();
     }
 
     _renderEqn() {
