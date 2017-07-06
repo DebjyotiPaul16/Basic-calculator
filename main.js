@@ -1,15 +1,44 @@
-// var btn = document.getElementById("close-calc");
-var btnShow = document.getElementById("show-calc");
-var clearCalc = document.getElementById("clear-calc");
-// var spawnCalc = document.getElementById("spawn-calc");
+var btnShow = document.getElementById("show-calc"),
+    clearCalc = document.getElementById("clear-calc"),
+    stateBtn = document.getElementById("get-state"),
+    hideBtn = document.getElementById("hide-calc"),
+    getPos = document.getElementById("get-pos"),
+    small = document.getElementById("small"),
+    medium = document.getElementById("medium"),
+    large = document.getElementById("large");
+    // setPos = document.getElementById("setPosition");
 
 
-var BasicCalculator = new calculator.loadCalculator();
-// BasicCalculator.loadDependencyAndCreate();
-// btn.addEventListener("click", BasicCalculator.hideCalculator.bind(BasicCalculator), false);
+
+var BasicCalculator = new calculator.LoadCalculator();
 btnShow.addEventListener("click", BasicCalculator.showCalculator.bind(BasicCalculator), false);
 clearCalc.addEventListener("click", BasicCalculator.clearCalculator.bind(BasicCalculator), false);
-// spawnCalc.addEventListener("click", function() {
-//     BasicCalculator.moveCalculator();
-//     BasicCalculator.validateLocation(100, 100);
-// });
+
+stateBtn.addEventListener("click", function () {
+    var state = BasicCalculator.getDisplayState(),
+        pos = BasicCalculator.getPosition();
+    console.log(state);
+}, false);
+
+hideBtn.addEventListener("click", function () {
+    BasicCalculator.hideCalculator();
+}, false);
+
+getPos.addEventListener("click", function () {
+    var pos = BasicCalculator.getPosition();
+    console.log(pos);
+}, false);
+
+small.addEventListener("click", function () {
+   BasicCalculator.setSize("small");
+}, false);
+medium.addEventListener("click", function () {
+    BasicCalculator.setSize("medium");
+}, false);
+large.addEventListener("click", function () {
+    BasicCalculator.setSize("large");
+}, false);
+
+// setPos.addEventListener("click", function () {
+//     BasicCalculator.validateLocation(100,100);
+// }, false);

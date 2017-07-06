@@ -13,23 +13,33 @@ body {
 
 #calc {
     display: inline-block;
-    border: 1px solid #ccc;
     cursor: move;
     padding: 4px;
+    background-color: #fff;
 }
 
 #drag {
     display: inline-block;
+    height: 388px;
+    width: 230px;
+    border: 1px solid #ccc;
 }
 
 #calc .btn {
     margin-top: 3px;
-    width: 72px;
-    height: 40px;
+    /*width: 72px;
+    height: 40px;*/
     font-size: 16px;
     color: #333;
     border: 1px solid #ccc;
     background-color: #fff;
+}
+
+#calc .btn.active {
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    cursor: pointer;
+    color: #fff;
 }
 
 #disp_sign {
@@ -40,7 +50,7 @@ body {
 }
 
 .disp_btn {
-    width: 290px;
+    /* width: 290px;*/
     height: 40px;
     border: 0;
     background-color: #fff;
@@ -55,6 +65,7 @@ body {
 
 #calc td {
     padding: 0;
+    width: 100px;
     /*border: 1px solid;*/
     /*border: 1px solid #fff;*/
 }
@@ -68,19 +79,44 @@ body {
     color: #000 !important;
     font-family:areal !important;
     text-transform:none;*/
+    height: 48px;
+    width: 100%;
 }
 
-#calc tr > td > button:hover, #calc tr > td > button:focus {
+#drag #calc tr:first-child td button {
+    width: auto;
+    height: 20px;
+    background: #115b9b !important;
+    margin-top: -9px;
+}
+
+#drag #calc button {
+    width: 54px;
+    height: 48px;
+}
+
+#drag table#calc tr td:nth-child(1), #drag table#calc tr td:nth-child(2), #drag table#calc tr td:nth-child(3) {
+    padding-right: 2px;
+}
+
+#drag table#calc tr:nth-child(2) td, #drag table#calc tr:nth-child(3) td {
+    padding: 0px;
+}
+
+
+/*#calc tr>td>button:hover, #calc tr>td>button:focus {
     background-color: #337ab7;
     border-color: #2e6da4;
     cursor: pointer;
     color: #fff;
-}
-#calc tr > td > div > button{
+}*/
+
+#calc tr>td>div>button {
     background-color: transparent;
     border: none;
     cursor: pointer;
 }
+
 #calc .minimize, #calc .close-calculator {
     background-color: #5E7A9C !important;
     color: #fff !important;
@@ -123,7 +159,9 @@ li {
 
 #calc tr:first-child td {
     background-color: #337ab7 !important;
-    padding: 10px 5px;
+    padding: 10px 2px !important;
+    padding-right: 0px !important;
+    height: 20px;
 }
 
 #calc tr:first-child td button {
@@ -155,15 +193,16 @@ li {
 
 #calc tr:nth-child(3) td span:first-child {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 19px;
     text-align: right;
     border-top: 0px;
     padding-right: 5px;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
 }
 
 #calc tr:nth-child(2) td span:last-child, #calc tr:nth-child(3) td span:last-child {
-    width: 295px;
+    line-height: 54px !important;
+    height: 48px;
 }
 
 #calc tr:nth-child(4) td:first-child button:before {
@@ -190,6 +229,16 @@ li {
     border: 1px solid #1b63a1;
 }
 
+#calc tr:nth-child(4) td button:hover, #calc tr:nth-child(5) td:last-child button:hover, #calc tr:nth-child(6) td:last-child button:hover, #calc tr:nth-child(7) td:last-child button:hover, #calc tr:nth-child(8) td:first-child button:hover, #calc tr:nth-child(8) td:last-child button:hover {
+    background-color: #115b9b;
+    color: #fff;
+    border: 1px solid #1b63a1;
+}
+
+#drag table#calc tr:first-child td button:hover {
+    background: #1466ac !important;
+}
+
 .calcDiv {
     position: relative;
     text-indent: 10px;
@@ -197,14 +246,14 @@ li {
     margin-top: 4px;
     margin-bottom: -1px;
     border-bottom: 0px;
-    width: 295px;
+    /*width: 295px;*/
     border: 1px solid #ccc;
     height: 40px;
     overflow: hidden;
     border-bottom: 0px;
 }
 
-.seek {
+#drag #calc .seek {
     position: absolute;
     display: inline-block;
     font-weight: bold;
@@ -213,23 +262,23 @@ li {
     background-image: url(data:image/png;base64,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);
     background-size: cover;
     background-repeat: no-repeat;
-    height: 15px;
-    width: 15px;
+    height: 15px !important;
+    width: 15px !important;
     cursor: pointer;
     display: none;
 }
 
-.seek:hover {
+#drag #calc .seek:hover {
     background-color: #bbb;
     box-shadow: 2px 1px 1px #ccc;
 }
 
-.seek.seekLeft {
+#drag #calc .seek.seekLeft {
     left: 1px;
     transform: rotate(180deg);
 }
 
-.seek.seekRight {
+#drag #calc .seek.seekRight {
     right: 1px;
 }
 
@@ -243,3 +292,203 @@ li {
     clip: rect(0, 0, 0, 0);
     border: 0;
 }
+
+
+/*====For Small Devices====*/
+
+#drag.small table#calc {
+    display: inline-block;
+    cursor: move;
+    padding: 4px;
+}
+
+#drag.small table#calc td {
+    width: 60px;
+}
+
+#drag.small table#calc tr td:nth-child(1), #drag.small table#calc tr td:nth-child(2), #drag.small table#calc tr td:nth-child(3) {
+    padding-right: 2px;
+}
+
+#drag.small table#calc tr:nth-child(1) td {
+    padding: 10px 2px !important;
+    padding-right: 0px !important;
+    height: 20px;
+}
+
+#drag.small table#calc tr:nth-child(2) td, #drag.small table#calc tr:nth-child(3) td {
+    padding: 0px;
+}
+
+#drag.small table#calc tr:first-child td button {
+    width: auto;
+    height: 20px;
+    background: #115b9b !important;
+    margin-top: -9px;
+}
+
+#drag.small table#calc button {
+    width: 100%;
+    height: 48px;
+}
+
+#drag.small {
+    height: 388px;
+    width: 230px;
+    border: 1px solid #ccc;
+}
+
+#drag.small table#calc .disp_btn {
+    height: 48px;
+}
+
+#drag.small table#calc tr:nth-child(2) td span:last-child, #drag.small table#calc tr:nth-child(3) td span:last-child {
+    line-height: 54px !important;
+}
+
+#drag.small table#calc tr:first-child td button:hover {
+    background-color: #1466ac !important;
+}
+
+
+/*====Ends For Small Devices====*/
+
+
+/*====For Medium Devices====*/
+
+#drag.medium table#calc {
+    display: inline-block;
+    cursor: move;
+    padding: 4px;
+}
+
+#drag.medium table#calc td {
+    width: 86px;
+}
+
+#drag.medium table#calc tr td:nth-child(1), #drag.medium table#calc tr td:nth-child(2), #drag.medium table#calc tr td:nth-child(3) {
+    padding-right: 2px;
+}
+
+#drag.medium table#calc tr:nth-child(1) td {
+    padding: 0px 2px !important;
+    height: 45px;
+    padding-right: 0px !important;
+}
+
+#drag.medium table#calc tr:nth-child(2) td, #drag.medium table#calc tr:nth-child(3) td {
+    padding: 0px;
+}
+
+#drag.medium table#calc tr:first-child td button {
+    width: auto;
+}
+
+#drag.medium table#calc button {
+    width: 100%;
+    height: 85px;
+}
+
+#drag.medium {
+    width: 358px;
+    height: 606px;
+    border: 1px solid #ccc;
+}
+
+#drag.medium table#calc tr:first-child td button {
+    font-size: 18px;
+    height: 34px;
+    background: #115b9b !important;
+    margin-top: -9px;
+}
+
+#drag.medium table#calc .btn {
+    font-size: 18px;
+}
+
+#drag.medium table#calc tr:nth-child(3) td span:first-child {
+    font-size: 22px;
+    line-height: 75px !important;
+}
+
+#drag.medium table#calc .disp_btn {
+    font-size: 18px;
+    height: 67px;
+}
+
+#drag.medium table#calc tr:first-child td button:hover {
+    background-color: #1466ac !important;
+}
+
+
+/*====Ends For Medium Devices====*/
+
+
+/*====For Large Devices====*/
+
+#drag.large table#calc {
+    display: inline-block;
+    cursor: move;
+    padding: 4px;
+}
+
+#drag.large table#calc td {
+    width: 125px;
+}
+
+#drag.large table#calc tr td:nth-child(1), #drag.large table#calc tr td:nth-child(2), #drag.large table#calc tr td:nth-child(3) {
+    padding-right: 2px;
+}
+
+#drag.large table#calc tr:nth-child(1) td {
+    padding: 0px 2px !important;
+    height: 60px;
+    padding-right: 0px !important;
+}
+
+#drag.large table#calc tr:nth-child(2) td, #drag.large table#calc tr:nth-child(3) td {
+    padding: 0px;
+}
+
+#drag.large table#calc tr:first-child td button {
+    width: auto;
+}
+
+#drag.large table#calc button {
+    width: 100%;
+    height: 128px;
+}
+
+#drag.large {
+    width: 512px;
+    height: 866px;
+    border: 1px solid #ccc;
+}
+
+#drag.large table#calc tr:first-child td button {
+    font-size: 22px;
+    height: 47px;
+    background: #115b9b !important;
+    margin-top: -11px;
+}
+
+#drag.large table#calc .btn {
+    font-size: 18px;
+}
+
+#drag.large table#calc tr:nth-child(3) td span:first-child {
+    font-size: 24px;
+    line-height: 100px !important;
+}
+
+#drag.large table#calc .disp_btn {
+    font-size: 18px;
+    height: 95px;
+}
+
+#drag.large table#calc tr:first-child td button:hover {
+    background-color: #1466ac !important;
+}
+
+
+/*====Ends For Large Devices====*/
