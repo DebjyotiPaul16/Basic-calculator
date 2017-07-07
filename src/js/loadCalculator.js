@@ -8,6 +8,7 @@ export default class LoadCalculator {
         this._calcManager = null;
         this._top = null;
         this._left = null;
+        this._isCreated = false;
         this._depArr = [{
             'jQuery': 'https://code.jquery.com/jquery-1.12.4.min.js'
         }, {
@@ -46,6 +47,7 @@ export default class LoadCalculator {
             self._createCalculator();
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
+            this._isCreated = true;
             this.validateLocation(100, 100);
         }
     }
@@ -55,8 +57,8 @@ export default class LoadCalculator {
         this._calcManager.createCalculator();
     }
 
-    getDisplayState(){
-        return this._calcManager.calcElem.css('display') === 'none' ? "hidden" : "visible";
+    getDisplayState() {
+        return !this._isCreated ? "hidden" : this._calcManager.calcElem.css('display') === 'none' ? "hidden" : "visible";
     }
 
     clearCalculator() {
@@ -64,14 +66,14 @@ export default class LoadCalculator {
     }
 
     setSize(size) {
-        this._calcManager.calcElem.find("#drag").attr("class",size);
+        this._calcManager.calcElem.find("#drag").attr("class", size);
     }
 
-    hideCalculator(){
+    hideCalculator() {
         this._calcManager.closeCalculator();
     }
 
-    getPosition(){
+    getPosition() {
         return this._calcManager.calcElem.offset();
     };
 
@@ -98,7 +100,7 @@ export default class LoadCalculator {
     _hasValidParent(target) {
         if (target === null) {
             return false;
-        } else if (target.id && target.id === this._calcManager.calcElem[0].id) {
+        } else if (target.id && target.id === this._calcManager.calcElem.get(0).id) {
             return true;
         } else {
             return this._hasValidParent(target.parentElement);
@@ -175,7 +177,7 @@ export default class LoadCalculator {
     showCalculator() {
         var self = this;
         if (!!this._calcManager) {
-          this._calcManager._calcInitialOpen = true;
+            this._calcManager._calcInitialOpen = true;
 
             if (this._top && this._left) {
                 this.validateLocation(this._top, this._left);
@@ -186,21 +188,21 @@ export default class LoadCalculator {
             this._calcManager.calcElem.find("#calc_state").get(0).setAttribute("tabindex", "0");
             this._calcManager.calcElem.find("#calc_state").get(0).innerText = "Calculator Maximized ";
             this._calcManager.calcElem.find("#calc_state").focus();
-            setTimeout(function() {
+            setTimeout(function () {
                 self._calcManager.calcElem.find("#calc_state").get(0).setAttribute("aria-hidden", "true");
                 self._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("tabindex");
-                self._calcManager.calcElem.find("#calc_state").css("display","none");
+                self._calcManager.calcElem.find("#calc_state").css("display", "none");
                 self._calcManager.calcElem.focus();
                 if (self._firstTimeOpen) {
                     self._firstTimeOpen = false;
                 } else {
-                    setTimeout(function() {
-                        self._calcManager.calcElem.find('[aria-label="Hide button"]').attr("aria-label","Hide");
+                    setTimeout(function () {
+                        self._calcManager.calcElem.find('[aria-label="Hide button"]').attr("aria-label", "Hide");
                         self._calcManager.calcElem.find('[aria-label="Hide"]').focus();
                     }, 400);
-                    setTimeout(function(){
-                      self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label","Hide button");
-                    },500);
+                    setTimeout(function () {
+                        self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label", "Hide button");
+                    }, 500);
                 }
 
             }, 1500);
@@ -211,7 +213,7 @@ export default class LoadCalculator {
     }
 }
 
-window.calculator = (function() {
+window.calculator = (function () {
     return {
         LoadCalculator: LoadCalculator
     }
