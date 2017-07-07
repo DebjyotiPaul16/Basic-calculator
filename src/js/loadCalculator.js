@@ -194,7 +194,7 @@ export default class LoadCalculator {
                 //     self._calcManager.calcElem.find(".close-calculator")[0].setAttribute("aria-label", label);
                 // }, 800);
 
-            }, 1500);
+            }, 800);
 
         } else {
             console.error("not possible to open calculator");

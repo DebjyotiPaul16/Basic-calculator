@@ -332,7 +332,7 @@ export default class CalculatorManger {
             self.calcElem.get(0).style.display = "none";
             document.getElementById("show-calc").focus();
 
-        }, 1500);
+        }, 800);
 
     }
 }
