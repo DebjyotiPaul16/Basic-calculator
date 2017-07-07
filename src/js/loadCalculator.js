@@ -47,8 +47,6 @@ export default class LoadCalculator {
             self._createCalculator();
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
-            this._isCreated = true;
-            this.setPosition(0, 100);
         }
     }
 
@@ -184,7 +182,7 @@ export default class LoadCalculator {
             this._calcManager._calcInitialOpen = true;
 
             if (this._top != null && this._left != null) {
-                this.validateLocation(this._top, this._left);
+                this.setPosition(this._top, this._left);
             }
             this._calcManager.handleWithKeyboard(this._calcManager.calcobj);
             this._calcManager.calcElem.css("display", "block");
