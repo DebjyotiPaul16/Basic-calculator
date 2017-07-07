@@ -16,7 +16,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if (this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit) {
+        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit)&& !this._isOperatorInserted) {
             return;
         }
         if (this._isEqualPressed) {
@@ -27,7 +27,7 @@ export default class Calculator {
             return;
         }
         if (!this._eqnArr.length || !this._isOperatorInserted) {
-            this._result = (this._result === '0') ? '' + val : this._result + val;
+            this._result = (this._result === '0' && val !== ".") ? '' + val : this._result + val;
         } else {
             this._result = val;
         }
@@ -188,6 +188,9 @@ export default class Calculator {
     negateValue() {
         if (this._result === '0' || this._isResultUndefined) {
             return;
+        }
+        if(this._result.indexOf("(") !== -1){
+            this._result = eval(this._result);
         }
         this._result = String(+(this._result) * -1);
         this._renderResult();
