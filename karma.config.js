@@ -5,6 +5,7 @@ module.exports = function (config) {
         browsers: ['PhantomJS'],
         files: [
             './node_modules/jquery/dist/jquery.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js',
             './node_modules/babel-core/browser-polyfill.js',
             'src/**/*.spec.js'
         ],

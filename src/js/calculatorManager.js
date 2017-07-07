@@ -316,7 +316,6 @@ export default class CalculatorManger {
 
     closeCalculator() {
         let self = this;
-        // self._calcInitialOpen = true;
         self.changeLabel();
         self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
         self._getElement("#calc_state").css("display", "inline-block");
@@ -327,7 +326,7 @@ export default class CalculatorManger {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";
-            document.getElementById("show-calc").focus();
+            document.getElementById("show-calc") && document.getElementById("show-calc").focus();
 
         }, 1500);
 
