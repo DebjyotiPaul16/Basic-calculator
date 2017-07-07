@@ -1,4 +1,4 @@
-import CalculatorManger from "../js/calculatorManager.js";
+import CalculatorManger from "../js/calculator_manager.js";
 import Calculator from "../js/calculator.js";
 function eventFire(el, etype, keyCode, key, isShiftKey) {
     if (el.fireEvent) {

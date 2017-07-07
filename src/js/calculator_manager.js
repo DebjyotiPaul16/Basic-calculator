@@ -1,7 +1,7 @@
 import Calculator from "./calculator.js";
 import {
     calculator_data
-} from './calculatorConfig.js';
+} from './calculator_config.js';
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =

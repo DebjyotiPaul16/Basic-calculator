@@ -6,7 +6,7 @@ module.exports = {
     debug: true,
 
     //  Defines the entrypoint of our application.
-    entry: path.resolve(__dirname, './src/js/loadCalculator.js'),
+    entry: path.resolve(__dirname, './src/js/load_calculator.js'),
 
     //  Bundle to a ./build/public/bundle.js file.
     output: {

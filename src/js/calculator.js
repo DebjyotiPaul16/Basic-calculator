@@ -1,5 +1,4 @@
 "use strict";
-import operator from "./calculatorConfig";
 export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {

@@ -1,5 +1,4 @@
-import CalculatorManger from "./calculatorManager.js";
-import Calculator from "./calculator.js";
+import CalculatorManger from "./calculator_manager.js";
 
 export default class LoadCalculator {
     constructor() {

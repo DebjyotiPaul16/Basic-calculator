@@ -1,5 +1,5 @@
-import LoadCalculator from "../js/loadCalculator.js"
-import CalculatorManger from "../js/calculatorManager.js";
+import LoadCalculator from "../js/load_calculator.js"
+import CalculatorManger from "../js/calculator_manager.js";
 
 describe("test suite for load calculator", function () {
     var loadCalcObj, headTagObj, findObj, getObj,jqObj,onObj,offsetObj = {
@@ -54,11 +54,10 @@ describe("test suite for load calculator", function () {
         loadCalcObj._arrCount = 10;
         spyOn(loadCalcObj, "_createCalculator");
         spyOn(loadCalcObj, "_moveCalculator");
-        spyOn(loadCalcObj, "validateLocation");
+        spyOn(loadCalcObj, "setSize");
         loadCalcObj._loadDependencyAndCreate();
         expect(loadCalcObj._createCalculator).toHaveBeenCalled();
         expect(loadCalcObj._moveCalculator).toHaveBeenCalled();
-        expect(loadCalcObj.validateLocation).toHaveBeenCalled();
         expect(loadCalcObj._calcManager.calcElem.css).toHaveBeenCalled();
     });
     it("should test _createCalculator", function () {
@@ -124,10 +123,9 @@ describe("test suite for load calculator", function () {
         it("should test when this._calcManager is defined and self._firstTimeOpen is false",function () {
             loadCalcObj._top = 1;
             loadCalcObj._left = 1;
-            spyOn(loadCalcObj,"validateLocation");
+            spyOn(loadCalcObj,"setSize");
             loadCalcObj._firstTimeOpen = false;
             loadCalcObj.showCalculator();
-            expect(loadCalcObj.validateLocation).toHaveBeenCalled();
             expect(findObj.attr).toHaveBeenCalled();
             expect(findObj.focus).toHaveBeenCalled();
         });
@@ -136,16 +134,16 @@ describe("test suite for load calculator", function () {
         loadCalcObj._calcManager.calcElem.offset.and.returnValue({top:0,left:0});
         expect(loadCalcObj.getPosition()).toEqual({top:0,left:0});
     });
-    describe("test suite for validateLocation",function () {
-        it("should validateLocation when left + calcWidth < windowWidth is false",function () {
-            loadCalcObj.validateLocation(0,0);
+    describe("test suite for setPosition",function () {
+        it("should setSize when left + calcWidth < windowWidth is false",function () {
+            loadCalcObj.setPosition(0,0);
             expect(loadCalcObj._top).toBe(null);
             expect(loadCalcObj._left).toBe(null);
         });
-        it("should validateLocation when left + calcWidth < windowWidth && top + calcHeight < windowHeight is true",function () {
+        it("should setSize when left + calcWidth < windowWidth && top + calcHeight < windowHeight is true",function () {
             jqObj.width.and.returnValue(100);
             jqObj.height.and.returnValue(100);
-            loadCalcObj.validateLocation(0,0);
+            loadCalcObj.setPosition(0,0);
             expect(loadCalcObj._top).toBe(0);
             expect(loadCalcObj._left).toBe(0);
             expect(jqObj.css).toHaveBeenCalledWith({
@@ -154,7 +152,7 @@ describe("test suite for load calculator", function () {
             });
         });
     });
-    describe("",function () {
+    describe("test suite for _hasValidParent",function () {
         let targetObj = {};
         it("should test _hasValidParent when target is null",function () {
             targetObj = null;
