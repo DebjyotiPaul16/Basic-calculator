@@ -4,6 +4,7 @@ export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {
         this._result = '0';
+        this._precision = 9;
         this._lastFocus = "";
         this._displayResultDiv = displayResultDiv;
         this._displayEqnDiv = displayEqnDiv;
@@ -16,11 +17,14 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit)&& !this._isOperatorInserted) {
+        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit) && !this._isOperatorInserted && !this._isEqualPressed) {
             return;
         }
         if (this._isEqualPressed) {
-            this._result = val;
+            if (this._isResultUndefined) {
+                return;
+            }
+            this._result = (val !== ".") ? val : "0" + val;
             this._renderResult();
             this._isOperatorInserted = false;
             this._isEqualPressed = false;
@@ -47,7 +51,7 @@ export default class Calculator {
         let self = this;
         self._displayResultDiv.setAttribute("tabindex", 0);
         self._displayResultDiv.focus();
-        setTimeout(function () {
+        setTimeout(function() {
             self._lastFocus.focus();
         }, 800);
     }
@@ -62,7 +66,7 @@ export default class Calculator {
         let numbers,
             operators,
             result;
-        if (this._eqnArr[this._eqnArr.length - 1] === '0' &&
+        if ((this._eqnArr[this._eqnArr.length - 1] === '0' || parseFloat(this._eqnArr[this._eqnArr.length - 1]) === 0) &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
             this._result = 'Cannot divide by zero';
@@ -85,7 +89,7 @@ export default class Calculator {
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
-            this._displayResultDiv.innerHTML = this._roundup(this._result, 9);
+            this._displayResultDiv.innerHTML = this._roundup(this._result, this._precision);
         } else {
             this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         }
@@ -94,15 +98,25 @@ export default class Calculator {
     }
 
     _roundup(value, precision) {
-        if(value.indexOf(".") !== -1){
-            return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult());
-        }else {
-            return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(9).toString();
+        if (value.indexOf(".") !== -1) {
+            if (value.indexOf("e") !== -1) {
+                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision).toString();
+            } else {
+                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult());
+            }
+        } else {
+            return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision).toString();
         }
     }
 
     _renderEqn() {
-        this._displayEqnDiv.innerHTML = this._eqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
+        let self = this;
+        let revisedEqnArr = [];
+        this._eqnArr.forEach(function(i) {
+            parseFloat(i) && i.indexOf(".") > -1 ? revisedEqnArr.push(self._roundup(i, self._precision)) :
+                (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
+        });
+        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
         this._checkOverflow();
     }
 
@@ -189,7 +203,7 @@ export default class Calculator {
         if (this._result === '0' || this._isResultUndefined) {
             return;
         }
-        if(this._result.indexOf("(") !== -1){
+        if (this._result.indexOf("(") !== -1) {
             this._result = eval(this._result);
         }
         this._result = String(+(this._result) * -1);

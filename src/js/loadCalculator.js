@@ -205,7 +205,7 @@ export default class LoadCalculator {
                     }, 500);
                 }
 
-            }, 1500);
+            }, 800);
 
         } else {
             console.error("not possible to open calculator");
