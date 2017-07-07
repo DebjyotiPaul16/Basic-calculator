@@ -48,7 +48,7 @@ export default class LoadCalculator {
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
             this._isCreated = true;
-            this.validateLocation(100, 100);
+            this.setPosition(0, 100);
         }
     }
 
@@ -58,7 +58,7 @@ export default class LoadCalculator {
     }
 
     getDisplayState() {
-        return !this._isCreated ? "hidden" : this._calcManager.calcElem.css('display') === 'none' ? "hidden" : "visible";
+        return this._calcManager.calcElem.css('display') !== 'none';
     }
 
     clearCalculator() {
@@ -73,11 +73,15 @@ export default class LoadCalculator {
         this._calcManager.closeCalculator();
     }
 
+    getCalculatorValue() {
+        return this._calcManager.calcobj._result;
+    }
+
     getPosition() {
         return this._calcManager.calcElem.offset();
     };
 
-    validateLocation(top, left) {
+    setPosition(top, left) {
         let calc = $(this._calcManager.calcElem),
             calcWidth = calc.width(),
             calcHeight = calc.height(),
@@ -179,7 +183,7 @@ export default class LoadCalculator {
         if (!!this._calcManager) {
             this._calcManager._calcInitialOpen = true;
 
-            if (this._top && this._left) {
+            if (this._top != null && this._left != null) {
                 this.validateLocation(this._top, this._left);
             }
             this._calcManager.handleWithKeyboard(this._calcManager.calcobj);
@@ -213,8 +217,8 @@ export default class LoadCalculator {
     }
 }
 
-window.calculator = (function () {
+window.Calculator = (function () {
     return {
-        LoadCalculator: LoadCalculator
+        createCalculator: LoadCalculator
     }
 }());

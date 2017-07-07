@@ -47,7 +47,7 @@ describe("test suite for load calculator", function () {
     });
     it("should test constructor definition with _loadDependencyAndCreate when this._arrCount < this._depArr.length", function () {
         loadCalcObj = new LoadCalculator();
-        expect(loadCalcObj._arrCount).toBe(2);
+        expect(loadCalcObj._arrCount).toBe(3);
         expect(loadCalcObj._loadDependencyAndCreate).toHaveBeenCalled();
     });
     it("should test constructor definition with _loadDependencyAndCreate when this._arrCount < this._depArr.length false", function () {
@@ -73,19 +73,14 @@ describe("test suite for load calculator", function () {
     });
 
     describe("test suite for getDisplayState",function () {
-        it("should test getDisplayState when display !this._isCreated", function () {
-            expect(loadCalcObj.getDisplayState()).toBe("hidden");
-        });
 
         it("should test getDisplayState when display this._isCreated", function () {
-            loadCalcObj._isCreated = true;
             loadCalcObj._calcManager.calcElem.css.and.returnValue("none");
-            expect(loadCalcObj.getDisplayState()).toBe("hidden");
+            expect(loadCalcObj.getDisplayState()).toBe(false);
         });
         it("should test getDisplayState when display this._isCreated and display block", function () {
-            loadCalcObj._isCreated = true;
             loadCalcObj._calcManager.calcElem.css.and.returnValue("block");
-            expect(loadCalcObj.getDisplayState()).toBe("visible");
+            expect(loadCalcObj.getDisplayState()).toBe(true);
         });
 
     });

@@ -157,7 +157,7 @@ describe("calculatorManager", ()=> {
         $.fn.css.and.callThrough();
     });
 
-    xit("should trigger keydown if first time open", ()=> {
+    it("should trigger keydown if first time open", ()=> {
         calcMgr._calcInitialOpen = true;
         spyOn(Element.prototype, "getAttribute").and.returnValue("");
         eventFire($(document).get(0), 'keydown');
@@ -165,7 +165,5 @@ describe("calculatorManager", ()=> {
         Element.prototype.getAttribute.and.callThrough();
 
     });
-
-    
 });
 

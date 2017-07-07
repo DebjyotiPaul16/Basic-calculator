@@ -6,37 +6,43 @@ var btnShow = document.getElementById("show-calc"),
     small = document.getElementById("small"),
     medium = document.getElementById("medium"),
     large = document.getElementById("large");
-    // setPos = document.getElementById("setPosition");
 
 
+var basicCalculator = new Calculator.createCalculator();
 
-var BasicCalculator = new calculator.LoadCalculator();
-btnShow.addEventListener("click", BasicCalculator.showCalculator.bind(BasicCalculator), false);
-clearCalc.addEventListener("click", BasicCalculator.clearCalculator.bind(BasicCalculator), false);
+
+btnShow.addEventListener("click", function () {
+    basicCalculator.showCalculator();
+}, false);
+
+clearCalc.addEventListener("click", function () {
+    basicCalculator.clearCalculator();
+}, false);
 
 stateBtn.addEventListener("click", function () {
-    var state = BasicCalculator.getDisplayState(),
-        pos = BasicCalculator.getPosition();
+    var state = basicCalculator.getDisplayState(),
+        pos = basicCalculator.getPosition();
     console.log(state);
 }, false);
 
 hideBtn.addEventListener("click", function () {
-    BasicCalculator.hideCalculator();
+    basicCalculator.hideCalculator();
 }, false);
 
 getPos.addEventListener("click", function () {
-    var pos = BasicCalculator.getPosition();
-    console.log(pos);
+    var pos = basicCalculator.getPosition();
+    var val = basicCalculator.getCalculatorValue();
+    console.log(pos, val);
 }, false);
 
 small.addEventListener("click", function () {
-   BasicCalculator.setSize("small");
+    basicCalculator.setSize("small");
 }, false);
 medium.addEventListener("click", function () {
-    BasicCalculator.setSize("medium");
+    basicCalculator.setSize("medium");
 }, false);
 large.addEventListener("click", function () {
-    BasicCalculator.setSize("large");
+    basicCalculator.setSize("large");
 }, false);
 
 // setPos.addEventListener("click", function () {
