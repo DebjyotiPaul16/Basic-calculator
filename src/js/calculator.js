@@ -14,32 +14,72 @@ export default class Calculator {
         this._resultLimit = false;
     }
 
+    /* Get last element */
+    _getLastElement() {
+        return this._eqnArr[this._eqnArr.length - 1];
+    }
+
     /*--------- Set value to calculate --------------*/
     setValue(val) {
         if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit) && !this._isOperatorInserted && !this._isEqualPressed) {
             return;
         }
-        if (this._isEqualPressed) {
-            if (this._isResultUndefined) {
-                return;
-            }
-            this._result = (val !== ".") ? val : "0" + val;
-            this._renderResult();
-            this._isOperatorInserted = false;
-            this._isEqualPressed = false;
+        if (this._shouldPopulateEquation(val)) {
             return;
         }
+        if (val === ".") {
+            if (!!this._eqnArr.length) {
+                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + ".";
+            } else {
+                this._eqnArr.push("0.");
+            }
+        } else {
+            if (!!this._eqnArr.length) {
+                if (this._getLastElement()[this._getLastElement().length - 1] === ".") {
+                    this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
+                } else {
+                        this._eqnArr.push(val);
+                }
+            } else {
+                this._eqnArr.push(val);
+            }
+        }
+
+//         this._eqnArr.push("0");
+//         this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + ".";
+//     } else if (!!this._eqnArr.length) {
+//     if (this._getLastElement()[this._getLastElement().length - 1] === ".") {
+//     this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
+// } else {
+//     // if(this._shouldPopulateEquation(val)){
+//     //     return;
+//     // }else {
+//     this._eqnArr.push(val);
+//     // }
+// }
+// } else {
+//     // if(this._shouldPopulateEquation(val)){
+//     //     return;
+//     // }else {
+//     this._eqnArr.push(val);
+//     //  }
+
         if (!this._eqnArr.length || !this._isOperatorInserted) {
             this._result = (this._result === '0' && val !== ".") ? '' + val : this._result + val;
         } else {
             this._result = val;
         }
-        this._renderResult();
+
+        this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = false;
         if (this._result.length === this._restrictResult()) {
             this._resultLimit = true;
         }
+    }
+
+    _shouldPopulateEquation(val) {
+        return this._getLastElement() === "0" && val === "0";
     }
 
     _restrictResult() {
@@ -73,18 +113,19 @@ export default class Calculator {
             this._isResultUndefined = true;
             return;
         }
-        numbers = this._eqnArr.filter((v, i) => {
-            return !(i % 2);
-        });
-        operators = this._eqnArr.filter((v, i) => {
-            return i % 2;
-        });
-
-        result = numbers[0];
-
-        for (let i = 0; i < operators.length; i++) {
-            result = eval(result + operators[i] + numbers[i + 1]);
-        }
+        result = eval(this._eqnArr.join(""));
+        // numbers = this._eqnArr.filter((v, i) => {
+        //     return !(i % 2);
+        // });
+        // operators = this._eqnArr.filter((v, i) => {
+        //     return i % 2;
+        // });
+        //
+        // result = numbers[0];
+        //
+        // for (let i = 0; i < operators.length; i++) {
+        //     result = eval(result + operators[i] + numbers[i + 1]);
+        // }
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
@@ -92,7 +133,7 @@ export default class Calculator {
         } else {
             this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         }
-            this._lastFocus = document.activeElement;
+        this._lastFocus = document.activeElement;
         this._readResult();
     }
 
@@ -111,11 +152,19 @@ export default class Calculator {
     _renderEqn() {
         let self = this;
         let revisedEqnArr = [];
-        this._eqnArr.forEach(function(i) {
-            parseFloat(i) && i.indexOf(".") > -1 ? revisedEqnArr.push(self._roundup(i, self._precision)) :
-                (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
-        });
-        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
+        if (!!this._eqnArr.length) {
+            if ((!parseInt(this._eqnArr[this._eqnArr.length - 1]) || !parseInt(this._eqnArr[this._eqnArr.length - 2])) &&
+                this._getLastElement().indexOf(".") === -1 && !(this._getLastElement() === "0")) {
+
+                this._eqnArr[this._eqnArr.length - 1] = " " + this._eqnArr[this._eqnArr.length - 1];
+            }
+        }
+
+        // this._eqnArr.forEach(function (i) {
+        //     parseFloat(i) && i.indexOf(".") > -1 ? revisedEqnArr.push(self._roundup(i, self._precision)) :
+        //         (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
+        // });
+        this._displayEqnDiv.innerHTML = this._eqnArr.join("").replace(/\//g, "&divide").replace(/\*/g, "&times");
         this._checkOverflow();
     }
 
@@ -131,19 +180,27 @@ export default class Calculator {
         if (this._isResultUndefined) {
             return;
         }
+        if (this._isEqualPressed) {
+            this._eqnArr = [];
+            this._eqnArr.push(this._result);
+            this._eqnArr.push(sign);
+            this._renderEqn();
+            this._isEqualPressed = false;
+            return;
+        }
         if (this._isOperatorInserted) {
             this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
         } else {
-            this._eqnArr.push(
-                this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
-            );
-            this._evalResult();
+            // this._eqnArr.push(
+            //     this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
+            // );
+            //this._evalResult();
             this._eqnArr.push(sign);
             this._renderEqn();
             this._isOperatorInserted = true;
-            this._isEqualPressed = true;
+            // this._isEqualPressed = true;
         }
     }
 
@@ -185,15 +242,15 @@ export default class Calculator {
         if (this._isResultUndefined) {
             return;
         }
-        this._eqnArr.push(
-            this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
-        );
+        // this._eqnArr.push(
+        //     this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
+        // );
         this._evalResult();
-        this._eqnArr = [];
+        //this._eqnArr = [];
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
-        if(!this._isEqualPressed){
+        if (!this._isEqualPressed) {
             this._lastFocus = document.activeElement;
         }
         this._readResult();
