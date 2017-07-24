@@ -47,7 +47,7 @@ export default class Calculator {
     }
 
     _readResult() {
-        let self = this;
+        //let self = this;
         // self._displayResultDiv.setAttribute("tabindex", 0);
         // self._displayResultDiv.focus();
         //  setTimeout(function() {
