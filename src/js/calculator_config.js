@@ -36,7 +36,7 @@ export const calculator_data = [
         label: "9 button",
         operation:"setValue"
     }, {
-        name: 'x',
+        name: "&times",
         value: "*",
         label: 'Multiplication button',
         operation:"setSign"
@@ -84,7 +84,7 @@ export const calculator_data = [
         operation:"setSign"
     }],
     [{
-        name: '+/-',
+        name: '&plusmn',
         value: 'negate',
         label: "Sign button",
         operation:"negate"
@@ -94,7 +94,7 @@ export const calculator_data = [
         label: "0 button",
         operation:"setValue"
     }, {
-        name: '.',
+        name: '<strong>.</strong>',
         value: ".",
         label: 'Point button',
         operation:"setValue"

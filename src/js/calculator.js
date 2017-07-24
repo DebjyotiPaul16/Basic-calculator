@@ -48,11 +48,11 @@ export default class Calculator {
 
     _readResult() {
         let self = this;
-        self._displayResultDiv.setAttribute("tabindex", 0);
-        self._displayResultDiv.focus();
-        setTimeout(function() {
-            self._lastFocus.focus();
-        }, 800);
+        // self._displayResultDiv.setAttribute("tabindex", 0);
+        // self._displayResultDiv.focus();
+        //  setTimeout(function() {
+        //     self._lastFocus.focus();
+        //  },50);
     }
 
     _renderResult() {
@@ -92,7 +92,7 @@ export default class Calculator {
         } else {
             this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         }
-        this._lastFocus = document.activeElement;
+            this._lastFocus = document.activeElement;
         this._readResult();
     }
 
@@ -193,7 +193,9 @@ export default class Calculator {
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
-        this._lastFocus = document.activeElement;
+        if(!this._isEqualPressed){
+            this._lastFocus = document.activeElement;
+        }
         this._readResult();
         this._resetArrows();
     }

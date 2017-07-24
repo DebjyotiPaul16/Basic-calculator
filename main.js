@@ -10,8 +10,8 @@ var btnShow = document.getElementById("show-calc"),
 
 var basicCalculator = new Calculator.createCalculator();
 
-
 btnShow.addEventListener("click", function () {
+   // basicCalculator = new Calculator.createCalculator();
     basicCalculator.showCalculator();
 }, false);
 

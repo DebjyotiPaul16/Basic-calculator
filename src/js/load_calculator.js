@@ -8,6 +8,8 @@ export default class LoadCalculator {
         this._top = null;
         this._left = null;
         this._isCreated = false;
+        this.retryCount = 0;
+        this.maxRetry = 10;
         this._depArr = [{
             'jQuery': 'https://code.jquery.com/jquery-1.12.4.min.js'
         }, {
@@ -46,6 +48,7 @@ export default class LoadCalculator {
             self._createCalculator();
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
+            this._isCreated = true;
         }
     }
 
@@ -209,7 +212,14 @@ export default class LoadCalculator {
             }, 800);
 
         } else {
-            console.error("not possible to open calculator");
+            if(!this._isCreated && this.retryCount < this.maxRetry){
+                this.retryCount++;
+                setTimeout(this.showCalculator.bind(this),1000);
+                console.log(this.retryCount);
+            }else {
+                console.error("not possible to open calculator");
+            }
+
         }
     }
 }

@@ -5,11 +5,11 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator" tabindex="0">
+            `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0">
                 <div id="drag">
-                    <div id="minimizeCalc" style="cursor: pointer;display: inline-block">
-                        <button id="calc_icon"></button>
-                    </div>
+                    <!--<div id="minimizeCalc" style="cursor: pointer;display: inline-block">-->
+                        <!--<button id="calc_icon" style="display: none;"></button>-->
+                    <!--</div>-->
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
@@ -29,7 +29,7 @@ export default class CalculatorManger {
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <span class="disp_btn" id="disp" type="text" style="line-height:40px; display:block"></span>
+                                <span class="disp_btn" id="disp" aria-live="polite" aria-atomic="false" type="text" style="line-height:40px; display:block"></span>
                             </td>
                         </tr>
                         ${calculator_data.map((rowData) => {
@@ -76,7 +76,7 @@ export default class CalculatorManger {
             let $this = $(e.currentTarget),
                 operation = $this.attr('operation');
             if (operation === "setValue") {
-                calcobj.setValue($this.val());
+                calcobj.setValue($this.val(),e);
             } else if (operation === "setSign") {
                 calcobj.setSign($this.val());
             } else if (operation === "getResult") {
@@ -86,7 +86,7 @@ export default class CalculatorManger {
             } else {
                 calcobj.clearData($this.val());
             }
-            e.stopPropagation();
+
         });
     }
 
