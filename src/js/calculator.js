@@ -12,6 +12,7 @@ export default class Calculator {
         this._isResultUndefined = false;
         this._isEqualPressed = false;
         this._resultLimit = false;
+        this._renderResult();
     }
 
     /* Get last element */
@@ -21,48 +22,24 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit) && !this._isOperatorInserted && !this._isEqualPressed) {
+        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isOperatorInserted && !this._isEqualPressed) {
             return;
         }
         if (this._shouldPopulateEquation(val)) {
             return;
         }
-        if (val === ".") {
-            if (!!this._eqnArr.length) {
-                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + ".";
+        if (this._isEqualPressed) {
+            this._eqnArr = [];
+        }
+        if (!!this._eqnArr.length) {
+            if (this._isOperatorInserted) {
+                this._eqnArr.push(val);
             } else {
-                this._eqnArr.push("0.");
+                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
             }
         } else {
-            if (!!this._eqnArr.length) {
-                if (this._getLastElement()[this._getLastElement().length - 1] === ".") {
-                    this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
-                } else {
-                        this._eqnArr.push(val);
-                }
-            } else {
-                this._eqnArr.push(val);
-            }
+            val === "." ? this._eqnArr.push("0" + val) : this._eqnArr.push(val);
         }
-
-//         this._eqnArr.push("0");
-//         this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + ".";
-//     } else if (!!this._eqnArr.length) {
-//     if (this._getLastElement()[this._getLastElement().length - 1] === ".") {
-//     this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
-// } else {
-//     // if(this._shouldPopulateEquation(val)){
-//     //     return;
-//     // }else {
-//     this._eqnArr.push(val);
-//     // }
-// }
-// } else {
-//     // if(this._shouldPopulateEquation(val)){
-//     //     return;
-//     // }else {
-//     this._eqnArr.push(val);
-//     //  }
 
         if (!this._eqnArr.length || !this._isOperatorInserted) {
             this._result = (this._result === '0' && val !== ".") ? '' + val : this._result + val;
@@ -79,11 +56,20 @@ export default class Calculator {
     }
 
     _shouldPopulateEquation(val) {
-        return this._getLastElement() === "0" && val === "0";
+        return (this._getLastElement() === "0" || this._getLastElement() === undefined) && val === "0";
     }
 
-    _restrictResult() {
-        return (this._result.indexOf(".") !== -1 || this._result.indexOf("-") !== -1) ? (this._result.indexOf(".") !== -1 && this._result.indexOf("-") !== -1) ? 12 : 11 : 10;
+    _restrictEqn() {
+        return this._eqnArr.join("").length === 20;
+    }
+
+    _restrictResult(value) {
+        if (!!value) {
+            return (value.indexOf(".") !== -1 || value.indexOf("-") !== -1) ? (value.indexOf(".") !== -1 && value.indexOf("-") !== -1) ? 12 : 11 : 10;
+        } else {
+            return (this._result.indexOf(".") !== -1 || this._result.indexOf("-") !== -1) ? (this._result.indexOf(".") !== -1 && this._result.indexOf("-") !== -1) ? 12 : 11 : 10;
+        }
+
     }
 
     _readResult() {
@@ -113,19 +99,10 @@ export default class Calculator {
             this._isResultUndefined = true;
             return;
         }
+
+        this._eqnArr = this._isOperatorInserted ? this._eqnArr.slice(0, -1) : this._getLastElement().length === 0 ? this._eqnArr.slice(0, -2) : this._eqnArr;
         result = eval(this._eqnArr.join(""));
-        // numbers = this._eqnArr.filter((v, i) => {
-        //     return !(i % 2);
-        // });
-        // operators = this._eqnArr.filter((v, i) => {
-        //     return i % 2;
-        // });
-        //
-        // result = numbers[0];
-        //
-        // for (let i = 0; i < operators.length; i++) {
-        //     result = eval(result + operators[i] + numbers[i + 1]);
-        // }
+
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
@@ -142,7 +119,7 @@ export default class Calculator {
             if (value.indexOf("e") !== -1) {
                 return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision).toString();
             } else {
-                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult());
+                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult(value));
             }
         } else {
             return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision).toString();
@@ -152,19 +129,11 @@ export default class Calculator {
     _renderEqn() {
         let self = this;
         let revisedEqnArr = [];
-        if (!!this._eqnArr.length) {
-            if ((!parseInt(this._eqnArr[this._eqnArr.length - 1]) || !parseInt(this._eqnArr[this._eqnArr.length - 2])) &&
-                this._getLastElement().indexOf(".") === -1 && !(this._getLastElement() === "0")) {
-
-                this._eqnArr[this._eqnArr.length - 1] = " " + this._eqnArr[this._eqnArr.length - 1];
-            }
-        }
-
-        // this._eqnArr.forEach(function (i) {
-        //     parseFloat(i) && i.indexOf(".") > -1 ? revisedEqnArr.push(self._roundup(i, self._precision)) :
-        //         (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
-        // });
-        this._displayEqnDiv.innerHTML = this._eqnArr.join("").replace(/\//g, "&divide").replace(/\*/g, "&times");
+        this._eqnArr.forEach(function (i) {
+            parseFloat(i) && i.indexOf(".") > -1 && i[i.length - 1] !== "." ? revisedEqnArr.push(self._roundup(i, self._precision)) :
+                (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
+        });
+        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
         this._checkOverflow();
     }
 
@@ -177,13 +146,14 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if (this._isResultUndefined) {
+        if (this._isResultUndefined || this._restrictEqn()) {
             return;
         }
         if (this._isEqualPressed) {
             this._eqnArr = [];
             this._eqnArr.push(this._result);
             this._eqnArr.push(sign);
+            this._isOperatorInserted = true;
             this._renderEqn();
             this._isEqualPressed = false;
             return;
@@ -193,13 +163,16 @@ export default class Calculator {
             this._renderEqn();
             this._isEqualPressed = false;
         } else {
-            // this._eqnArr.push(
-            //     this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
-            // );
+            if (this._eqnArr.length === 0) {
+                this._eqnArr.push(
+                    this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
+                );
+            }
             //this._evalResult();
             this._eqnArr.push(sign);
             this._renderEqn();
             this._isOperatorInserted = true;
+            this._resultLimit = false;
             // this._isEqualPressed = true;
         }
     }
@@ -214,14 +187,24 @@ export default class Calculator {
             this._renderResult();
             this._isResultUndefined = false;
         } else if (cleartype === "bs") {
-            if (this._result === '0' || this._isEqualPressed || this._isResultUndefined) {
+            if (this._result === '0' || this._isEqualPressed || this._isResultUndefined || this._eqnArr.length === 0) {
                 return;
             }
-            this._result = this._result.slice(0, -1);
-            if (this._result.length === 0) {
-                this._result = '0'
+            if (!isNaN(this._getLastElement()) && this._getLastElement() !== "" && this._getLastElement().indexOf("(") === -1) {
+                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
+            } else if (this._getLastElement().indexOf("(") !== -1) {
+                this.negateValue();
+            } else {
+                this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
+                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
             }
-            this._renderResult();
+
+            if (this._result === '0') {
+                this._result = '0'
+            } else {
+                this._result = this._getLastElement();
+            }
+            this._renderEqn();
         } else if (cleartype === "ce") {
             this._result = '0';
             this._renderResult();
@@ -242,11 +225,7 @@ export default class Calculator {
         if (this._isResultUndefined) {
             return;
         }
-        // this._eqnArr.push(
-        //     this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
-        // );
         this._evalResult();
-        //this._eqnArr = [];
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = true;
@@ -258,13 +237,15 @@ export default class Calculator {
     }
 
     negateValue() {
-        if (this._result === '0' || this._isResultUndefined) {
+        if (this._result === '0' || this._isResultUndefined || this._isOperatorInserted) {
             return;
         }
-        if (this._result.indexOf("(") !== -1) {
-            this._result = eval(this._result);
+        if (this._getLastElement().indexOf("(") !== -1) {
+            this._eqnArr[this._eqnArr.length - 1] = (eval(this._eqnArr[this._eqnArr.length - 1]) * (-1)).toString();
+            this._renderEqn();
+            return;
         }
-        this._result = String(+(this._result) * -1);
-        this._renderResult();
+        this._eqnArr[this._eqnArr.length - 1] = "(" + String(+(this._eqnArr[this._eqnArr.length - 1]) * -1) + ")";
+        this._renderEqn();
     }
 }
