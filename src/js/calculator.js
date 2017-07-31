@@ -33,7 +33,7 @@ export default class Calculator {
         }
         if (!!this._eqnArr.length) {
             if (this._isOperatorInserted) {
-                this._eqnArr.push(val);
+                val === "." ? this._eqnArr.push("0" + val) : this._eqnArr.push(val);
             } else {
                 this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
             }
@@ -60,7 +60,7 @@ export default class Calculator {
     }
 
     _restrictEqn() {
-        return this._eqnArr.join("").length === 20;
+        return this._eqnArr.join("").length === 23;
     }
 
     _restrictResult(value) {
@@ -82,7 +82,7 @@ export default class Calculator {
     }
 
     _renderResult() {
-        this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
+        this._displayResultDiv.innerHTML = this._result.length >this._restrictResult()? this._roundup(this._result,this._restrictResult()) : this._result.slice(0, this._restrictResult());
         this._lastFocus = document.activeElement;
         this._readResult();
     }
@@ -101,7 +101,7 @@ export default class Calculator {
         }
 
         this._eqnArr = this._isOperatorInserted ? this._eqnArr.slice(0, -1) : this._getLastElement().length === 0 ? this._eqnArr.slice(0, -2) : this._eqnArr;
-        result = eval(this._eqnArr.join(""));
+        result = eval(this._eqnArr.join(" "));
 
         this._result = String(result);
         this._resultLimit = false;
@@ -180,27 +180,34 @@ export default class Calculator {
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
-            this._resetArrows();
+            // this._resetArrows();
             this._result = '0';
             this._eqnArr = [];
             this._renderEqn();
             this._renderResult();
             this._isResultUndefined = false;
         } else if (cleartype === "bs") {
-            if (this._result === '0' || this._isEqualPressed || this._isResultUndefined || this._eqnArr.length === 0) {
+            if (this._isEqualPressed || this._isResultUndefined || this._eqnArr.length === 0) {
                 return;
             }
-            if (!isNaN(this._getLastElement()) && this._getLastElement() !== "" && this._getLastElement().indexOf("(") === -1) {
+            if(this._getLastElement().length === 2 && this._getLastElement().indexOf("-") !== -1) {
+                this._eqnArr = this._eqnArr.slice(0, -1);
+                this._isOperatorInserted = true;
+                this._renderEqn();
+                return;
+            }
+
+            if (!isNaN(this._getLastElement()) && this._getLastElement() !== "") {
                 this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-            } else if (this._getLastElement().indexOf("(") !== -1) {
-                this.negateValue();
-            } else {
+            } else if (this._getLastElement().indexOf("-") === -1) {
                 this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
                 this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
             }
 
-            if (this._result === '0') {
-                this._result = '0'
+            if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
+                this._result = '0';
+                this._eqnArr = this._eqnArr.slice(0, -1);
+                // this._eqnArr.push("0");
             } else {
                 this._result = this._getLastElement();
             }
@@ -233,19 +240,25 @@ export default class Calculator {
             this._lastFocus = document.activeElement;
         }
         this._readResult();
-        this._resetArrows();
+        // this._resetArrows();
     }
 
     negateValue() {
         if (this._result === '0' || this._isResultUndefined || this._isOperatorInserted) {
             return;
         }
-        if (this._getLastElement().indexOf("(") !== -1) {
-            this._eqnArr[this._eqnArr.length - 1] = (eval(this._eqnArr[this._eqnArr.length - 1]) * (-1)).toString();
+        if (this._isEqualPressed) {
+            this._result = String(+(this._result) * -1);
+            this._renderResult();
+            return;
+        }
+        if (this._getLastElement() === "-") {
+            this._eqnArr = this._eqnArr.slice(0, -1);
+            // (eval(this._eqnArr[this._eqnArr.length - 1]) * (-1)).toString();
             this._renderEqn();
             return;
         }
-        this._eqnArr[this._eqnArr.length - 1] = "(" + String(+(this._eqnArr[this._eqnArr.length - 1]) * -1) + ")";
+        this._eqnArr[this._eqnArr.length - 1] = String(+(this._eqnArr[this._eqnArr.length - 1]) * -1);
         this._renderEqn();
     }
 }

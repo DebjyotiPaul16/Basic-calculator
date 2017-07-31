@@ -22,8 +22,8 @@ export default class CalculatorManger {
                                 <div class="calcDiv">
                                 <span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block">
                 								</span>
-                								 <button class="seek seekLeft"></button>
-                								 <button class="seek seekRight"></button>
+                								 <!--<button class="seek seekLeft"></button>-->
+                								 <!--<button class="seek seekRight"></button>-->
                 								</div>
                             </td>
                         </tr>

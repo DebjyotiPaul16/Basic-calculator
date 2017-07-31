@@ -1,21 +1,160 @@
+Try this example
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<title>calc</title>
-<link rel="stylesheet" href="calculator.css">
+  <title>Infix to Postfix</title>
+  <style type="text/css">
+    .header{font-family:verdana,arial,helvetica; font-weight:bold; font-size:22pt; color:#003366; filter:DropShadow(color=#CCCCDD, offX=2, offY=2, positive=1); width:100%}
+    .form_in{background:#FCFCFF; border:#003366 solid 1px}
+    .text_box{font-weight:bold; background:#EFEFF5; border:#003366 solid 1px; height:20px}
+    .button{background:#CCCCDD; font-weight:bold; color:#003366; border:#003366 solid 1px; height:20px; cursor:hand}
+    .link{color:#003366}
+    .link:hover{color:#666699}
+  </style>
 </head>
-<body>
-<h3>Simple Calculator</h3>
-<input type="button" id="show-calc" value="Open Calculator">
-<ul>
-  <li><a href="default.asp">Home</a></li>
-  <li><a href="news.asp">News</a></li>
-  <li><a href="contact.asp">Contact</a></li>
-  <li><a href="about.asp">About</a></li>
-  <li><div id="simple-calculator"></div></li>
-</ul>
+<body bgcolor="#FFFFFF">
 
-<script type="text/javascript" src="build/public/basic-calculator-1.0.0.combine.js"></script>
-<script type="text/javascript" src="main.js"></script>
+<!--BEGIN INFIX TO POSTFIX JAVASCRIPT-->
+<script language="JavaScript">
+  /*
+   Infix to Postfix Conversion
+   - Converts an Infix(Inorder) expression to Postfix(Postorder)
+   - For eg. '1*2+3' converts to '12*3+'
+   - Valid Operators are +,-,*,/
+   - No Error Handling in this version
+   JavaScript Implementation
+   - CopyRight 2002 Premshree Pillai
+   See algorithm at
+   -http://www.qiksearch.com/articles/cs/infix-postfix/index.htm
+   Created : 28/08/02 (dd/mm/yy)
+   Web : http://www.qiksearch.com
+   E-mail : qiksearch@rediffmail.com
+   */
+
+  function push_stack(stackArr,ele)
+  {
+    stackArr[stackArr.length]=ele;
+  }
+
+  function pop_stack(stackArr)
+  {
+    var _temp=stackArr[stackArr.length-1];
+    delete stackArr[stackArr.length-1];
+    stackArr.length--;
+    return(_temp);
+  }
+
+  function isOperand(who)
+  {
+    return(!isOperator(who)? true : false);
+  }
+
+  function isOperator(who)
+  {
+    return((who=="+" || who=="-" || who=="*" || who=="/" || who=="(" || who==")")? true : false);
+  }
+
+  function topStack(stackArr)
+  {
+    return(stackArr[stackArr.length-1]);
+  }
+
+  function isEmpty(stackArr)
+  {
+    return((stackArr.length==0)? true : false);
+  }
+
+  /* Check for Precedence */
+  function prcd(char1,char2)
+  {
+    var char1_index,char2_index;
+    var _def_prcd="-+*/";
+    for(var i=0; i<_def_prcd.length; i++)
+    {
+      if(char1==_def_prcd.charAt(i)) char1_index=i;
+      if(char2==_def_prcd.charAt(i)) char2_index=i;
+    }
+    if(((char1_index==0)||(char1_index==1)) && (char2_index>1)) return false;
+    else return true;
+  }
+
+  function InfixToPostfix(infixStr,postfixStr)
+  {
+    var postfixStr=new Array();
+    var stackArr=new Array();
+    var postfixPtr=0;
+    infixStr=infixStr.split('');
+    for(var i=0; i<infixStr.length; i++)
+    {
+      if(isOperand(infixStr[i]))
+      {
+        postfixStr[postfixPtr]=infixStr[i];
+        postfixPtr++;
+      }
+      else
+      {
+        while((!isEmpty(stackArr)) && (prcd(topStack(stackArr),infixStr[i])))
+        {
+          postfixStr[postfixPtr]=topStack(stackArr);
+          pop_stack(stackArr);
+          postfixPtr++;
+        }
+        if((!isEmpty(stackArr)) && (infixStr[i]==")"))
+        {
+          pop_stack(stackArr);
+        }
+        else
+        {
+          push_stack(stackArr,infixStr[i]);
+        }
+      }
+    }
+    while(!isEmpty(stackArr))
+    {
+      postfixStr[postfixStr.length]=topStack(stackArr);
+      pop_stack(stackArr);
+    }
+    var returnVal='';
+    for(var i=0; i<postfixStr.length; i++)
+    {
+      returnVal+=postfixStr[i];
+    }
+    return(returnVal);
+  }
+</script>
+<!--END INFIX TO POSTFIX JAVASCRIPT-->
+
+<center><span class="header">Infix to Postfix Conversion</span></center>
+<!--BEGIN FORM-->
+<center>
+  <form name="input_form">
+    <table class="form_in" cellspacing="0" cellpadding="3">
+      <tr bgcolor="#003366">
+        <td><font face="verdana,arial,helvetica" size="-2" color="#CCCCDD">Infix Expression :</font></td>
+
+        <td><font face="verdana,arial,helvetica" size="-2" color="#CCCCDD">Postfix Expression :</font></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><input type="text" name="infixVal" class="text_box" value=""></td>
+        <td><input type="text" name="postfixVal" class="text_box" value=""></td>
+        <td align="bottom"><input type="button" onClick="document.input_form.postfixVal.value=InfixToPostfix(document.input_form.infixVal.value,'arr')" value="Infix to Postfix" class="button"></td>
+      </tr>
+
+    </table>
+  </form>
+</center>
+<!--END FORM-->
+
+<table width="465" align="center"><tr><td>
+  <font face="verdana,arial,helvetica" size="-1" color="#000000">
+    This is the "JavaScript" Implementation of converting an Infix(Inorder) expression to Postfix(Postorder) expression.
+    <br><br><a href="http://www.qiksearch.com/articles/cs/infix-postfix/index.htm" class="link">Click here</a> for the algorithm used.
+    <hr style="color:#003366; height:1px">
+    &#169 2002 <a href="http://www.qiksearch.com" class="link" title="Click here to visit Qiksearch.com">Premshree Pillai</a>.
+  </font>
+
+</td></tr></table>
 
 </body>
 </html>
