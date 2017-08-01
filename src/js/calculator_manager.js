@@ -20,7 +20,7 @@ export default class CalculatorManger {
                         <tr>
                             <td colspan="4">
                                 <div class="calcDiv">
-                                <span class="disp_btn" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block">
+                                <span class="disp_btn" tabindex="0" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block">
                 								</span>
                 								 <!--<button class="seek seekLeft"></button>-->
                 								 <!--<button class="seek seekRight"></button>-->
@@ -29,7 +29,7 @@ export default class CalculatorManger {
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <span class="disp_btn" id="disp" aria-live="polite" aria-atomic="false" type="text" style="line-height:40px; display:block"></span>
+                                <span class="disp_btn" tabindex="0" id="disp" aria-live="polite" aria-atomic="false" type="text" style="line-height:40px; display:block"></span>
                             </td>
                         </tr>
                         ${calculator_data.map((rowData) => {
@@ -68,7 +68,7 @@ export default class CalculatorManger {
         let elemValue = columnData.value,
             label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
             operation = columnData.operation;
-        return '<button class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+        return '<button class="btn opeationButton" tabindex="0" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
     }
 
     _operateCalculator(calcobj) {
@@ -76,7 +76,7 @@ export default class CalculatorManger {
             let $this = $(e.currentTarget),
                 operation = $this.attr('operation');
             if (operation === "setValue") {
-                calcobj.setValue($this.val(),e);
+                calcobj.setValue($this.val(), e);
             } else if (operation === "setSign") {
                 calcobj.setSign($this.val());
             } else if (operation === "getResult") {
@@ -108,7 +108,7 @@ export default class CalculatorManger {
                 let xMouse = event.pageX,
                     yMouse = event.pageY,
                     $this = event.target,
-                    //get offsets
+                //get offsets
                     bodySelector = $('body'),
                     contMinWidth = bodySelector.offset().left,
                     contMaxWidth = bodySelector.width() + contMinWidth,
@@ -169,7 +169,7 @@ export default class CalculatorManger {
                 }
             },
             stop: () => {
-                setTimeout(function() {
+                setTimeout(function () {
                     calcElem.find('#calc_icon').addClass('maximize');
                 }, 200);
             }
@@ -186,7 +186,7 @@ export default class CalculatorManger {
                 111: '/'
             };
             if (!isNaN(event.key) && event.keyCode !== 32) {
-                calcobj.setValue(event.key);
+                calcobj.setValue(event.key, event);
             } else if (event.keyCode === 110) {
                 calcobj.setValue('.');
             } else if (event.keyCode === 107 || event.keyCode === 109 || event.keyCode === 106 || event.keyCode === 111) {
@@ -200,6 +200,15 @@ export default class CalculatorManger {
             } else if (event.keyCode == 8) {
                 calcobj.clearData('bs');
             }
+
+            $(document).off("keydown").on("keydown", (e)=> {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    calcobj.getResult();
+                }
+
+            })
         });
     }
 
@@ -322,7 +331,7 @@ export default class CalculatorManger {
         self._getElement("#calc_state")[0].setAttribute("tabindex", "0");
         self._getElement("#calc_state")[0].innerText = "Calculator Hidden";
         self._getElement("#calc_state")[0].focus();
-        setTimeout(function() {
+        setTimeout(function () {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";

@@ -1,11 +1,11 @@
 body {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    overflow: hidden;
-}
+     position: fixed;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     top: 0;
+     overflow: hidden;
+ }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f {
     position: absolute;

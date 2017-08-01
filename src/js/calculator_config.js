@@ -84,7 +84,7 @@ export const calculator_data = [
         operation:"setSign"
     }],
     [{
-        name: '&plusmn',
+        name: '+/-',
         value: 'negate',
         label: "Sign button",
         operation:"negate"

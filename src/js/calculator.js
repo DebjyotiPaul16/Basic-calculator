@@ -12,7 +12,7 @@ export default class Calculator {
         this._isResultUndefined = false;
         this._isEqualPressed = false;
         this._resultLimit = false;
-        this._renderResult();
+        // this._renderResult();
     }
 
     /* Get last element */
@@ -21,7 +21,7 @@ export default class Calculator {
     }
 
     /*--------- Set value to calculate --------------*/
-    setValue(val) {
+    setValue(val, e) {
         if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isOperatorInserted && !this._isEqualPressed) {
             return;
         }
@@ -82,7 +82,7 @@ export default class Calculator {
     }
 
     _renderResult() {
-        this._displayResultDiv.innerHTML = this._result.length >this._restrictResult()? this._roundup(this._result,this._restrictResult()) : this._result.slice(0, this._restrictResult());
+        this._displayResultDiv.innerHTML = this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
         this._lastFocus = document.activeElement;
         this._readResult();
     }
@@ -190,7 +190,12 @@ export default class Calculator {
             if (this._isEqualPressed || this._isResultUndefined || this._eqnArr.length === 0) {
                 return;
             }
-            if(this._getLastElement().length === 2 && this._getLastElement().indexOf("-") !== -1) {
+            if(this._isOperatorInserted){
+                this._eqnArr = this._eqnArr.slice(0, -1);
+                this._renderEqn();
+                return;
+            }
+            if (this._getLastElement().length === 2 && this._getLastElement().indexOf("-") !== -1) {
                 this._eqnArr = this._eqnArr.slice(0, -1);
                 this._isOperatorInserted = true;
                 this._renderEqn();
