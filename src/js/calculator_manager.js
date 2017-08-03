@@ -6,30 +6,26 @@ export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
             `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0">
-                <div id="drag">
-                    <!--<div id="minimizeCalc" style="cursor: pointer;display: inline-block">-->
-                        <!--<button id="calc_icon" style="display: none;"></button>-->
-                    <!--</div>-->
+                <div id="drag">                
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
                             <td style="text-align: right;background-color: #1A2533" colspan="4">
 																<span id="calc_state" class="sr-only" aria-hidden="true"></span>
-                                <button  class="close-calculator" aria-label="Hide button">Hide</button>
+                                <button  class="close-calculator" aria-label="Hide">Hide</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">                  
+                                <span class="disp_btn" tabindex="0" id="disp_eqn" role="textbox" aria-label="equation" aria-live="polite" aria-atomic="false" style="line-height:40px; display:block">
+                								</span>     
+                								<span class="sr-only">equals</span>		
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
-                                <div class="calcDiv">
-                                <span class="disp_btn" tabindex="0" id="disp_eqn" name="display" type="text" style="line-height:40px; display:block">
-                								</span>
-                								 <!--<button class="seek seekLeft"></button>-->
-                								 <!--<button class="seek seekRight"></button>-->
-                								</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <span class="disp_btn" tabindex="0" id="disp" aria-live="polite" aria-atomic="false" type="text" style="line-height:40px; display:block"></span>
+                            <div class="disp_btn_outer">
+                                <span class="disp_btn" role="textbox" tabindex="0" id="disp" aria-live="polite" aria-atomic="false" aria-label="result" type="text" style="line-height:40px; display:block"></span>
+                            </div>
                             </td>
                         </tr>
                         ${calculator_data.map((rowData) => {
@@ -68,11 +64,11 @@ export default class CalculatorManger {
         let elemValue = columnData.value,
             label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
             operation = columnData.operation;
-        return '<button class="btn opeationButton" tabindex="0" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+        return '<button class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
     }
 
     _operateCalculator(calcobj) {
-        $(document).off('click', '.opeationButton').on('click', '.opeationButton', (e) => {
+        $(this._getElement(".opeationButton")).off('click').on('click', (e) => {
             let $this = $(e.currentTarget),
                 operation = $this.attr('operation');
             if (operation === "setValue") {
@@ -201,14 +197,6 @@ export default class CalculatorManger {
                 calcobj.clearData('bs');
             }
 
-            $(document).off("keydown").on("keydown", (e)=> {
-                if (e.which === 13) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    calcobj.getResult();
-                }
-
-            })
         });
     }
 
@@ -242,14 +230,19 @@ export default class CalculatorManger {
                 event.target.focus();
             }
             if (this._calcInitialOpen) {
-                this.changeLabel();
+                // this.changeLabel();
                 this._calcInitialOpen = false;
             }
         });
 
-        $(document).off("keydown").on("keydown", () => {
+        $(document).off("keydown").on("keydown", function(e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                // this.calcobj.getResult();
+            }
             if (this._calcInitialOpen) {
-                this.changeLabel();
+                // this.changeLabel();
                 this._calcInitialOpen = false;
             }
         });
@@ -325,7 +318,7 @@ export default class CalculatorManger {
 
     closeCalculator() {
         let self = this;
-        self.changeLabel();
+        // self.changeLabel();
         self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
         self._getElement("#calc_state").css("display", "inline-block");
         self._getElement("#calc_state")[0].setAttribute("tabindex", "0");

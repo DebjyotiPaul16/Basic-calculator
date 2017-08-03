@@ -49,7 +49,6 @@ body {
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f .disp_btn {
-    /* width: 290px;*/
     height: 40px;
     border: 0;
     background-color: #fff;
@@ -58,33 +57,19 @@ body {
     color: #333;
 }
 
-#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f .disp_btn:focus {
-    outline: none;
-}
-
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc td {
     padding: 0;
     width: 100px;
-    /*border: 1px solid;*/
-    /*border: 1px solid #fff;*/
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc button {
-    /*background-color:#BFBFBF !important;
-    border-radius:5px;
-    line-height:0;
-    padding:0;
-    box-shadow: inset 0 0 0 2px #F9FDFE;
-    color: #000 !important;
-    font-family:areal !important;
-    text-transform:none;*/
     height: 48px;
     width: 100%;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag #calc tr:first-child td button {
     width: auto;
-    height: 19px;
+    height: 20px;
     background: #115b9b !important;
     margin-top: -9px;
 }
@@ -101,14 +86,6 @@ body {
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag table#calc tr:nth-child(2) td, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag table#calc tr:nth-child(3) td {
     padding: 0px;
 }
-
-
-/*#calc tr>td>button:hover, #calc tr>td>button:focus {
-    background-color: #337ab7;
-    border-color: #2e6da4;
-    cursor: pointer;
-    color: #fff;
-}*/
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr>td>div>button {
     background-color: transparent;
@@ -148,23 +125,10 @@ body {
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(2) td span, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(3) td span {
     font-family: arial;
-    border: 1px solid #ccc;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(2) td span:first-child, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(3) td span:first-child {
     text-indent: 7px;
-}
-
-#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(2) td span:first-child {
-    /*padding-right: 5px;*/
-    /*margin-top: 4px;*/
-    margin-bottom: -1px;
-    border: 0;
-    position: absolute;
-    width: 100% !important;
-    text-align: left;
-    right: 0;
-    line-height: 32px;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(3) td span:first-child {
@@ -176,12 +140,17 @@ body {
     margin-bottom: 1px;
 }
 
-#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(2) td span:last-child, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(3) td span:last-child {
-    line-height: 54px !important;
-    height: 48px;
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(2) td span:last-child,
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(3) td span:last-child {
+        height: 45px;
+    margin-top: 2px;
 }
 
-#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(4) td:first-child button:before {
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(3) td span:last-child {
+    line-height: 50px !important;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(4) td:first-child button:after {
     position: absolute;
     content: "";
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAAGXcA1uAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUZDQjM1N0U1NzMxMTFFN0I5RkU4RTBENEQ1QjUyQkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUZDQjM1N0Y1NzMxMTFFN0I5RkU4RTBENEQ1QjUyQkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFRkNCMzU3QzU3MzExMUU3QjlGRThFMEQ0RDVCNTJCQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFRkNCMzU3RDU3MzExMUU3QjlGRThFMEQ0RDVCNTJCQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvFh8VQAAAGZSURBVHjaYvz//z8DDDBBaZCIFiNUBkS8AgggRnRlYFEQDZKBSwEEEAOIDcRi/9EASHA1El8LiF+BGMgGI4wBAoAAQrERGbBgUw1z1hqYbijtDDMKWTUjTDdIhxiSSpDgNWR/PEPzxguAAMLpKlyABYlNlE6Qm0SxKH4Ndbg2EOuhyEDdig5AQawLDWaQ/EvkuGDAEic4AcmeBgggkjUwMZAIkDW8gYYWPvwSpiEciIWJsEAMW7A6ArEOlP0SXR7EeY0l9LShmAGW5JE1YAMwk3XQJUB+CENzJygPikNpENDBljSQrb2MxnfEFdP/SY0HVyLU+5GcNAACjGQNlCQlZOAOSjZEJC18GBQr/th8sBaIg2jhAzFoUYHN8MtA7ASVZ8CSjkByV/FZEAYNEhEcDpGAGi4GTYivoFgbmkjfIJW3DOgJlaiiCCmLaCMVY7roeQtb/SNKSBGS4VpIBusg5Uec+pmQvL4GT1w5QYOCGRo0l6Dx8gqaYsSgagjmg1AgXkXLfLAaKTVRA7xkwSL4GmeKoGJOphoAAAeOfAmIouDbAAAAAElFTkSuQmCC);
@@ -193,11 +162,6 @@ body {
     margin-left: -12px;
     margin-top: -11px;
 }
-
-
-/*#calc tr:nth-child(5) td:last-child button:hover:before {
-    background-image: url(backarrow-white.png);
-}*/
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(4) td button, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(5) td:last-child button, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(6) td:last-child button, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(7) td:last-child button, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:last-child button {
     background-color: #337ab7;
@@ -222,7 +186,6 @@ body {
     margin-top: 4px;
     margin-bottom: -1px;
     border-bottom: 0px;
-    /*width: 295px;*/
     border: 1px solid #ccc;
     height: 40px;
     overflow: hidden;
@@ -270,6 +233,9 @@ body {
 }
 
 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag #calc .disp_btn_outer{border: 1px solid #ccc;}
+
+
 /*====For Small Devices====*/
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc {
@@ -298,7 +264,7 @@ body {
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc tr:first-child td button {
     width: auto;
-    height: 19px;
+    height: 20px;
     background: #115b9b !important;
     margin-top: -9px;
 }
@@ -315,18 +281,58 @@ body {
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc .disp_btn {
-    height: 48px;
+    height: 45px;
+    margin-top: 2px;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc .calcDiv .disp_btn{
+	height: 40px;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc tr:nth-child(2) td span:last-child, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc tr:nth-child(3) td span:last-child {
-    line-height: 54px !important;
+    line-height: 50px !important;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc tr:first-child td button:hover {
     background-color: #1466ac !important;
 }
 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small #calc tr:nth-child(8) td:first-child button{
+	background-color: #115b9b;
+	font-weight: bold;
+}
 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small #calc tr:nth-child(8) td:first-child button:hover{
+	background-color: #337ab7;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc tr:nth-child(2) td span.disp_btn{
+    position: relative;
+    text-indent: 10px;
+    padding-right: 5px;
+    margin-top: 4px;
+    margin-bottom: -1px;
+    border-bottom: 0px;
+    border: 1px solid #ccc;
+    height: 40px;
+    overflow: hidden;
+    border-bottom: 0px;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag table#calc tr:nth-child(2) td span.disp_btn{
+    position: relative;
+    text-indent: 10px;
+    padding-right: 5px;
+    margin-top: 4px;
+    margin-bottom: -1px;
+    border-bottom: 0px;
+    border: 1px solid #ccc;
+    height: 40px;
+    overflow: hidden;
+    border-bottom: 0px;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.small table#calc tr:nth-child(2) td span.disp_btn{}
 /*====Ends For Small Devices====*/
 
 
@@ -384,19 +390,39 @@ body {
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.medium table#calc tr:nth-child(3) td span:first-child {
     font-size: 48px;
-    line-height: 75px !important;
+    line-height: 75px !important;	
+    height: 64px;
+	    margin-top: 2px;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.medium table#calc .disp_btn {
     font-size: 24px;
-    height: 67px;
+    height: 40px;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.medium table#calc tr:nth-child(2) td span.disp_btn{
+    position: relative;
+    text-indent: 10px;
+    padding-right: 5px;
+    margin-top: 4px;
+    margin-bottom: -1px;
+    border-bottom: 0px;
+    border: 1px solid #ccc;
+    height: 40px;
+    overflow: hidden;
+    border-bottom: 0px;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.medium table#calc tr:first-child td button:hover {
     background-color: #1466ac !important;
 }
 
-
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.medium #calc tr:nth-child(4) td:first-child button:after {
+   width: 35px;
+    height: 35px;
+    margin-left: -20px;
+    margin-top: -17px;
+}
 /*====Ends For Medium Devices====*/
 
 
@@ -457,14 +483,68 @@ body {
     line-height: 100px !important;
 }
 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.large table#calc .calcDiv .disp_btn{
+	height: 40px;
+}
+
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.large table#calc .disp_btn {
     font-size: 33px;
-    height: 95px;
+    height: 94px;
+	    margin-top: 2px;
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.large table#calc tr:first-child td button:hover {
     background-color: #1466ac !important;
 }
 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.large #calc tr:nth-child(4) td:first-child button:after {
+  width: 52px;
+    height: 52px;
+    margin-left: -30px;
+    margin-top: -25px;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.large table#calc tr:nth-child(2) td span.disp_btn{
+    position: relative;
+    text-indent: 10px;
+    padding-right: 5px;
+    margin-top: 4px;
+    margin-bottom: -1px;
+    border-bottom: 0px;
+    border: 1px solid #ccc;
+    height: 40px;
+    overflow: hidden;
+    border-bottom: 0px;
+}
 
 /*====Ends For Large Devices====*/
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button{background-color: #115b9b;}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:nth-child(3) button{ font-weight: bold;}
+
+/*FOCUS ON TAB*/
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(4) td button:focus, 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(5) td:last-child button:focus, 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(6) td:last-child button:focus, 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(7) td:last-child button:focus, 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button:focus, 
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:last-child button:focus {
+    background-color: #115b9b;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #drag.medium table#calc tr:first-child td button:focus {
+    background: #1466ac !important;
+}
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button:focus, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button:hover{background-color: #337ab7;}
+
+/*====Ends For FOCUS ON TAB====*/
+
+/*====For IE====*/
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+   #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f .large#drag #calc tr:nth-child(4) td:first-child button::after{margin-left: 24px;}		
+   #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f .medium#drag #calc tr:nth-child(4) td:first-child button::after{margin-left: 12px;}	
+   #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(4) td:first-child button:after{ margin-left: 5px;}
+}
+/*====Ends For IE====*/
