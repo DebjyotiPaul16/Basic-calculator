@@ -519,7 +519,7 @@ body {
 
 /*====Ends For Large Devices====*/
 
-#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button{background-color: #115b9b;}
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:last-child button{background-color: #115b9b;}
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:nth-child(3) button{ font-weight: bold;}
 

@@ -72,19 +72,11 @@ export default class Calculator {
 
     }
 
-    _readResult() {
-        //let self = this;
-        // self._displayResultDiv.setAttribute("tabindex", 0);
-        // self._displayResultDiv.focus();
-        //  setTimeout(function() {
-        //     self._lastFocus.focus();
-        //  },50);
-    }
-
     _renderResult() {
-        this._displayResultDiv.innerHTML = this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
+        this._displayResultDiv.innerHTML = this._result.length > this._restrictResult() ? this._roundup(this._result,this._precision) : this._result;
+            // this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
         this._lastFocus = document.activeElement;
-        this._readResult();
+        // this._readResult();
     }
 
     _evalResult() {
@@ -111,7 +103,7 @@ export default class Calculator {
             this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
         }
         this._lastFocus = document.activeElement;
-        this._readResult();
+        // this._readResult();
     }
 
     _roundup(value, precision) {
@@ -193,6 +185,7 @@ export default class Calculator {
             if(this._isOperatorInserted){
                 this._eqnArr = this._eqnArr.slice(0, -1);
                 this._renderEqn();
+                this._isOperatorInserted = false;
                 return;
             }
             if (this._getLastElement().length === 2 && this._getLastElement().indexOf("-") !== -1) {
@@ -234,7 +227,7 @@ export default class Calculator {
     }
 
     getResult() {
-        if (this._isResultUndefined) {
+        if (this._isResultUndefined || this._eqnArr.length === 0) {
             return;
         }
         this._evalResult();
@@ -244,7 +237,7 @@ export default class Calculator {
         if (!this._isEqualPressed) {
             this._lastFocus = document.activeElement;
         }
-        this._readResult();
+        // this._readResult();
         // this._resetArrows();
     }
 
