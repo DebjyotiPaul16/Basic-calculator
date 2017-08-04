@@ -17,8 +17,7 @@ export default class CalculatorManger {
                         <tr>
                             <td colspan="4">                  
                                 <span class="disp_btn" tabindex="0" id="disp_eqn" role="textbox" aria-label="equation" aria-live="polite" aria-atomic="false" style="line-height:40px; display:block">
-                								</span>     
-                								<span class="sr-only">equals</span>		
+                								</span>
                             </td>
                         </tr>
                         <tr>

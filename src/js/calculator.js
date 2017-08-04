@@ -30,6 +30,7 @@ export default class Calculator {
         }
         if (this._isEqualPressed) {
             this._eqnArr = [];
+            this._result = "0";
         }
         if (!!this._eqnArr.length) {
             if (this._isOperatorInserted) {
@@ -60,7 +61,7 @@ export default class Calculator {
     }
 
     _restrictEqn() {
-        return this._eqnArr.join("").length === 23;
+        return this._checkOverflow(this._displayEqnDiv);
     }
 
     _restrictResult(value) {
@@ -73,8 +74,10 @@ export default class Calculator {
     }
 
     _renderResult() {
-        this._displayResultDiv.innerHTML = this._result.length > this._restrictResult() ? this._roundup(this._result,this._precision) : this._result;
-            // this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
+        let result;
+        result = this._result.length > this._restrictResult() ? this._roundup(this._result, this._precision) : this._result;
+        this._displayResultDiv.innerHTML = "<span class='sr-only'>equals</span>" + result;
+        // this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
         this._lastFocus = document.activeElement;
         // this._readResult();
     }
@@ -98,10 +101,11 @@ export default class Calculator {
         this._result = String(result);
         this._resultLimit = false;
         if (this._result.length > this._restrictResult()) {
-            this._displayResultDiv.innerHTML = this._roundup(this._result, this._precision);
+            this._result = this._roundup(this._result, this._precision);
         } else {
-            this._displayResultDiv.innerHTML = this._result.slice(0, this._restrictResult());
+            this._result = this._result.slice(0, this._restrictResult());
         }
+        this._renderResult();
         this._lastFocus = document.activeElement;
         // this._readResult();
     }
@@ -121,19 +125,27 @@ export default class Calculator {
     _renderEqn() {
         let self = this;
         let revisedEqnArr = [];
-        this._eqnArr.forEach(function (i) {
-            parseFloat(i) && i.indexOf(".") > -1 && i[i.length - 1] !== "." ? revisedEqnArr.push(self._roundup(i, self._precision)) :
-                (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
-        });
-        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
-        this._checkOverflow();
+       
+            this._eqnArr.forEach(function (i) {
+                parseFloat(i) && i.indexOf(".") > -1 && i[i.length - 1] !== "." ? revisedEqnArr.push(self._roundup(i, self._precision)) :
+                    (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
+            });
+            this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
+            console.log(this._checkOverflow(this._displayEqnDiv));
     }
 
-    _checkOverflow() {
-        if (this._displayEqnDiv.innerHTML.length * 7.5 > this._displayResultDiv.offsetWidth) {
-            this._displayEqnDiv.parentElement.querySelector(".seekLeft").style.display = 'inline-block';
-            this._displayEqnDiv.parentElement.querySelector(".seekLeft").setAttribute("aria-label", "Left");
-        }
+    _checkOverflow(el) {
+        var curOverflow = el.style.overflow;
+
+        if ( !curOverflow || curOverflow === "visible" )
+            el.style.overflow = "hidden";
+
+        var isOverflowing = el.clientWidth < el.scrollWidth
+            || el.clientHeight < el.scrollHeight;
+
+        el.style.overflow = curOverflow;
+
+        return isOverflowing;
     }
 
     /*--------- Set operator sign to calculate --------------*/
@@ -150,7 +162,7 @@ export default class Calculator {
             this._isEqualPressed = false;
             return;
         }
-        if (this._isOperatorInserted) {
+        if (this._isOperatorInserted && this._eqnArr.length !== 0) {
             this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
@@ -182,7 +194,7 @@ export default class Calculator {
             if (this._isEqualPressed || this._isResultUndefined || this._eqnArr.length === 0) {
                 return;
             }
-            if(this._isOperatorInserted){
+            if (this._isOperatorInserted) {
                 this._eqnArr = this._eqnArr.slice(0, -1);
                 this._renderEqn();
                 this._isOperatorInserted = false;

@@ -519,7 +519,7 @@ body {
 
 /*====Ends For Large Devices====*/
 
-#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:last-child button{background-color: #115b9b;}
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button{background-color: #115b9b;}
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:nth-child(3) button{ font-weight: bold;}
 
@@ -538,6 +538,17 @@ body {
 }
 
 #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button:focus, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc tr:nth-child(8) td:first-child button:hover{background-color: #337ab7;}
+
+@-moz-document url-prefix() {
+
+#calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc span:focus, #calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f #calc button:focus{
+ outline: 2px solid #87b4fc !important; 
+     -webkit-box-shadow: 0px 0px 5px  #87b4fc !important;
+     box-shadow: 0px 0px 5px  #87b4fc !important;
+}
+
+}
+
 
 /*====Ends For FOCUS ON TAB====*/
 
