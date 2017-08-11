@@ -9,24 +9,25 @@ export default class CalculatorManger {
                 <div id="drag">                
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td style="text-align: right;background-color: #1A2533" colspan="4">
-																<span id="calc_state" class="sr-only" aria-hidden="true"></span>
+                            <td colspan="4">
+								<span id="calc_state" class="sr-only" aria-hidden="true"></span>
                                 <button  class="close-calculator" aria-label="Hide">Hide</button>
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="4">                  
-                                <span class="disp_btn" tabindex="0" id="disp_eqn" role="textbox" aria-label="equation" aria-live="polite" aria-atomic="false" style="line-height:40px; display:block">
-                								</span>
-                            </td>
-                        </tr>
-                        <tr>
                             <td colspan="4">
-                            <div class="disp_btn_outer">
-                                <span class="disp_btn" role="textbox" tabindex="0" id="disp" aria-live="polite" aria-atomic="false" aria-label="result" type="text" style="line-height:40px; display:block"></span>
-                            </div>
+                                    <div class="disp-holder">
+                                      <div class="disp-eqn-outer" tabindex="0" role="contentinfo" aria-labelledby="hidden-text-equation">
+                                           <span id="hidden-text-equation" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+                                           <span class="disp_btn" id="disp_eqn" aria-hidden="true">
+                					    			</span>
+               					      </div>
+               						  <div class="disp_btn_outer">
+                                         <span class="disp_btn" role="textbox" tabindex="0" id="disp" aria-live="polite" aria-atomic="true" aria-label="result" type="text"></span>
+                                      </div>
+                                    </div>
                             </td>
-                        </tr>
+                        </tr>                       
                         ${calculator_data.map((rowData) => {
                 return `<tr>
                           ${rowData.map((columnData) => {
@@ -62,12 +63,13 @@ export default class CalculatorManger {
     _createCalculatorButton(columnData) {
         let elemValue = columnData.value,
             label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
-            operation = columnData.operation;
-        return '<button class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+            operation = columnData.operation,
+            id = "btn"+columnData.operation;
+        return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
     }
 
     _operateCalculator(calcobj) {
-        $(this._getElement(".opeationButton")).off('click').on('click', (e) => {
+        this._getElement(".opeationButton",true).off('click').on('click', (e) => {
             let $this = $(e.currentTarget),
                 operation = $this.attr('operation');
             if (operation === "setValue") {
@@ -201,7 +203,7 @@ export default class CalculatorManger {
 
     _calculatorShowHide() {
         let self = this;
-        $(document).off('click', '.close-calculator').on('click', '.close-calculator', () => {
+        this._getElement(".close-calculator",true).off('click').on('click', () => {
             self.closeCalculator();
             $(document).off("keyup");
         });
@@ -209,7 +211,7 @@ export default class CalculatorManger {
 
 
     _handleCalculatorFocus() {
-
+        let self = this;
         this._getElement(".close-calculator").off("keydown").on("keydown", (event) => {
             if (event.shiftKey && event.keyCode === 9) {
                 $("[value='=']").focus();
@@ -238,7 +240,7 @@ export default class CalculatorManger {
             if (e.keyCode === 13) {
                 e.preventDefault();
                 e.stopPropagation();
-                // this.calcobj.getResult();
+                self._getElement("#btngetResult").focus();
             }
             if (this._calcInitialOpen) {
                 // this.changeLabel();

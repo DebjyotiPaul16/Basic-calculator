@@ -12,7 +12,7 @@ export default class Calculator {
         this._isResultUndefined = false;
         this._isEqualPressed = false;
         this._resultLimit = false;
-        // this._renderResult();
+        this._calculatorSize = "";
     }
 
     /* Get last element */
@@ -22,7 +22,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val, e) {
-        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isOperatorInserted && !this._isEqualPressed) {
+        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
         if (this._shouldPopulateEquation(val)) {
@@ -74,18 +74,26 @@ export default class Calculator {
     }
 
     _renderResult() {
-        let result;
-        result = this._result.length > this._restrictResult() ? this._roundup(this._result, this._precision) : this._result;
-        this._displayResultDiv.innerHTML = "<span class='sr-only'>equals</span>" + result;
+        let result,
+            isRoundedUp = this._result.length > this._restrictResult();
+        this._renderEqn();
+        if (isRoundedUp) {
+           // this._result = this._roundup(this._result, this._precision);
+            $(this._displayResultDiv).addClass("roundUp");
+        } else {
+            //this._result = this._result.slice(0, this._restrictResult());
+            $(this._displayResultDiv).removeClass("roundUp");
+        }
+        result = isRoundedUp ? this._roundup(this._result, this._precision) : this._result;
+        this._displayResultDiv.innerHTML = "<span class='sr-only'>equals</span>" + result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         // this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
         this._lastFocus = document.activeElement;
-        // this._readResult();
     }
 
+    
+
     _evalResult() {
-        let numbers,
-            operators,
-            result;
+        let result;
         if ((this._eqnArr[this._eqnArr.length - 1] === '0' || parseFloat(this._eqnArr[this._eqnArr.length - 1]) === 0) &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
@@ -100,11 +108,7 @@ export default class Calculator {
 
         this._result = String(result);
         this._resultLimit = false;
-        if (this._result.length > this._restrictResult()) {
-            this._result = this._roundup(this._result, this._precision);
-        } else {
-            this._result = this._result.slice(0, this._restrictResult());
-        }
+
         this._renderResult();
         this._lastFocus = document.activeElement;
         // this._readResult();
@@ -125,32 +129,59 @@ export default class Calculator {
     _renderEqn() {
         let self = this;
         let revisedEqnArr = [];
-       
-            this._eqnArr.forEach(function (i) {
+
+        this._eqnArr.forEach(function (i) {
+            if(i.length > self._restrictResult()){
                 parseFloat(i) && i.indexOf(".") > -1 && i[i.length - 1] !== "." ? revisedEqnArr.push(self._roundup(i, self._precision)) :
                     (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
-            });
-            this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide").replace(/\*/g, "&times");
-            console.log(this._checkOverflow(this._displayEqnDiv));
+            }else {
+                revisedEqnArr.push(i);
+            }
+        });
+        this._setTextToHiddenSpan(revisedEqnArr);
+        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
     }
+    
+    /* Set text for screen reader */
 
+    _setTextToHiddenSpan(revisedEqnArr){
+        let text = revisedEqnArr.join("").replace(/\//g, "divided by").replace(/\*/g, "multiplies").replace(/\-/g, "minus").replace(/\./g, "point").replace(/\+/g, "plus");
+        this._displayEqnDiv.previousElementSibling.innerHTML = text ;
+    }
+    /* End of method */
+
+    /*---------should determine weather the equation will overflow the display or not--------*/
     _checkOverflow(el) {
-        var curOverflow = el.style.overflow;
+        return el.offsetWidth + this._getCharacterRequiredToOverflow() > el.parentElement.offsetWidth;
+    }
+    /* End of method */
 
-        if ( !curOverflow || curOverflow === "visible" )
-            el.style.overflow = "hidden";
-
-        var isOverflowing = el.clientWidth < el.scrollWidth
-            || el.clientHeight < el.scrollHeight;
-
-        el.style.overflow = curOverflow;
-
-        return isOverflowing;
+    /*--------should return character size of the calculator as per calculator size---------*/
+    _getCharacterRequiredToOverflow(){
+        let charSize = 0;
+        switch(this._calculatorSize){
+            case "small":
+                charSize = 20;
+                break;
+            case "medium":
+                charSize = 30;
+                break;
+            case "large":
+                charSize = 40;
+                break;
+            default:
+                charSize = 20;
+        }
+        return charSize;
     }
 
+    _setCalculatorSize(size){
+        this._calculatorSize = size;
+    }
+    /* End of method */
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if (this._isResultUndefined || this._restrictEqn()) {
+        if ((this._isResultUndefined || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
         if (this._isEqualPressed) {
@@ -249,8 +280,6 @@ export default class Calculator {
         if (!this._isEqualPressed) {
             this._lastFocus = document.activeElement;
         }
-        // this._readResult();
-        // this._resetArrows();
     }
 
     negateValue() {

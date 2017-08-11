@@ -67,6 +67,7 @@ export default class LoadCalculator {
 
     setSize(size) {
         this._calcManager.calcElem.find("#drag").attr("class", size);
+        this._calcManager.calcobj._setCalculatorSize(size);
     }
 
     hideCalculator() {
