@@ -5,7 +5,7 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0">
+            `<form id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0" name="calc">
                 <div id="drag">                
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
@@ -37,7 +37,7 @@ export default class CalculatorManger {
             }).join("")}
                     </table>
                 </div>
-            </div>`;
+            </form>`;
 
         this.calcElem = this._attachCalculatorBody(calculatordiv);
         let _displayResult = this.calcElem.find("#disp").get(0),
@@ -64,12 +64,14 @@ export default class CalculatorManger {
         let elemValue = columnData.value,
             label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
             operation = columnData.operation,
-            id = "btn"+columnData.operation;
-        return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+            id = "btn" + columnData.operation,
+            tabOrder = columnData.tabindex;
+       // return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '"tabindex="' + tabOrder + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+        return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '">' + columnData.name + '</button>';
     }
 
     _operateCalculator(calcobj) {
-        this._getElement(".opeationButton",true).off('click').on('click', (e) => {
+        this._getElement(".opeationButton", true).off('click').on('click', (e) => {
             let $this = $(e.currentTarget),
                 operation = $this.attr('operation');
             if (operation === "setValue") {
@@ -203,7 +205,7 @@ export default class CalculatorManger {
 
     _calculatorShowHide() {
         let self = this;
-        this._getElement(".close-calculator",true).off('click').on('click', () => {
+        this._getElement(".close-calculator", true).off('click').on('click', () => {
             self.closeCalculator();
             $(document).off("keyup");
         });
@@ -217,6 +219,10 @@ export default class CalculatorManger {
                 $("[value='=']").focus();
                 event.preventDefault();
             }
+        });
+
+        this._getElement(".close-calculator").off("focusout").on("focusout",(event)=>{
+            this._getElement(".disp-eqn-outer").focus();
         });
 
         this._getElement("[value='=']").off("keydown").on("keydown", (event) => {
@@ -236,7 +242,7 @@ export default class CalculatorManger {
             }
         });
 
-        $(document).off("keydown").on("keydown", function(e) {
+        $(document).off("keydown").on("keydown", function (e) {
             if (e.keyCode === 13) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -330,8 +336,6 @@ export default class CalculatorManger {
             self._getElement("#calc_state")[0].removeAttribute("tabindex");
             self.calcElem.get(0).style.display = "none";
             document.getElementById("show-calc") && document.getElementById("show-calc").focus();
-
         }, 800);
-
     }
 }

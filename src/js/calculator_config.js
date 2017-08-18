@@ -3,105 +3,125 @@ export const calculator_data = [
         name: '',
         value: 'bs',
         label: "Back Space",
-        operation:"clearData"
+        operation:"clearData",
+        tabindex:3
     }, {
         name: 'CE',
         value: 'ce',
         label: "Clear Entry",
-        operation:"clearData"
+        operation:"clearData",
+        tabindex:4
     }, {
         name: 'C',
         value: 'c',
         label: "Clear All",
-        operation:"clearData"
+        operation:"clearData",
+        tabindex:5
     }, {
         name: '&divide',
         value: '/',
         label: 'Division',
-        operation:"setSign"
+        operation:"setSign",
+        tabindex:18
     }],
     [{
         name: 7,
         value: 7,
         label: "7",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:13
     }, {
         name: 8,
         value: 8,
         label: "8",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:14
     }, {
         name: 9,
         value: 9,
         label: "9",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:15
     }, {
         name: "&times",
         value: "*",
         label: 'Multiplication',
-        operation:"setSign"
+        operation:"setSign",
+        tabindex:19
     }],
     [{
         name: 4,
         value: 4,
         label: "4",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:10
     }, {
         name: 5,
         value: 5,
         label: "5",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:11
     }, {
         name: 6,
         value: 6,
         label: "6",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:12
     }, {
         name: '-',
         value: "-",
         label: 'Minus',
-        operation:"setSign"
+        operation:"setSign",
+        tabindex:20
     }],
     [{
         name: 1,
         value: 1,
         label: "1",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:7
     }, {
         name: 2,
         value: 2,
         label: "2",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:8
     }, {
         name: 3,
         value: 3,
         label: "3",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:9
     }, {
         name: '+',
         value: "+",
         label: 'Plus',
-        operation:"setSign"
+        operation:"setSign",
+        tabindex:21
     }],
     [{
         name: '+/-',
         value: 'negate',
         label: "Sign",
-        operation:"negate"
+        operation:"negate",
+        tabindex:16
     }, {
         name: 0,
         value: 0,
         label: "0",
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:6
     }, {
         name: '<strong>.</strong>',
         value: ".",
         label: 'decimal separator',
-        operation:"setValue"
+        operation:"setValue",
+        tabindex:17
     }, {
         name: '=',
         value: '=',
         label: 'Equals',
-        operation:"getResult"
+        operation:"getResult",
+        tabindex:22
     }]
 ];
