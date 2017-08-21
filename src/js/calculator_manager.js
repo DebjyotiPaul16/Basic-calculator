@@ -5,7 +5,7 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<form id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0" name="calc">
+            `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0">
                 <div id="drag">                
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
@@ -17,9 +17,10 @@ export default class CalculatorManger {
                         <tr>
                             <td colspan="4">
                                     <div class="disp-holder">
-                                      <div class="disp-eqn-outer" tabindex="0" role="contentinfo" aria-labelledby="hidden-text-equation">
+                                      <div action="javascript:void(0)" name="myForm" id="calcForm" class="disp-eqn-outer" aria-labelledby="hidden-text-equation">
+                                         <!--action="javascript:void(0)" name="myForm"-->
                                            <span id="hidden-text-equation" class="sr-only" aria-live="polite" aria-atomic="true"></span>
-                                           <span class="disp_btn" id="disp_eqn" aria-hidden="true">
+                                           <span contenteditable="true" class="disp_btn" id="disp_eqn"  tabindex="0">
                 					    			</span>
                					      </div>
                						  <div class="disp_btn_outer">
@@ -37,7 +38,7 @@ export default class CalculatorManger {
             }).join("")}
                     </table>
                 </div>
-            </form>`;
+            </div>`;
 
         this.calcElem = this._attachCalculatorBody(calculatordiv);
         let _displayResult = this.calcElem.find("#disp").get(0),
@@ -66,7 +67,7 @@ export default class CalculatorManger {
             operation = columnData.operation,
             id = "btn" + columnData.operation,
             tabOrder = columnData.tabindex;
-       // return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '"tabindex="' + tabOrder + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+        // return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '"tabindex="' + tabOrder + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
         return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '">' + columnData.name + '</button>';
     }
 
@@ -199,7 +200,6 @@ export default class CalculatorManger {
             } else if (event.keyCode == 8) {
                 calcobj.clearData('bs');
             }
-
         });
     }
 
@@ -221,7 +221,7 @@ export default class CalculatorManger {
             }
         });
 
-        this._getElement(".close-calculator").off("focusout").on("focusout",(event)=>{
+        this._getElement(".close-calculator").off("focusout").on("focusout", (event)=> {
             this._getElement(".disp-eqn-outer").focus();
         });
 
@@ -243,15 +243,15 @@ export default class CalculatorManger {
         });
 
         $(document).off("keydown").on("keydown", function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
-                e.stopPropagation();
-                self._getElement("#btngetResult").focus();
-            }
-            if (this._calcInitialOpen) {
-                // this.changeLabel();
-                this._calcInitialOpen = false;
-            }
+            // if (e.keyCode === 13) {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+            //     self._getElement("#btngetResult").focus();
+            // }
+            // if (this._calcInitialOpen) {
+            //     // this.changeLabel();
+            //     this._calcInitialOpen = false;
+            // }
         });
 
         this.calcElem.children().on("focusin", (event) => {
@@ -261,6 +261,13 @@ export default class CalculatorManger {
         this.calcElem.children().on("mouseover", (event) => {
             this._setActive(event.target);
         });
+
+        $("#calcForm").submit(function (e) {
+            self.calcobj.getResult();
+            self._getElement("#disp_eqn",true)[0].focus();
+            e.preventDefault();
+            e.stopPropagation();
+        })
     }
 
     _setActive(elem) {

@@ -23,6 +23,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
+        this._displayEqnDiv.innerHTML = "";
         if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
@@ -153,7 +154,10 @@ export default class Calculator {
             // }
         });
         this._setTextToHiddenSpan(revisedEqnArr);
+        // this._displayEqnDiv.innerHTML = "";
         this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
+        //this._displayEqnDiv.value = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
+
     }
 
     /* Set text for screen reader */
@@ -168,7 +172,7 @@ export default class Calculator {
     /*---------should determine weather the equation will overflow the display or not--------*/
 
     _checkOverflow(el) {
-      return el.offsetWidth + this._getCharacterRequiredToOverflow() > el.parentElement.offsetWidth;
+        return el.offsetWidth + this._getCharacterRequiredToOverflow() > el.parentElement.offsetWidth;
     }
 
     /* End of method */
@@ -240,7 +244,7 @@ export default class Calculator {
         } else if (cleartype === "bs") {
             if (this._isResultUndefined || this._eqnArr.length === 0) {
                 return;
-            } else if(this._isEqualPressed){
+            } else if (this._isEqualPressed) {
                 this._result = "";
                 this._renderResult();
             }
@@ -267,7 +271,7 @@ export default class Calculator {
 
             if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
                 this._result = '0';
-                 this._eqnArr = this._eqnArr.slice(0, -1);
+                this._eqnArr = this._eqnArr.slice(0, -1);
                 // this._eqnArr.push("0");
             } else {
                 this._result = this._getLastElement();
