@@ -17,14 +17,14 @@ export default class CalculatorManger {
                         <tr>
                             <td colspan="4">
                                     <div class="disp-holder">
-                                      <div action="javascript:void(0)" name="myForm" id="calcForm" class="disp-eqn-outer" aria-labelledby="hidden-text-equation">
+                                      <div id="calcForm" class="disp-eqn-outer" aria-labelledby="hidden-text-equation">
                                          <!--action="javascript:void(0)" name="myForm"-->
                                            <span id="hidden-text-equation" class="sr-only" aria-live="polite" aria-atomic="true"></span>
-                                           <span contenteditable="true" class="disp_btn" id="disp_eqn"  tabindex="0">
-                					    			</span>
+                                            <input type="text" class="disp_btn" id="disp_eqn" tabindex="0">
+                					    	<input type="submit" style="display:none;"/>
                					      </div>
                						  <div class="disp_btn_outer">
-                                         <span class="disp_btn" role="textbox" tabindex="0" id="disp" aria-live="polite" aria-atomic="true" aria-label="result" type="text"></span>
+                                         <span class="disp_btn" role="textbox" tabindex="0" id="disp" aria-label="result" aria-live="polite" aria-atomic="true"></span>
                                       </div>
                                     </div>
                             </td>
@@ -186,11 +186,14 @@ export default class CalculatorManger {
                 111: '/'
             };
             if (!isNaN(event.key) && event.keyCode !== 32) {
+                this._getElement("#disp_eqn", true).focus();
                 calcobj.setValue(event.key, event);
             } else if (event.keyCode === 110) {
-                calcobj.setValue('.');
+                calcobj.setValue('.', event);
+                this._getElement("#disp_eqn", true).focus();
             } else if (event.keyCode === 107 || event.keyCode === 109 || event.keyCode === 106 || event.keyCode === 111) {
                 calcobj.setSign(operator[event.keyCode]);
+                this._getElement("#disp_eqn", true).focus();
             } else if (event.keyCode == 13) {
                 calcobj.getResult();
             } else if (event.keyCode == 27) {
@@ -222,7 +225,7 @@ export default class CalculatorManger {
         });
 
         this._getElement(".close-calculator").off("focusout").on("focusout", (event)=> {
-            this._getElement(".disp-eqn-outer").focus();
+            self._getElement("#disp_eqn", true)[0].focus();
         });
 
         this._getElement("[value='=']").off("keydown").on("keydown", (event) => {
@@ -242,16 +245,16 @@ export default class CalculatorManger {
             }
         });
 
-        $(document).off("keydown").on("keydown", function (e) {
-            // if (e.keyCode === 13) {
-            //     e.preventDefault();
-            //     e.stopPropagation();
-            //     self._getElement("#btngetResult").focus();
-            // }
-            // if (this._calcInitialOpen) {
-            //     // this.changeLabel();
-            //     this._calcInitialOpen = false;
-            // }
+        this._getElement(".btn", true).keypress(function (e) {
+            if (e.keyCode === 13) {
+                e.preventDefault();
+                e.stopPropagation();
+                self._getElement("#btngetResult").focus();
+            }
+            if (this._calcInitialOpen) {
+                // this.changeLabel();
+                this._calcInitialOpen = false;
+            }
         });
 
         this.calcElem.children().on("focusin", (event) => {
@@ -262,12 +265,49 @@ export default class CalculatorManger {
             this._setActive(event.target);
         });
 
-        $("#calcForm").submit(function (e) {
-            self.calcobj.getResult();
-            self._getElement("#disp_eqn",true)[0].focus();
-            e.preventDefault();
-            e.stopPropagation();
-        })
+
+       this._getElement("#calcForm input", true).keydown(function (e) {
+           if (e.keyCode !== 9) {
+                e.preventDefault();
+                return false;
+            }
+       });
+        // this._getElement("#calcForm", true).keyup(function (e) {
+        //     if (e.keyCode === 13) {
+        //         console.log("keyUp");
+        //         $("#disp_eqn").focus();
+        //     }
+        // });
+
+        // this._getElement("#disp_eqn", true).keypress(function (e) {
+        //     console.log("ting");
+        //     e = e || window.event;
+        //     var charCode = e.which || e.keyCode;
+        //     if (charCode == 13) {
+        //         self._setEndOfContenteditable(window, 4);
+        //         return false;
+        //     }
+        // });
+    }
+
+    _setEndOfContenteditable(contentEditableElement) {
+        var range, selection;
+        if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
+        {
+            range = document.createRange();//Create a range (a range is a like the selection but invisible)
+            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            selection = window.getSelection();//get the selection object (allows you to change selection)
+            selection.removeAllRanges();//remove any selections already made
+            selection.addRange(range);//make the range you have just created the visible selection
+        }
+        else if (document.selection)//IE 8 and lower
+        {
+            range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
+            range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
+            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
+            range.select();//Select the range (make it the visible selection
+        }
     }
 
     _setActive(elem) {

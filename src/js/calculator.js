@@ -23,7 +23,6 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        this._displayEqnDiv.innerHTML = "";
         if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
@@ -81,13 +80,6 @@ export default class Calculator {
         let result,
             isRoundedUp = this._result.length > this._restrictResult();
         this._renderEqn();
-        if (isRoundedUp) {
-            // this._result = this._roundup(this._result, this._precision);
-            $(this._displayResultDiv).addClass("roundUp");
-        } else {
-            //this._result = this._result.slice(0, this._restrictResult());
-            $(this._displayResultDiv).removeClass("roundUp");
-        }
         result = isRoundedUp ? this._roundup(this._result, this._precision) : this._result;
         this._displayResultDiv.innerHTML = "<span class='sr-only'>equals</span>" + result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         // this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
@@ -140,7 +132,8 @@ export default class Calculator {
     _renderEqn() {
         let self = this,
             revisedEqnArr = [],
-            digit = 0;
+            digit = 0,
+            expression;
 
         this._eqnArr.forEach(function (i) {
 
@@ -155,8 +148,15 @@ export default class Calculator {
         });
         this._setTextToHiddenSpan(revisedEqnArr);
         // this._displayEqnDiv.innerHTML = "";
-        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
-        //this._displayEqnDiv.value = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
+        // this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
+       // this._displayEqnDiv.value = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
+       //  this._displayEqnDiv.value = "";
+        if(!this._eqnArr.length){
+            expression = "";
+        }else {
+             expression = $.parseHTML(revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;"))[0].nodeValue;
+        }
+        this._displayEqnDiv.value = expression;
 
     }
 
@@ -170,12 +170,35 @@ export default class Calculator {
     /* End of method */
 
     /*---------should determine weather the equation will overflow the display or not--------*/
-
     _checkOverflow(el) {
-        return el.offsetWidth + this._getCharacterRequiredToOverflow() > el.parentElement.offsetWidth;
+       // return el.offsetWidth > el.parentElement.offsetWidth - this._getCharacterRequiredToOverflow();
+        return this._inputExceeded($(el));
     }
-
     /* End of method */
+
+
+    /*--------Determine the input length in pixels to get the overflow situation--------*/
+
+    _inputExceeded(el){
+        var s = $('<span >'+el.val()+'</span>');
+        s.css({
+            position : 'absolute',
+            left : -9999,
+            top : -9999,
+            // ensure that the span has same font properties as the element
+            'font-family' : el.css('font-family'),
+            'font-size' : el.css('font-size'),
+            'font-weight' : el.css('font-weight'),
+            'font-style' : el.css('font-style')
+        });
+        $('body').append(s);
+        var result = s.width() > el.width() - this._getCharacterRequiredToOverflow();
+        //remove the newly created span
+        s.remove();
+        return result;
+    }
+    /*End of method*/
+
 
     /*--------should return character size of the calculator as per calculator size---------*/
     _getCharacterRequiredToOverflow() {
@@ -261,13 +284,14 @@ export default class Calculator {
                 this._renderEqn();
                 return;
             }
-
-            if (!isNaN(this._getLastElement()) && this._getLastElement() !== "") {
+            // !isNaN(this._getLastElement()) &&
+            if (this._getLastElement() === "") {
                 this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-            } else if (this._getLastElement().indexOf("-") === -1) {
-                this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
-                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
-            }
+            } 
+            // else if (this._getLastElement().indexOf("-") === -1) {
+            //     this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
+            //     this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
+            // }
 
             if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
                 this._result = '0';
