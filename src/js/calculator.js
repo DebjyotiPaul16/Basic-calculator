@@ -267,7 +267,7 @@ export default class Calculator {
         } else if (cleartype === "bs") {
             if (this._isResultUndefined || this._eqnArr.length === 0) {
                 return;
-            } else if (this._isEqualPressed) {
+            } else if(this._isEqualPressed){
                 this._result = "";
                 this._renderResult();
             }
@@ -284,14 +284,13 @@ export default class Calculator {
                 this._renderEqn();
                 return;
             }
-            // !isNaN(this._getLastElement()) &&
-            if (this._getLastElement() === "") {
+
+            if (!isNaN(this._getLastElement()) && this._getLastElement() !== "") {
                 this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-            } 
-            // else if (this._getLastElement().indexOf("-") === -1) {
-            //     this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
-            //     this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
-            // }
+            } else if (this._getLastElement().indexOf("-") === -1) {
+                this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
+                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
+            }
 
             if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
                 this._result = '0';

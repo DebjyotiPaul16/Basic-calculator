@@ -201,13 +201,13 @@ export default class LoadCalculator {
                 if (self._firstTimeOpen) {
                     self._firstTimeOpen = false;
                 } else {
-                    setTimeout(function () {
-                        self._calcManager.calcElem.find('[aria-label="Hide button"]').attr("aria-label", "Hide");
-                        self._calcManager.calcElem.find('[aria-label="Hide"]').focus();
-                    }, 400);
-                    setTimeout(function () {
-                        self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label", "Hide button");
-                    }, 500);
+                    // setTimeout(function () {
+                    //     self._calcManager.calcElem.find('[aria-label="Hide button"]').attr("aria-label", "Hide");
+                    //     self._calcManager.calcElem.find('[aria-label="Hide"]').focus();
+                    // }, 400);
+                    // setTimeout(function () {
+                    //     self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label", "Hide button");
+                    // }, 500);
                 }
 
             }, 800);

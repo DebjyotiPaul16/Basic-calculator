@@ -11,7 +11,7 @@ export default class CalculatorManger {
                         <tr>
                             <td colspan="4">
 								<span id="calc_state" class="sr-only" aria-hidden="true"></span>
-                                <button  class="close-calculator" aria-label="Hide">Hide</button>
+                                <button type="button" role="button" class="close-calculator" aria-label="Hide">Hide</button>
                             </td>
                         </tr>
                         <tr>
