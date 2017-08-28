@@ -229,7 +229,7 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if ((this._isResultUndefined || this._restrictEqn() || this._isEntryError) && this._isEqualPressed) {
+        if ((this._isResultUndefined || (this._restrictEqn() && !this._isEqualPressed) || this._isEntryError) && this._isEqualPressed) {
             return;
         }
         if (this._isEqualPressed) {
@@ -242,7 +242,7 @@ export default class Calculator {
             return;
         }
         if (this._isOperatorInserted && this._eqnArr.length !== 0) {
-            this._eqnArr[this._eqnArr.length - 1] = sign;
+            sign === "-" ?  this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
         } else {
@@ -267,7 +267,7 @@ export default class Calculator {
             this._renderResult();
             this._isResultUndefined = false;
         } else if (cleartype === "bs") {
-            let lastElem;
+            let lastElem,isNegative;
             if (this._eqnArr.length === 0) {
                 return;
             } else if (this._isEqualPressed) {
@@ -275,10 +275,18 @@ export default class Calculator {
                 this._renderResult();
             }
             this._isResultUndefined = this._isResultUndefined ? !this._isResultUndefined : this._isResultUndefined;
-            this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
+           
 
             lastElem = this._getLastElement();
+            isNegative = parseInt(lastElem,10) < 0;
             lastElem.length !== 1 && lastElem.indexOf("ans") === -1 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1) : this._eqnArr = this._eqnArr.slice(0, -1);
+
+            if (isNaN(this._getLastElement()) && !isNegative) {
+                this._isOperatorInserted = true;
+            }else {
+                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
+            }
+
             // if (this._isResultUndefined || this._eqnArr.length === 0) {
             //     return;
             // } else if(this._isEqualPressed){
@@ -341,7 +349,10 @@ export default class Calculator {
     }
 
     negateValue() {
-        if (this._result === '0' || this._isResultUndefined || this._isOperatorInserted) {
+        if (this._result === '0' || this._isResultUndefined) {
+            return;
+        }else if(this._isOperatorInserted){
+            this.setValue("-");
             return;
         }
         if (this._isEqualPressed) {
