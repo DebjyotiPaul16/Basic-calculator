@@ -49,7 +49,6 @@ export default class CalculatorManger {
         this.handleWithKeyboard(this.calcobj);
         this._calculatorShowHide();
         this._handleCalculatorFocus();
-        this._seekEquation();
         this.calcElem.focus();
         this._calcInitialOpen = false;
     }
@@ -324,51 +323,51 @@ export default class CalculatorManger {
         return !!shouldWrap ? $(this.calcElem.find(selector)) : this.calcElem.find(selector);
     }
 
-    _seekEquation() {
-        let self = this,
-            eqnDiv = $(self.calcobj._displayEqnDiv);
-        this._getElement(".seekLeft", true).off("click").on("click", () => {
-            eqnDiv.css({
-                "right": parseFloat(eqnDiv.css("right")) - 80 + "px"
-            });
-            self._checkSeekStatus();
-        });
-        this._getElement(".seekRight", true).off("click").on("click", () => {
-            eqnDiv.css({
-                "right": parseFloat(eqnDiv.css("right")) + 80 + "px"
-            });
-            self._checkSeekStatus();
-        });
-    }
-
-    _checkSeekStatus() {
-        if (parseFloat(this.calcobj._displayEqnDiv.style.right) < 0) {
-            this._getElement(".seekRight", true).css("display", "inline-block");
-            this._getElement(".seekRight", true).attr("aria-label", "right");
-        } else {
-            this._getElement(".seekRight", true).css("display", "none");
-        }
-
-        if (parseFloat(this.calcobj._displayEqnDiv.style.right) >= -(this.calcobj._displayEqnDiv.innerText.length * 8 - this.calcobj._displayEqnDiv.parentElement.offsetWidth)) {
-            this._getElement(".seekLeft", true).css("display", "inline-block");
-        } else {
-            this._getElement(".seekLeft", true).css("display", "none");
-        }
-    }
-
-    changeLabel() {
-        let buttons = this._getElement("button[aria-label]"),
-            label;
-        for (let i = 0; i < buttons.length - 1; i++) {
-            if (buttons[i].getAttribute("aria-label").indexOf("button") < 0) {
-                label = buttons[i].getAttribute("aria-label").split("button")[0].trim() + " button";
-                buttons[i].setAttribute("aria-label", label);
-            } else {
-                label = buttons[i].getAttribute("aria-label").split("button")[0].trim();
-                buttons[i].setAttribute("aria-label", label);
-            }
-        }
-    }
+    // _seekEquation() {
+    //     let self = this,
+    //         eqnDiv = $(self.calcobj._displayEqnDiv);
+    //     this._getElement(".seekLeft", true).off("click").on("click", () => {
+    //         eqnDiv.css({
+    //             "right": parseFloat(eqnDiv.css("right")) - 80 + "px"
+    //         });
+    //         self._checkSeekStatus();
+    //     });
+    //     this._getElement(".seekRight", true).off("click").on("click", () => {
+    //         eqnDiv.css({
+    //             "right": parseFloat(eqnDiv.css("right")) + 80 + "px"
+    //         });
+    //         self._checkSeekStatus();
+    //     });
+    // }
+    //
+    // _checkSeekStatus() {
+    //     if (parseFloat(this.calcobj._displayEqnDiv.style.right) < 0) {
+    //         this._getElement(".seekRight", true).css("display", "inline-block");
+    //         this._getElement(".seekRight", true).attr("aria-label", "right");
+    //     } else {
+    //         this._getElement(".seekRight", true).css("display", "none");
+    //     }
+    //
+    //     if (parseFloat(this.calcobj._displayEqnDiv.style.right) >= -(this.calcobj._displayEqnDiv.innerText.length * 8 - this.calcobj._displayEqnDiv.parentElement.offsetWidth)) {
+    //         this._getElement(".seekLeft", true).css("display", "inline-block");
+    //     } else {
+    //         this._getElement(".seekLeft", true).css("display", "none");
+    //     }
+    // }
+    //
+    // changeLabel() {
+    //     let buttons = this._getElement("button[aria-label]"),
+    //         label;
+    //     for (let i = 0; i < buttons.length - 1; i++) {
+    //         if (buttons[i].getAttribute("aria-label").indexOf("button") < 0) {
+    //             label = buttons[i].getAttribute("aria-label").split("button")[0].trim() + " button";
+    //             buttons[i].setAttribute("aria-label", label);
+    //         } else {
+    //             label = buttons[i].getAttribute("aria-label").split("button")[0].trim();
+    //             buttons[i].setAttribute("aria-label", label);
+    //         }
+    //     }
+    // }
 
     closeCalculator() {
         let self = this;

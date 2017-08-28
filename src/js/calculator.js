@@ -64,7 +64,21 @@ export default class Calculator {
     }
 
     _restrictEqn() {
-        return this._checkOverflow(this._displayEqnDiv);
+        let totalLength = 0;
+        const MAX_ALLOWED = 23;
+        if(!this._eqnArr.length){
+            return false;
+        }
+        for (let i = 0; i < this._eqnArr.length; i++) {
+            if(!!this._eqnArr[i].match(/ans/)){
+                totalLength += 3;
+            }else if (!!this._eqnArr[i].match(/[0-9]/)) {
+                totalLength += this._eqnArr[i].length;
+            }else{
+                totalLength += this._eqnArr[i].length + 1;
+            }
+        }
+        return totalLength >= MAX_ALLOWED;
     }
 
     _restrictResult(value) {
@@ -229,14 +243,12 @@ export default class Calculator {
             return;
         }
         if (this._isOperatorInserted && this._eqnArr.length !== 0) {
-            sign === "-" ?  this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
+            sign === "-" ? this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
         } else {
             if (this._eqnArr.length === 0) {
-                this._eqnArr.push(
-                    this._result.indexOf("-") > -1 ? "(" + this._result + ")" : this._result
-                );
+                this._eqnArr.push("0");
             }
             this._eqnArr.push(sign);
             this._renderEqn();
@@ -254,7 +266,7 @@ export default class Calculator {
             this._renderResult();
             this._isResultUndefined = false;
         } else if (cleartype === "bs") {
-            let lastElem,isNegative;
+            let lastElem, isNegative;
             if (this._eqnArr.length === 0) {
                 return;
             } else if (this._isEqualPressed) {
@@ -262,17 +274,17 @@ export default class Calculator {
                 this._renderResult();
             }
             this._isResultUndefined = this._isResultUndefined ? !this._isResultUndefined : this._isResultUndefined;
-           
+
 
             lastElem = this._getLastElement();
-            isNegative = parseInt(lastElem,10) < 0;
+            isNegative = parseInt(lastElem, 10) < 0;
             lastElem.length !== 1 && lastElem.indexOf("ans") === -1
                 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
                 : this._eqnArr = this._eqnArr.slice(0, -1);
 
             if (isNaN(this._getLastElement()) && !isNegative) {
                 this._isOperatorInserted = true;
-            }else {
+            } else {
                 this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
             }
             this._isEqualPressed = false;
@@ -303,7 +315,7 @@ export default class Calculator {
     negateValue() {
         if (this._result === '0' || this._isResultUndefined) {
             return;
-        }else if(this._isOperatorInserted){
+        } else if (this._isOperatorInserted) {
             this.setValue("-");
             return;
         }
@@ -318,7 +330,13 @@ export default class Calculator {
             this._renderEqn();
             return;
         }
-        this._eqnArr[this._eqnArr.length - 1] = String(+(this._eqnArr[this._eqnArr.length - 1]) * -1);
+        if (this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {
+            this._eqnArr[this._eqnArr.length - 1] = "-" + this._eqnArr[this._eqnArr.length - 1];
+        } else {
+            this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].replace("-", "");
+        }
+
+        // this._eqnArr[this._eqnArr.length - 1] = String(+(this._eqnArr[this._eqnArr.length - 1]) * -1);
         this._renderEqn();
     }
 }
