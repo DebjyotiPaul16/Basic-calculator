@@ -23,7 +23,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._resultLimit || this._restrictEqn()) && !this._isEqualPressed) {
+        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
         if (this._shouldPopulateEquation(val)) {
@@ -82,7 +82,6 @@ export default class Calculator {
         this._renderEqn();
         result = isRoundedUp ? this._roundup(this._result, this._precision) : this._result;
         this._displayResultDiv.innerHTML = "<span class='sr-only'>equals</span>" + result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
-        // this._result.length > this._restrictResult() ? parseFloat(this._result).toFixed(this._precision) : this._result;
         this._lastFocus = document.activeElement;
     }
 
@@ -114,7 +113,6 @@ export default class Calculator {
 
         this._renderResult();
         this._lastFocus = document.activeElement;
-        // this._readResult();
     }
 
     _roundup(value, precision) {
@@ -122,16 +120,16 @@ export default class Calculator {
             if (value.indexOf("e") !== -1) {
                 return parseFloat(parseFloat(eval(value)).toFixed(precision - 1)).toExponential(this._precision - 3).toString();
             } else {
-                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toString().slice(0, this._restrictResult(value));
+                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision - 3).toString();
             }
         } else {
             return parseFloat(parseFloat(eval(value)).toFixed(precision - 1)).toExponential(this._precision - 3).toString();
         }
+
     }
 
     _renderEqn() {
-        let self = this,
-            revisedEqnArr = [],
+        let revisedEqnArr = [],
             digit = 0,
             expression;
 
@@ -139,18 +137,8 @@ export default class Calculator {
 
             digit = i.indexOf("ans") !== -1 ? i.split("-")[0] : i;
             revisedEqnArr.push(digit);
-            // if (i.length > self._restrictResult()) {
-            //     parseFloat(i) && i.indexOf(".") > -1 && i[i.length - 1] !== "." ? revisedEqnArr.push(self._roundup(i, self._precision)) :
-            //         (i.length > self._precision * 2 ? revisedEqnArr.push(parseInt(i).toExponential(self._precision)) : revisedEqnArr.push(i));
-            // } else {
-            //     revisedEqnArr.push(i);
-            // }
         });
         this._setTextToHiddenSpan(revisedEqnArr);
-        // this._displayEqnDiv.innerHTML = "";
-        // this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
-        // this._displayEqnDiv.value = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
-        //  this._displayEqnDiv.value = "";
         if (!this._eqnArr.length) {
             expression = "";
         } else {
@@ -171,7 +159,6 @@ export default class Calculator {
 
     /*---------should determine weather the equation will overflow the display or not--------*/
     _checkOverflow(el) {
-        // return el.offsetWidth > el.parentElement.offsetWidth - this._getCharacterRequiredToOverflow();
         return this._inputExceeded($(el));
     }
 
@@ -279,50 +266,15 @@ export default class Calculator {
 
             lastElem = this._getLastElement();
             isNegative = parseInt(lastElem,10) < 0;
-            lastElem.length !== 1 && lastElem.indexOf("ans") === -1 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1) : this._eqnArr = this._eqnArr.slice(0, -1);
+            lastElem.length !== 1 && lastElem.indexOf("ans") === -1
+                ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
+                : this._eqnArr = this._eqnArr.slice(0, -1);
 
             if (isNaN(this._getLastElement()) && !isNegative) {
                 this._isOperatorInserted = true;
             }else {
                 this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
             }
-
-            // if (this._isResultUndefined || this._eqnArr.length === 0) {
-            //     return;
-            // } else if(this._isEqualPressed){
-            //     this._result = "";
-            //     this._renderResult();
-            // }
-            // if (this._isOperatorInserted) {
-            //     this._eqnArr = this._eqnArr.slice(0, -1);
-            //     this._renderEqn();
-            //     this._isOperatorInserted = false;
-            //     return;
-            // }
-            //
-            // if (this._getLastElement().indexOf("-") === 0) {
-            //     this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-            //     //this._isOperatorInserted = true;
-            //     this._renderEqn();
-            //     return;
-            // }
-            //
-            // if (!isNaN(this._getLastElement()) && this._getLastElement() !== "") {
-            //     this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-            // } else if (this._getLastElement().indexOf("-") === -1) {
-            //     this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
-            //     this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
-            // }
-            //
-            // if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
-            //     this._result = '0';
-            //     this._eqnArr = this._eqnArr.slice(0, -1);
-            //     // this._eqnArr.push("0");
-            // } else {
-            //     this._result = this._getLastElement();
-            // }
-
-
             this._isEqualPressed = false;
             this._renderEqn();
         } else if (cleartype === "ce") {
