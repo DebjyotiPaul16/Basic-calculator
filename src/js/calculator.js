@@ -91,7 +91,7 @@ export default class Calculator {
         if ((this._eqnArr[this._eqnArr.length - 1] === '0' || parseFloat(this._eqnArr[this._eqnArr.length - 1]) === 0) &&
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
-            this._result = 'Cannot divide by zero';
+            this._result = '<span style="font-size: 65%">Cannot divide by zero</span>';
             this._displayResultDiv.innerHTML = this._result;
             this._isResultUndefined = true;
             return;
@@ -102,7 +102,7 @@ export default class Calculator {
             result = eval(this._eqnArr.join(" ").replace("ans-", ""));
         } catch (e) {
             console.log("ENTRY ERROR");
-            this._result = 'ENTRY ERROR';
+            this._result = '<span style="font-size: 65%">ENTRY ERROR</span>';
             this._displayResultDiv.innerHTML = this._result;
             this._isEntryError = true;
             return;
