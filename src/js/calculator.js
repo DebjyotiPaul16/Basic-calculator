@@ -149,12 +149,12 @@ export default class Calculator {
         this._setTextToHiddenSpan(revisedEqnArr);
         // this._displayEqnDiv.innerHTML = "";
         // this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
-       // this._displayEqnDiv.value = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
-       //  this._displayEqnDiv.value = "";
-        if(!this._eqnArr.length){
+        // this._displayEqnDiv.value = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
+        //  this._displayEqnDiv.value = "";
+        if (!this._eqnArr.length) {
             expression = "";
-        }else {
-             expression = $.parseHTML(revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;"))[0].nodeValue;
+        } else {
+            expression = $.parseHTML(revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;"))[0].nodeValue;
         }
         this._displayEqnDiv.value = expression;
 
@@ -171,25 +171,26 @@ export default class Calculator {
 
     /*---------should determine weather the equation will overflow the display or not--------*/
     _checkOverflow(el) {
-       // return el.offsetWidth > el.parentElement.offsetWidth - this._getCharacterRequiredToOverflow();
+        // return el.offsetWidth > el.parentElement.offsetWidth - this._getCharacterRequiredToOverflow();
         return this._inputExceeded($(el));
     }
+
     /* End of method */
 
 
     /*--------Determine the input length in pixels to get the overflow situation--------*/
 
-    _inputExceeded(el){
-        var s = $('<span >'+el.val()+'</span>');
+    _inputExceeded(el) {
+        var s = $('<span >' + el.val() + '</span>');
         s.css({
-            position : 'absolute',
-            left : -9999,
-            top : -9999,
+            position: 'absolute',
+            left: -9999,
+            top: -9999,
             // ensure that the span has same font properties as the element
-            'font-family' : el.css('font-family'),
-            'font-size' : el.css('font-size'),
-            'font-weight' : el.css('font-weight'),
-            'font-style' : el.css('font-style')
+            'font-family': el.css('font-family'),
+            'font-size': el.css('font-size'),
+            'font-weight': el.css('font-weight'),
+            'font-style': el.css('font-style')
         });
         $('body').append(s);
         var result = s.width() > el.width() - this._getCharacterRequiredToOverflow();
@@ -197,6 +198,7 @@ export default class Calculator {
         s.remove();
         return result;
     }
+
     /*End of method*/
 
 
@@ -265,40 +267,54 @@ export default class Calculator {
             this._renderResult();
             this._isResultUndefined = false;
         } else if (cleartype === "bs") {
-            if (this._isResultUndefined || this._eqnArr.length === 0) {
+            let lastElem;
+            if (this._eqnArr.length === 0) {
                 return;
-            } else if(this._isEqualPressed){
+            } else if (this._isEqualPressed) {
                 this._result = "";
                 this._renderResult();
             }
-            if (this._isOperatorInserted) {
-                this._eqnArr = this._eqnArr.slice(0, -1);
-                this._renderEqn();
-                this._isOperatorInserted = false;
-                return;
-            }
+            this._isResultUndefined = this._isResultUndefined ? !this._isResultUndefined : this._isResultUndefined;
+            this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
 
-            if (this._getLastElement().indexOf("-") === 0) {
-                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-                //this._isOperatorInserted = true;
-                this._renderEqn();
-                return;
-            }
+            lastElem = this._getLastElement();
+            lastElem.length !== 1 && lastElem.indexOf("ans") === -1 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1) : this._eqnArr = this._eqnArr.slice(0, -1);
+            // if (this._isResultUndefined || this._eqnArr.length === 0) {
+            //     return;
+            // } else if(this._isEqualPressed){
+            //     this._result = "";
+            //     this._renderResult();
+            // }
+            // if (this._isOperatorInserted) {
+            //     this._eqnArr = this._eqnArr.slice(0, -1);
+            //     this._renderEqn();
+            //     this._isOperatorInserted = false;
+            //     return;
+            // }
+            //
+            // if (this._getLastElement().indexOf("-") === 0) {
+            //     this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
+            //     //this._isOperatorInserted = true;
+            //     this._renderEqn();
+            //     return;
+            // }
+            //
+            // if (!isNaN(this._getLastElement()) && this._getLastElement() !== "") {
+            //     this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
+            // } else if (this._getLastElement().indexOf("-") === -1) {
+            //     this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
+            //     this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
+            // }
+            //
+            // if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
+            //     this._result = '0';
+            //     this._eqnArr = this._eqnArr.slice(0, -1);
+            //     // this._eqnArr.push("0");
+            // } else {
+            //     this._result = this._getLastElement();
+            // }
 
-            if (!isNaN(this._getLastElement()) && this._getLastElement() !== "") {
-                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1);
-            } else if (this._getLastElement().indexOf("-") === -1) {
-                this._eqnArr = this._getLastElement() === "" ? this._eqnArr.slice(0, -2) : this._eqnArr.slice(0, -1);
-                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
-            }
 
-            if ((this._result === '0' || this._getLastElement() === "" || isNaN(parseInt(this._getLastElement(), 10))) && this._eqnArr.length === 1) {
-                this._result = '0';
-                this._eqnArr = this._eqnArr.slice(0, -1);
-                // this._eqnArr.push("0");
-            } else {
-                this._result = this._getLastElement();
-            }
             this._isEqualPressed = false;
             this._renderEqn();
         } else if (cleartype === "ce") {
