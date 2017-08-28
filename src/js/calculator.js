@@ -168,41 +168,7 @@ export default class Calculator {
         let text = revisedEqnArr.join("").replace(/\//g, "divided by").replace(/\*/g, "multiplies").replace(/\-/g, "minus").replace(/\./g, "point").replace(/\+/g, "plus");
         this._displayEqnDiv.previousElementSibling.innerHTML = text;
     }
-
-    /* End of method */
-
-    /*---------should determine weather the equation will overflow the display or not--------*/
-    _checkOverflow(el) {
-        return this._inputExceeded($(el));
-    }
-
-    /* End of method */
-
-
-    /*--------Determine the input length in pixels to get the overflow situation--------*/
-
-    _inputExceeded(el) {
-        var s = $('<span >' + el.val() + '</span>');
-        s.css({
-            position: 'absolute',
-            left: -9999,
-            top: -9999,
-            // ensure that the span has same font properties as the element
-            'font-family': el.css('font-family'),
-            'font-size': el.css('font-size'),
-            'font-weight': el.css('font-weight'),
-            'font-style': el.css('font-style')
-        });
-        $('body').append(s);
-        var result = s.width() > el.width() - this._getCharacterRequiredToOverflow();
-        //remove the newly created span
-        s.remove();
-        return result;
-    }
-
-    /*End of method*/
-
-
+    
     /*--------should return character size of the calculator as per calculator size---------*/
     _getCharacterRequiredToOverflow() {
         let charSize = 0;
