@@ -193,11 +193,12 @@ export default class LoadCalculator {
             this._calcManager.calcElem.find("#calc_state").get(0).setAttribute("tabindex", "0");
             this._calcManager.calcElem.find("#calc_state").get(0).innerText = "Calculator Maximized ";
             this._calcManager.calcElem.find("#calc_state").focus();
+            self._calcManager.calcElem.focus();
             setTimeout(function () {
                 self._calcManager.calcElem.find("#calc_state").get(0).setAttribute("aria-hidden", "true");
                 self._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("tabindex");
                 self._calcManager.calcElem.find("#calc_state").css("display", "none");
-                self._calcManager.calcElem.focus();
+                self._calcManager.calcElem.find("#disp_eqn").focus();
                 if (self._firstTimeOpen) {
                     self._firstTimeOpen = false;
                 } else {
@@ -209,8 +210,8 @@ export default class LoadCalculator {
                     //     self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label", "Hide button");
                     // }, 500);
                 }
-
-            }, 800);
+            
+            }, 400);
 
         } else {
             if(!this._isCreated && this.retryCount < this.maxRetry){

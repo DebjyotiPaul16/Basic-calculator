@@ -18,13 +18,13 @@ export default class CalculatorManger {
                             <td colspan="4">
                                     <div class="disp-holder">
                                       <div id="calcForm" class="disp-eqn-outer" aria-labelledby="hidden-text-equation">
-                                         <!--action="javascript:void(0)" name="myForm"-->
-                                           <span id="hidden-text-equation" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
                                             <input type="text" class="disp_btn" id="disp_eqn" tabindex="0">
                 					    	<input type="submit" style="display:none;"/>
                					      </div>
                						  <div class="disp_btn_outer">
-                                         <span class="disp_btn" role="textbox" tabindex="0" id="disp" aria-label="result" aria-live="polite" aria-atomic="true"></span>
+               						      <span id="hidden-text-result" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+                                          <span class="disp_btn" id="disp" tabindex="0" role="textbox" aria-label="result"></span>
                                       </div>
                                     </div>
                             </td>
@@ -85,7 +85,7 @@ export default class CalculatorManger {
             } else {
                 calcobj.clearData($this.val());
             }
-
+            
         });
     }
 

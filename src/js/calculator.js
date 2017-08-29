@@ -66,15 +66,15 @@ export default class Calculator {
     _restrictEqn() {
         let totalLength = 0;
         const MAX_ALLOWED = 23;
-        if(!this._eqnArr.length){
+        if (!this._eqnArr.length) {
             return false;
         }
         for (let i = 0; i < this._eqnArr.length; i++) {
-            if(!!this._eqnArr[i].match(/ans/)){
+            if (!!this._eqnArr[i].match(/ans/)) {
                 totalLength += 3;
-            }else if (!!this._eqnArr[i].match(/[0-9]/)) {
+            } else if (!!this._eqnArr[i].match(/[0-9]/)) {
                 totalLength += this._eqnArr[i].length;
-            }else{
+            } else {
                 totalLength += this._eqnArr[i].length + 1;
             }
         }
@@ -95,7 +95,8 @@ export default class Calculator {
             isRoundedUp = this._result.length > this._restrictResult();
         this._renderEqn();
         result = isRoundedUp ? this._roundup(this._result, this._precision) : this._result;
-        this._displayResultDiv.innerHTML = "<span class='sr-only'>equals</span>" + result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
+        this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
+        this._displayResultDiv.previousElementSibling.innerHTML = "equals " + result.replace(/\-/g, "minus");
         this._lastFocus = document.activeElement;
     }
 
@@ -116,7 +117,7 @@ export default class Calculator {
             result = eval(this._eqnArr.join(" ").replace("ans-", ""));
         } catch (e) {
             console.log("ENTRY ERROR");
-            this._result = '<span style="font-size: 65%">ENTRY ERROR</span>';
+            this._result = '<span style="font-size: 65%">Entry Error</span>';
             this._displayResultDiv.innerHTML = this._result;
             this._isEntryError = true;
             return;
@@ -168,7 +169,7 @@ export default class Calculator {
         let text = revisedEqnArr.join("").replace(/\//g, "divided by").replace(/\*/g, "multiplies").replace(/\-/g, "minus").replace(/\./g, "point").replace(/\+/g, "plus");
         this._displayEqnDiv.previousElementSibling.innerHTML = text;
     }
-    
+
     /*--------should return character size of the calculator as per calculator size---------*/
     _getCharacterRequiredToOverflow() {
         let charSize = 0;
@@ -196,7 +197,7 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if ((this._isResultUndefined || (this._restrictEqn() && !this._isEqualPressed) || this._isEntryError) && this._isEqualPressed) {
+        if ((this._isResultUndefined || this._restrictEqn() || this._isEntryError)) {
             return;
         }
         if (this._isEqualPressed) {
@@ -208,7 +209,7 @@ export default class Calculator {
             this._isEqualPressed = false;
             return;
         }
-        if (this._isOperatorInserted && this._eqnArr.length !== 0) {
+        if (this._isOperatorInserted || this._eqnArr.length === 0) {
             sign === "-" ? this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
@@ -231,6 +232,7 @@ export default class Calculator {
             this._renderEqn();
             this._renderResult();
             this._isResultUndefined = false;
+            this._isEqualPressed = false;
         } else if (cleartype === "bs") {
             let lastElem, isNegative;
             if (this._eqnArr.length === 0) {
@@ -279,9 +281,9 @@ export default class Calculator {
     }
 
     negateValue() {
-        if (this._result === '0' || this._isResultUndefined) {
+        if (this._isResultUndefined) {
             return;
-        } else if (this._isOperatorInserted) {
+        } else if (this._isOperatorInserted || this._eqnArr.length === 0) {
             this.setValue("-");
             return;
         }
