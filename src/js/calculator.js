@@ -135,7 +135,7 @@ export default class Calculator {
             if (value.indexOf("e") !== -1) {
                 return parseFloat(parseFloat(eval(value)).toFixed(precision - 1)).toExponential(this._precision - 3).toString();
             } else {
-                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision - 3).toString();
+                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision - 4).toString();
             }
         } else {
             return parseFloat(parseFloat(eval(value)).toFixed(precision - 1)).toExponential(this._precision - 3).toString();
@@ -258,8 +258,9 @@ export default class Calculator {
             this._isEqualPressed = false;
             this._renderEqn();
         } else if (cleartype === "ce") {
-            this._result = '0';
-            this._renderResult();
+            this._eqnArr.pop();
+            this._isOperatorInserted = isNaN(this._getLastElement());
+            this._renderEqn();
             this._isResultUndefined = false;
         } else {
             console.info("invalid clear type");
