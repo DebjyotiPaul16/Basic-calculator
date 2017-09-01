@@ -21,6 +21,14 @@ export default class Calculator {
         return this._eqnArr[this._eqnArr.length - 1];
     }
 
+    _isNegationNotAllowed() {
+        return (
+        (this._eqnArr.length === 1 && this._eqnArr[0] === "-")
+        ||
+        (this._eqnArr.length >= 2 && ["+", "-", "*", "/"].indexOf(this._eqnArr[this._eqnArr.length - 2]) !== -1
+        && this._eqnArr[this._eqnArr.length - 1] === "-"))
+    }
+
     /*--------- Set value to calculate --------------*/
     setValue(val) {
         if (this._eqnArr.length !==0 && (this._isResultUndefined || (val === "." && this._getLastElement().indexOf(".") > -1) || this._restrictEqn()) && !this._isEqualPressed) {
@@ -29,6 +37,10 @@ export default class Calculator {
         if (this._shouldPopulateEquation(val)) {
             return;
         }
+        if (val === "-" && this._isNegationNotAllowed()) {
+            return;
+        }
+
         if (this._isEqualPressed && !this._isEntryError) {
             this._eqnArr = [];
             this._result = "";
@@ -225,10 +237,7 @@ export default class Calculator {
             sign === "-" ? this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
-        } else {
-            if (this._eqnArr.length === 0) {
-                this._eqnArr.push("0");
-            }
+        } else if (sign !== "-" || (sign === "-" && !this._isNegationNotAllowed())) {
             this._eqnArr.push(sign);
             this._isOperatorInserted = true;
             this._renderEqn();
@@ -309,7 +318,6 @@ export default class Calculator {
         }
         if (this._getLastElement() === "-") {
             this._eqnArr = this._eqnArr.slice(0, -1);
-            // (eval(this._eqnArr[this._eqnArr.length - 1]) * (-1)).toString();
             this._renderEqn();
             return;
         }
