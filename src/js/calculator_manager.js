@@ -271,6 +271,13 @@ export default class CalculatorManger {
                 return false;
             }
        });
+        // this._getElement("#calcForm", true).submit(function (e) {
+        //     e.preventDefault();
+        //     setTimeout(function () {
+        //         self._getElement("#disp_eqn", true).focus();
+        //         self.calcobj._evalResult();
+        //     },10);
+        // });
         // this._getElement("#calcForm", true).keyup(function (e) {
         //     if (e.keyCode === 13) {
         //         console.log("keyUp");
