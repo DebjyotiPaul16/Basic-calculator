@@ -223,10 +223,6 @@ export default class CalculatorManger {
             }
         });
 
-        this._getElement(".close-calculator").off("focusout").on("focusout", (event)=> {
-            self._getElement("#disp_eqn", true)[0].focus();
-        });
-
         this._getElement("[value='=']").off("keydown").on("keydown", (event) => {
             if (!event.shiftKey && event.keyCode === 9) {
                 this._getElement(".close-calculator", true).focus();
