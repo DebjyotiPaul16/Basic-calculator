@@ -31,7 +31,8 @@ export default class Calculator {
         }
         if (this._isEqualPressed && !this._isEntryError) {
             this._eqnArr = [];
-            this._result = "0";
+            this._result = "";
+            this._renderResult();
         }
 
         if (!!this._eqnArr.length) {
@@ -60,7 +61,7 @@ export default class Calculator {
     }
 
     _shouldPopulateEquation(val) {
-        return (this._getLastElement() === "0" || this._getLastElement() === undefined) && val === "0";
+        return (this._getLastElement() === "0" || this._getLastElement() === "-0") && val === "0";
     }
 
     _restrictEqn() {
@@ -113,6 +114,9 @@ export default class Calculator {
 
         this._eqnArr = this._isOperatorInserted ? this._eqnArr.slice(0, -1) : this._getLastElement().length === 0 ? this._eqnArr.slice(0, -2) : this._eqnArr;
         try {
+            this._eqnArr = this._eqnArr.map((elem)=> {
+                return elem.replace(/^(-)*0(?!\.)[0-9]+/, "$1");
+            });
             result = eval(this._eqnArr.join(" ").replace("ans-", ""));
         } catch (e) {
             console.log("ENTRY ERROR");
@@ -240,7 +244,7 @@ export default class Calculator {
             let lastElem, isNegative;
             if (this._eqnArr.length === 0) {
                 return;
-            } else if (this._isEqualPressed) {
+            } else if (this._isEqualPressed || this._eqnArr.length === 1) {
                 this._result = "";
                 this._renderResult();
             }
