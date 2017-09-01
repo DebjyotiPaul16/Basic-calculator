@@ -115,7 +115,7 @@ export default class Calculator {
         this._eqnArr = this._isOperatorInserted ? this._eqnArr.slice(0, -1) : this._getLastElement().length === 0 ? this._eqnArr.slice(0, -2) : this._eqnArr;
         try {
             this._eqnArr = this._eqnArr.map((elem)=> {
-                return elem.replace(/^(-)*0(?!\.)[0-9]+/, "$1");
+                return elem.replace(/^(-)*0(?!\.)(?!$)/, "$1");
             });
             result = eval(this._eqnArr.join(" ").replace("ans-", ""));
         } catch (e) {
