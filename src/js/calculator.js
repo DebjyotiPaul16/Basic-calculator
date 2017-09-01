@@ -41,7 +41,7 @@ export default class Calculator {
             return;
         }
 
-        if (this._isEqualPressed && !this._isEntryError) {
+        if (this._isEqualPressed || this._isEntryError || this._isResultUndefined) {
             this._eqnArr = [];
             this._result = "";
             this._renderResult();
@@ -66,6 +66,7 @@ export default class Calculator {
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = false;
+        this._isResultUndefined = false;
         this._isEntryError = false;
         if (this._result.length === this._restrictResult()) {
             this._resultLimit = true;
@@ -221,7 +222,7 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if ((this._isResultUndefined || this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
+        if ((this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
             return;
         }
         if (this._isEqualPressed) {
