@@ -75,7 +75,7 @@ export default class LoadCalculator {
     }
 
     getCalculatorValue() {
-        return this._calcManager.calcobj._result;
+        return this._calcManager.calcobj._result.replace(/^<span style="font-size: 65%">(.*)<\/span>$/, "$1");
     }
 
     getPosition() {

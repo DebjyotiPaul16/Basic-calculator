@@ -100,6 +100,10 @@ export default class Calculator {
         this._lastFocus = document.activeElement;
     }
 
+    _renderError() {
+        this._displayResultDiv.innerHTML = this._result;
+        this._displayResultDiv.previousElementSibling.innerHTML = "equals " + this._result.replace(/^<span style="font-size: 65%">(.*)<\/span>$/, "$1");
+    }
 
     _evalResult() {
         let result;
@@ -107,7 +111,7 @@ export default class Calculator {
             this._eqnArr[this._eqnArr.length - 2] &&
             this._eqnArr[this._eqnArr.length - 2] === '/') {
             this._result = '<span style="font-size: 65%">Cannot divide by zero</span>';
-            this._displayResultDiv.innerHTML = this._result;
+            this._renderError();
             this._isResultUndefined = true;
             return;
         }
@@ -121,7 +125,7 @@ export default class Calculator {
         } catch (e) {
             console.log("ENTRY ERROR");
             this._result = '<span style="font-size: 65%">Entry Error</span>';
-            this._displayResultDiv.innerHTML = this._result;
+            this._renderError();
             this._isEntryError = true;
             return;
         }
@@ -315,7 +319,6 @@ export default class Calculator {
             this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].replace("-", "");
         }
 
-        // this._eqnArr[this._eqnArr.length - 1] = String(+(this._eqnArr[this._eqnArr.length - 1]) * -1);
         this._renderEqn();
     }
 }
