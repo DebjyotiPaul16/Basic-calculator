@@ -23,7 +23,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if ((this._isResultUndefined || (val === "." && this._result.indexOf(".") > -1) || this._restrictEqn()) && !this._isEqualPressed) {
+        if (this._eqnArr.length !==0 && (this._isResultUndefined || (val === "." && this._getLastElement().indexOf(".") > -1) || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
         if (this._shouldPopulateEquation(val)) {
@@ -132,6 +132,7 @@ export default class Calculator {
         this._renderEqn();
         this._renderResult();
         this._lastFocus = document.activeElement;
+        this._isOperatorInserted = false;
     }
 
     _roundup(value, precision) {
@@ -153,9 +154,9 @@ export default class Calculator {
             expression,
             self = this;
 
-        this._eqnArr.forEach(function (i,index) {
-            if(i.length === 2 && i.indexOf(".") === 1 && self._isOperatorInserted){
-                i = self._eqnArr[index] = i.slice(0,-1);
+        this._eqnArr.forEach(function (i, index) {
+            if (i.length === 2 && i.indexOf(".") === 1 && self._isOperatorInserted && index + 1 !== self._eqnArr.length) {
+                i = self._eqnArr[index] = i.slice(0, -1);
             }
             digit = i.indexOf("ans") !== -1 ? i.split("-")[0] : i;
             revisedEqnArr.push(digit);
@@ -204,7 +205,7 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if ((this._isResultUndefined || this._restrictEqn() || this._isEntryError)) {
+        if ((this._isResultUndefined || this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
             return;
         }
         if (this._isEqualPressed) {
@@ -282,7 +283,6 @@ export default class Calculator {
         if (this._isResultUndefined || this._eqnArr.length === 0) {
             return;
         }
-        this._isOperatorInserted = false;
         this._isEqualPressed = true;
         if (!this._isEqualPressed) {
             this._lastFocus = document.activeElement;
