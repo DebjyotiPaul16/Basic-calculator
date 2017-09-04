@@ -3,7 +3,6 @@ export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {
         this._result = '0';
-        this._precision = 9;
         this._lastFocus = "";
         this._displayResultDiv = displayResultDiv;
         this._displayEqnDiv = displayEqnDiv;
@@ -31,7 +30,7 @@ export default class Calculator {
 
     /*--------- Set value to calculate --------------*/
     setValue(val) {
-        if (this._eqnArr.length !==0 && (this._isResultUndefined || (val === "." && this._getLastElement().indexOf(".") > -1) || this._restrictEqn()) && !this._isEqualPressed) {
+        if (this._eqnArr.length !== 0 && (this._isResultUndefined || (val === "." && this._getLastElement().indexOf(".") > -1) || this._restrictEqn()) && !this._isEqualPressed) {
             return;
         }
         if (this._shouldPopulateEquation(val)) {
@@ -41,7 +40,7 @@ export default class Calculator {
             return;
         }
 
-        if (this._isEqualPressed && !this._isEntryError) {
+        if (this._isEqualPressed || this._isEntryError || this._isResultUndefined) {
             this._eqnArr = [];
             this._result = "";
             this._renderResult();
@@ -66,6 +65,7 @@ export default class Calculator {
         this._renderEqn();
         this._isOperatorInserted = false;
         this._isEqualPressed = false;
+        this._isResultUndefined = false;
         this._isEntryError = false;
         if (this._result.length === this._restrictResult()) {
             this._resultLimit = true;
@@ -77,6 +77,9 @@ export default class Calculator {
     }
 
     _restrictEqn() {
+        if (this._isOperatorInserted) {
+            return false;
+        }
         let totalLength = 0;
         const MAX_ALLOWED = 23;
         if (!this._eqnArr.length) {
@@ -106,9 +109,9 @@ export default class Calculator {
     _renderResult() {
         let result,
             isRoundedUp = this._result.length > this._restrictResult();
-        result = isRoundedUp ? this._roundup(this._result, this._precision) : this._result;
+        result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
-        this._displayResultDiv.previousElementSibling.innerHTML = "equals " + result.replace(/\-/g, "minus");
+        this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
         this._lastFocus = document.activeElement;
     }
 
@@ -151,17 +154,13 @@ export default class Calculator {
         this._isOperatorInserted = false;
     }
 
-    _roundup(value, precision) {
-        if (value.indexOf(".") !== -1) {
-            if (value.indexOf("e") !== -1) {
-                return parseFloat(parseFloat(eval(value)).toFixed(precision - 1)).toExponential(this._precision - 3).toString();
-            } else {
-                return parseFloat(parseFloat(eval(value)).toFixed(precision)).toExponential(this._precision - 4).toString();
-            }
-        } else {
-            return parseFloat(parseFloat(eval(value)).toFixed(precision - 1)).toExponential(this._precision - 3).toString();
+    _roundup(value) {
+        const MAX_ALLOWED = 10;
+        let wholeNumberLength = value.split(".")[0].replace(/\-/, '').length;
+        if (value.indexOf(".") !== -1 && wholeNumberLength <= MAX_ALLOWED - 2) {
+            return parseFloat(value).toFixed(MAX_ALLOWED - wholeNumberLength);
         }
-
+        return parseFloat(value).toExponential(MAX_ALLOWED - 5);
     }
 
     _renderEqn() {
@@ -190,8 +189,15 @@ export default class Calculator {
     /* Set text for screen reader */
 
     _setTextToHiddenSpan(revisedEqnArr) {
-        let text = revisedEqnArr.join("").replace(/\//g, "divided by").replace(/\*/g, "multiplies").replace(/\-/g, "minus").replace(/\./g, "point").replace(/\+/g, "plus");
-        this._displayEqnDiv.previousElementSibling.innerHTML = text;
+        let text = revisedEqnArr.join("")
+            .replace(/ans/g, "answer") // read answer for ans
+            .replace(/([\+\-\*\\]|^)(\-)/g, "$1 negative") //read negetive for any "-" sign after operator or starting of line
+            .replace(/\//g, "divide")
+            .replace(/\*/g, "multiply")
+            .replace(/\-/g, "minus")
+            .replace(/\./g, "decimal")
+            .replace(/\+/g, "plus");
+        this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression " + text : "blank";
     }
 
     /*--------should return character size of the calculator as per calculator size---------*/
@@ -215,7 +221,7 @@ export default class Calculator {
  
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if ((this._isResultUndefined || this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
+        if ((this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
             return;
         }
         if (this._isEqualPressed) {
@@ -242,7 +248,7 @@ export default class Calculator {
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
-            this._result = '0';
+            this._result = '';
             this._eqnArr = [];
             this._renderEqn();
             this._renderResult();
@@ -256,8 +262,8 @@ export default class Calculator {
                 this._result = "";
                 this._renderResult();
             }
-            this._isResultUndefined = this._isResultUndefined ? !this._isResultUndefined : this._isResultUndefined;
-
+            this._isResultUndefined = false;
+            this._isEntryError = false;
 
             lastElem = this._getLastElement();
             isNegative = parseInt(lastElem, 10) < 0;
@@ -295,13 +301,16 @@ export default class Calculator {
             this._lastFocus = document.activeElement;
         }
         this._evalResult();
-        //this._renderEqn();
     }
 
     negateValue() {
         if (this._isResultUndefined) {
             return;
-        } else if (this._isOperatorInserted || this._eqnArr.length === 0) {
+        }
+        if (this._restrictEqn()) {
+            return;
+        }
+        if (this._isOperatorInserted || this._eqnArr.length === 0) {
             this.setValue("-");
             return;
         }
@@ -312,6 +321,7 @@ export default class Calculator {
         }
         if (this._getLastElement() === "-") {
             this._eqnArr = this._eqnArr.slice(0, -1);
+            this._isOperatorInserted = isNaN(this._getLastElement());
             this._renderEqn();
             return;
         }
