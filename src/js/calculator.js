@@ -203,7 +203,7 @@ export default class Calculator {
             .replace(/\./g, "decimal ")
             .replace(/\+/g, "plus ");
         if(this._isEqualPressed){
-            this._displayEqnDiv.previousElementSibling.innerHTML = "accessibility placeholder for equation reading";
+            this._displayEqnDiv.previousElementSibling.innerHTML = "";
             setTimeout(function(){
                 this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
             }.bind(this),100);
