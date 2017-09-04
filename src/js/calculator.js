@@ -78,6 +78,9 @@ export default class Calculator {
     }
 
     _restrictEqn() {
+        if (this._isOperatorInserted) {
+            return false;
+        }
         let totalLength = 0;
         const MAX_ALLOWED = 23;
         if (!this._eqnArr.length) {
@@ -308,7 +311,11 @@ export default class Calculator {
     negateValue() {
         if (this._isResultUndefined) {
             return;
-        } else if (this._isOperatorInserted || this._eqnArr.length === 0) {
+        }
+        if (this._restrictEqn()) {
+            return;
+        }
+        if (this._isOperatorInserted || this._eqnArr.length === 0) {
             this.setValue("-");
             return;
         }
