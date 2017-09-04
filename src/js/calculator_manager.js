@@ -5,21 +5,22 @@ import {
 export default class CalculatorManger {
     createCalculator() {
         let calculatordiv =
-            `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0">
+            `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0" role="application">
                 <div id="drag">                
                     <table id="calc" cellpadding="0" cellspacing="0">
                         <tr>
                             <td colspan="4">
-								<span id="calc_state" class="sr-only" aria-hidden="true"></span>
+								<span id="calc_state" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
                                 <button type="button" role="button" class="close-calculator" aria-label="Hide">Hide</button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">
                                     <div class="disp-holder">
-                                      <div id="calcForm" class="disp-eqn-outer" aria-labelledby="hidden-text-equation">
-                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
-                                            <input type="text" class="disp_btn" id="disp_eqn" tabindex="0">
+                                      <div id="calcForm" class="disp-eqn-outer">
+                                      <!--aria-labelledby="hidden-text-equation"-->
+                                            <span id="hidden-text-equation" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+                                            <input type="text" class="disp_btn" id="disp_eqn" tabindex="0" aria-hidden="true" aria-label="expression">
                 					    	<input type="submit" style="display:none;"/>
                					      </div>
                						  <div class="disp_btn_outer">
@@ -378,7 +379,7 @@ export default class CalculatorManger {
         self._getElement("#calc_state")[0].removeAttribute("aria-hidden");
         self._getElement("#calc_state").css("display", "inline-block");
         self._getElement("#calc_state")[0].setAttribute("tabindex", "0");
-        self._getElement("#calc_state")[0].innerText = "Calculator Hidden";
+        self._getElement("#calc_state")[0].innerHTML = "Calculator Hidden";
         self._getElement("#calc_state")[0].focus();
         setTimeout(function () {
             self._getElement("#calc_state")[0].setAttribute("aria-hidden", "true");

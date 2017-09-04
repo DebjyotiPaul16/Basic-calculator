@@ -178,13 +178,13 @@ export default class Calculator {
             revisedEqnArr.push(digit);
         });
         this._setTextToHiddenSpan(revisedEqnArr);
+
         if (!this._eqnArr.length) {
             expression = "";
         } else {
             expression = $.parseHTML(revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;"))[0].nodeValue;
         }
         this._displayEqnDiv.value = expression;
-
     }
 
     /* Set text for screen reader */
@@ -210,15 +210,9 @@ export default class Calculator {
             default:
                 charSize = 20;
         }
-        return charSize;
+        
     }
-
-    /*------ End of method ------*/
-
-    _setCalculatorSize(size) {
-        this._calculatorSize = size;
-    }
-
+ 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
         if ((this._isResultUndefined || this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {

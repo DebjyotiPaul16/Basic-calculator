@@ -2,7 +2,7 @@ export const calculator_data = [
     [{
         name: '',
         value: 'bs',
-        label: "Back Space",
+        label: "backspace",
         operation:"clearData",
         tabindex:3
     }, {
