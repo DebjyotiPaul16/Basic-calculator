@@ -247,7 +247,7 @@ export default class Calculator {
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
-            this._result = '0';
+            this._result = '';
             this._eqnArr = [];
             this._renderEqn();
             this._renderResult();
@@ -261,8 +261,8 @@ export default class Calculator {
                 this._result = "";
                 this._renderResult();
             }
-            this._isResultUndefined = this._isResultUndefined ? !this._isResultUndefined : this._isResultUndefined;
-
+            this._isResultUndefined = false;
+            this._isEntryError = false;
 
             lastElem = this._getLastElement();
             isNegative = parseInt(lastElem, 10) < 0;
@@ -320,6 +320,7 @@ export default class Calculator {
         }
         if (this._getLastElement() === "-") {
             this._eqnArr = this._eqnArr.slice(0, -1);
+            this._isOperatorInserted = isNaN(this._getLastElement());
             this._renderEqn();
             return;
         }
