@@ -111,13 +111,18 @@ export default class Calculator {
             isRoundedUp = this._result.length > this._restrictResult();
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
-        this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
-        this._lastFocus = document.activeElement;
+        setTimeout(function(){
+            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
+            this._lastFocus = document.activeElement;
+        }.bind(this),500);
     }
 
     _renderError() {
-        this._displayResultDiv.innerHTML = this._result;
-        this._displayResultDiv.previousElementSibling.innerHTML = "equals " + this._result.replace(/^<span style="font-size: 65%">(.*)<\/span>$/, "$1");
+        this._renderEqn();
+        setTimeout(function(){
+            this._displayResultDiv.innerHTML = this._result;
+            this._displayResultDiv.previousElementSibling.innerHTML = "equals " + this._result.replace(/^<span style="font-size: 65%">(.*)<\/span>$/, "$1");
+        }.bind(this),500);
     }
 
     _evalResult() {
@@ -190,35 +195,23 @@ export default class Calculator {
 
     _setTextToHiddenSpan(revisedEqnArr) {
         let text = revisedEqnArr.join("")
-            .replace(/ans/g, "answer") // read answer for ans
-            .replace(/([\+\-\*\\]|^)(\-)/g, "$1 negative") //read negetive for any "-" sign after operator or starting of line
-            .replace(/\//g, "divide")
-            .replace(/\*/g, "multiply")
-            .replace(/\-/g, "minus")
-            .replace(/\./g, "decimal")
-            .replace(/\+/g, "plus");
-        this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression " + text : "blank";
-    }
-
-    /*--------should return character size of the calculator as per calculator size---------*/
-    _getCharacterRequiredToOverflow() {
-        let charSize = 0;
-        switch (this._calculatorSize) {
-            case "small":
-                charSize = 20;
-                break;
-            case "medium":
-                charSize = 30;
-                break;
-            case "large":
-                charSize = 40;
-                break;
-            default:
-                charSize = 20;
+            .replace(/ans/g, "answer ") // read answer for ans
+            .replace(/([\+\-\*\/]|^)(\-)/g, "$1negative") //read negetive for any "-" sign after operator or starting of line
+            .replace(/\//g, "divide ")
+            .replace(/\*/g, "multiply ")
+            .replace(/\-/g, "minus ")
+            .replace(/\./g, "decimal ")
+            .replace(/\+/g, "plus ");
+        if(this._isEqualPressed){
+            this._displayEqnDiv.previousElementSibling.innerHTML = "accessibility placeholder for equation reading";
+            setTimeout(function(){
+                this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
+            }.bind(this),100);
+        }else {
+            this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
         }
-        
     }
- 
+    
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
         if ((this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {

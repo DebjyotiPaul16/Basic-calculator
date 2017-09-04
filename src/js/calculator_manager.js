@@ -19,13 +19,12 @@ export default class CalculatorManger {
                                     <div class="disp-holder">
                                       <div id="calcForm" class="disp-eqn-outer">
                                       <!--aria-labelledby="hidden-text-equation"-->
-                                            <span id="hidden-text-equation" class="sr-only" aria-live="polite" aria-atomic="true"></span>
-                                            <input type="text" class="disp_btn" id="disp_eqn" tabindex="0" aria-hidden="true" aria-label="expression">
-                					    	<input type="submit" style="display:none;"/>
+                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
+                                            <input type="text" class="disp_btn" id="disp_eqn" tabindex="0" aria-label="expression" aria-hidden="true">
                					      </div>
                						  <div class="disp_btn_outer">
                						      <span id="hidden-text-result" class="sr-only" aria-live="polite" aria-atomic="true"></span>
-                                          <span class="disp_btn" id="disp" tabindex="0" role="textbox" aria-label="result"></span>
+                                          <span class="disp_btn" id="disp" tabindex="0" role="textbox" aria-label="" ></span>
                                       </div>
                                     </div>
                             </td>
@@ -268,29 +267,6 @@ export default class CalculatorManger {
                 return false;
             }
        });
-        // this._getElement("#calcForm", true).submit(function (e) {
-        //     e.preventDefault();
-        //     setTimeout(function () {
-        //         self._getElement("#disp_eqn", true).focus();
-        //         self.calcobj._evalResult();
-        //     },10);
-        // });
-        // this._getElement("#calcForm", true).keyup(function (e) {
-        //     if (e.keyCode === 13) {
-        //         console.log("keyUp");
-        //         $("#disp_eqn").focus();
-        //     }
-        // });
-
-        // this._getElement("#disp_eqn", true).keypress(function (e) {
-        //     console.log("ting");
-        //     e = e || window.event;
-        //     var charCode = e.which || e.keyCode;
-        //     if (charCode == 13) {
-        //         self._setEndOfContenteditable(window, 4);
-        //         return false;
-        //     }
-        // });
     }
 
     _setEndOfContenteditable(contentEditableElement) {
