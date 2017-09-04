@@ -111,7 +111,7 @@ export default class Calculator {
             isRoundedUp = this._result.length > this._restrictResult();
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
-        this._displayResultDiv.previousElementSibling.innerHTML = "equals " + result.replace(/\-/g, "minus");
+        this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
         this._lastFocus = document.activeElement;
     }
 
@@ -189,8 +189,15 @@ export default class Calculator {
     /* Set text for screen reader */
 
     _setTextToHiddenSpan(revisedEqnArr) {
-        let text = revisedEqnArr.join("").replace(/\//g, "divided by").replace(/\*/g, "multiplies").replace(/\-/g, "minus").replace(/\./g, "point").replace(/\+/g, "plus");
-        this._displayEqnDiv.previousElementSibling.innerHTML = text;
+        let text = revisedEqnArr.join("")
+            .replace(/ans/g, "answer") // read answer for ans
+            .replace(/([\+\-\*\\]|^)(\-)/g, "$1 negative") //read negetive for any "-" sign after operator or starting of line
+            .replace(/\//g, "divide")
+            .replace(/\*/g, "multiply")
+            .replace(/\-/g, "minus")
+            .replace(/\./g, "decimal")
+            .replace(/\+/g, "plus");
+        this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression " + text : "blank";
     }
 
     /*--------should return character size of the calculator as per calculator size---------*/
