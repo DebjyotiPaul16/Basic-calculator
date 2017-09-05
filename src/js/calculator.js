@@ -182,13 +182,8 @@ export default class Calculator {
             revisedEqnArr.push(digit);
         });
         this._setTextToHiddenSpan(revisedEqnArr);
-
-        if (!this._eqnArr.length) {
-            expression = "";
-        } else {
-            expression = $.parseHTML(revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;"))[0].nodeValue;
-        }
-        this._displayEqnDiv.value = expression;
+        
+        this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
     }
 
     /* Set text for screen reader */
@@ -205,10 +200,10 @@ export default class Calculator {
         if(this._isEqualPressed){
             this._displayEqnDiv.previousElementSibling.innerHTML = "";
             setTimeout(function(){
-                this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
+                this._displayEqnDiv.previousElementSibling.innerHTML = "Expression: " + text;
             }.bind(this),100);
         }else {
-            this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
+            this._displayEqnDiv.previousElementSibling.innerHTML = "Expression: " + text;
         }
     }
     

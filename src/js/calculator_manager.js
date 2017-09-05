@@ -18,13 +18,12 @@ export default class CalculatorManger {
                             <td colspan="4">
                                     <div class="disp-holder">
                                       <div id="calcForm" class="disp-eqn-outer">
-                                      <!--aria-labelledby="hidden-text-equation"-->
                                             <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
-                                            <input type="text" class="disp_btn" id="disp_eqn" tabindex="0" aria-label="expression" aria-hidden="true">
+                                            <span class="disp_btn" role="none" id="disp_eqn" tabindex="0" aria-label="expression:" aria-labelledby="hidden-text-equation"></span>
                					      </div>
                						  <div class="disp_btn_outer">
                						      <span id="hidden-text-result" class="sr-only" aria-live="polite" aria-atomic="true"></span>
-                                          <span class="disp_btn" id="disp" tabindex="0" role="textbox" aria-label="" ></span>
+                                          <span class="disp_btn" id="disp" role="none" tabindex="0" aria-label="blank" aria-labelledby="hidden-text-result"></span>
                                       </div>
                                     </div>
                             </td>
