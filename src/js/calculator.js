@@ -77,9 +77,6 @@ export default class Calculator {
     }
 
     _restrictEqn() {
-        if (this._isOperatorInserted) {
-            return false;
-        }
         let totalLength = 0;
         const MAX_ALLOWED = 23;
         if (!this._eqnArr.length) {
@@ -304,7 +301,7 @@ export default class Calculator {
         if (this._isResultUndefined) {
             return;
         }
-        if (this._restrictEqn()) {
+        if (this._restrictEqn() && this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {
             return;
         }
         if (this._isOperatorInserted || this._eqnArr.length === 0) {
