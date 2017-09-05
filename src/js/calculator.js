@@ -220,7 +220,7 @@ export default class Calculator {
             sign === "-" ? this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
-        } else if (sign !== "-" || (sign === "-" && !this._isNegationNotAllowed())) {
+        } else if ((sign !== "-" && this._getLastElement() !== "-") || (sign === "-" && !this._isNegationNotAllowed())) {
             this._eqnArr.push(sign);
             this._isOperatorInserted = true;
             this._renderEqn();
@@ -253,11 +253,7 @@ export default class Calculator {
                 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
                 : this._eqnArr = this._eqnArr.slice(0, -1);
 
-            if (isNaN(this._getLastElement()) && !isNegative) {
-                this._isOperatorInserted = true;
-            } else {
-                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
-            }
+            this._isOperatorInserted = this._getLastElement() && isNaN(this._getLastElement().replace("ans-", "")) && !isNegative;
             this._isEqualPressed = false;
             this._renderEqn();
         } else if (cleartype === "ce") {
@@ -287,7 +283,7 @@ export default class Calculator {
     }
 
     negateValue() {
-        if (this._isResultUndefined) {
+        if (this._isResultUndefined || this._isEntryError) {
             return;
         }
         if (this._restrictEqn() && this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {

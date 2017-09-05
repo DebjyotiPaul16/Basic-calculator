@@ -182,9 +182,13 @@ export default class LoadCalculator {
     _getAllLabels() {
         let label = [];
         this._calcManager.calcElem.find("[aria-label]").each(function (index, elem) {
-            label.push($(elem).attr("aria-label"));
-            console.log($(elem).attr("aria-label"))
+            if (elem.getAttribute("role") === "button") {
+                label.push($(elem).attr("aria-label") + " button");
+            } else {
+                label.push($(elem).attr("aria-label"));
+            }
         });
+        console.log(label.join(" "));
         return label.join(" ");
     }
 
