@@ -67,7 +67,6 @@ export default class LoadCalculator {
 
     setSize(size) {
         this._calcManager.calcElem.find("#drag").attr("class", size);
-        this._calcManager.calcobj._setCalculatorSize(size);
     }
 
     hideCalculator() {
@@ -220,18 +219,6 @@ export default class LoadCalculator {
                         self._firstTimeOpen = false;
                     }
                 }, 800);
-                if (self._firstTimeOpen) {
-                    self._firstTimeOpen = false;
-                } else {
-                    //setTimeout(function () {
-                    // self._calcManager.calcElem.find('[aria-label="Hide button"]').attr("aria-label", "Hide");
-                    //     self._calcManager.calcElem.find("#disp_eqn").focus();
-                    //}, 400);
-                    // setTimeout(function () {
-                    //     self._calcManager.calcElem.find('[aria-label="Hide"]').attr("aria-label", "Hide button");
-                    // }, 500);
-                }
-
             }, 600);
 
         } else {
