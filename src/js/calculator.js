@@ -10,7 +10,6 @@ export default class Calculator {
         this._isOperatorInserted = false;
         this._isResultUndefined = false;
         this._isEqualPressed = false;
-        this._resultLimit = false;
         this._calculatorSize = "";
         this._isEntryError = false;
     }
@@ -50,16 +49,10 @@ export default class Calculator {
             if (this._isOperatorInserted) {
                 val === "." ? this._eqnArr.push("0" + val) : this._eqnArr.push(val);
             } else {
-                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
+                this._eqnArr[this._eqnArr.length - 1] = (this._eqnArr[this._eqnArr.length - 1] + val).replace(/\-\./, "-0.");
             }
         } else {
             val === "." ? this._eqnArr.push("0" + val) : this._eqnArr.push(val);
-        }
-
-        if (!this._eqnArr.length || !this._isOperatorInserted) {
-            this._result = (this._result === '0' && val !== ".") ? '' + val : this._result + val;
-        } else {
-            this._result = val;
         }
 
         this._renderEqn();
@@ -67,9 +60,6 @@ export default class Calculator {
         this._isEqualPressed = false;
         this._isResultUndefined = false;
         this._isEntryError = false;
-        if (this._result.length === this._restrictResult()) {
-            this._resultLimit = true;
-        }
     }
 
     _shouldPopulateEquation(val) {
@@ -77,9 +67,6 @@ export default class Calculator {
     }
 
     _restrictEqn() {
-        if (this._isOperatorInserted) {
-            return false;
-        }
         let totalLength = 0;
         const MAX_ALLOWED = 23;
         if (!this._eqnArr.length) {
@@ -111,18 +98,18 @@ export default class Calculator {
             isRoundedUp = this._result.length > this._restrictResult();
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
-        setTimeout(function(){
-            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
+        setTimeout(function () {
+            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "negetive").replace(/\./g, "decimal") : "blank";
             this._lastFocus = document.activeElement;
-        }.bind(this),500);
+        }.bind(this), 500);
     }
 
     _renderError() {
         this._renderEqn();
-        setTimeout(function(){
+        setTimeout(function () {
             this._displayResultDiv.innerHTML = this._result;
             this._displayResultDiv.previousElementSibling.innerHTML = "equals " + this._result.replace(/^<span style="font-size: 65%">(.*)<\/span>$/, "$1");
-        }.bind(this),500);
+        }.bind(this), 500);
     }
 
     _evalResult() {
@@ -151,7 +138,6 @@ export default class Calculator {
         }
 
         this._result = String(result);
-        this._resultLimit = false;
 
         this._renderEqn();
         this._renderResult();
@@ -161,9 +147,13 @@ export default class Calculator {
 
     _roundup(value) {
         const MAX_ALLOWED = 10;
+        if (value.indexOf("e") > -1) {
+            let ePower = value.split("e")[1];
+            return parseFloat(value).toExponential(MAX_ALLOWED - 1 - ePower.length);
+        }
         let wholeNumberLength = value.split(".")[0].replace(/\-/, '').length;
         if (value.indexOf(".") !== -1 && wholeNumberLength <= MAX_ALLOWED - 2) {
-            return parseFloat(value).toFixed(MAX_ALLOWED - wholeNumberLength);
+            return parseFloat(value).toFixed(MAX_ALLOWED - wholeNumberLength).replace(/(0)*$/, "");
         }
         return parseFloat(value).toExponential(MAX_ALLOWED - 5);
     }
@@ -197,7 +187,7 @@ export default class Calculator {
             .replace(/\-/g, "minus ")
             .replace(/\./g, "decimal ")
             .replace(/\+/g, "plus ");
-        if(this._isEqualPressed){
+        if (this._isEqualPressed) {
             this._displayEqnDiv.previousElementSibling.innerHTML = "";
             setTimeout(function(){
                 this._displayEqnDiv.previousElementSibling.innerHTML = "Expression: " + text;
@@ -206,7 +196,7 @@ export default class Calculator {
             this._displayEqnDiv.previousElementSibling.innerHTML = "Expression: " + text;
         }
     }
-    
+
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
         if ((this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
@@ -225,11 +215,10 @@ export default class Calculator {
             sign === "-" ? this.setValue("-") : this._eqnArr[this._eqnArr.length - 1] = sign;
             this._renderEqn();
             this._isEqualPressed = false;
-        } else if (sign !== "-" || (sign === "-" && !this._isNegationNotAllowed())) {
+        } else if ((sign !== "-" && this._getLastElement() !== "-") || (sign === "-" && !this._isNegationNotAllowed())) {
             this._eqnArr.push(sign);
             this._isOperatorInserted = true;
             this._renderEqn();
-            this._resultLimit = false;
         }
     }
 
@@ -259,16 +248,14 @@ export default class Calculator {
                 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
                 : this._eqnArr = this._eqnArr.slice(0, -1);
 
-            if (isNaN(this._getLastElement()) && !isNegative) {
-                this._isOperatorInserted = true;
-            } else {
-                this._isOperatorInserted = this._isOperatorInserted ? !this._isOperatorInserted : this._isOperatorInserted;
-            }
+            this._isOperatorInserted = this._getLastElement() && isNaN(this._getLastElement().replace("ans-", "")) && !isNegative;
             this._isEqualPressed = false;
             this._renderEqn();
         } else if (cleartype === "ce") {
             this._eqnArr.pop();
-            this._result = "";
+            if (!this._eqnArr.length || (this._eqnArr.length && this._eqnArr[0].indexOf("ans") === -1)) {
+                this._result = "";
+            }
             this._isOperatorInserted = isNaN(this._getLastElement());
             this._isEqualPressed = false;
             this._renderEqn();
@@ -277,7 +264,6 @@ export default class Calculator {
         } else {
             console.info("invalid clear type");
         }
-        this._resultLimit = false;
     }
 
     getResult() {
@@ -292,10 +278,10 @@ export default class Calculator {
     }
 
     negateValue() {
-        if (this._isResultUndefined) {
+        if (this._isResultUndefined || this._isEntryError) {
             return;
         }
-        if (this._restrictEqn()) {
+        if (this._restrictEqn() && this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {
             return;
         }
         if (this._isOperatorInserted || this._eqnArr.length === 0) {
