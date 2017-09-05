@@ -111,18 +111,18 @@ export default class Calculator {
             isRoundedUp = this._result.length > this._restrictResult();
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
-        setTimeout(function(){
+        setTimeout(function () {
             this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
             this._lastFocus = document.activeElement;
-        }.bind(this),500);
+        }.bind(this), 500);
     }
 
     _renderError() {
         this._renderEqn();
-        setTimeout(function(){
+        setTimeout(function () {
             this._displayResultDiv.innerHTML = this._result;
             this._displayResultDiv.previousElementSibling.innerHTML = "equals " + this._result.replace(/^<span style="font-size: 65%">(.*)<\/span>$/, "$1");
-        }.bind(this),500);
+        }.bind(this), 500);
     }
 
     _evalResult() {
@@ -161,9 +161,13 @@ export default class Calculator {
 
     _roundup(value) {
         const MAX_ALLOWED = 10;
+        if (value.indexOf("e") > -1) {
+            let ePower = value.split("e")[1];
+            return parseFloat(value).toExponential(MAX_ALLOWED - 1 - ePower.length);
+        }
         let wholeNumberLength = value.split(".")[0].replace(/\-/, '').length;
         if (value.indexOf(".") !== -1 && wholeNumberLength <= MAX_ALLOWED - 2) {
-            return parseFloat(value).toFixed(MAX_ALLOWED - wholeNumberLength);
+            return parseFloat(value).toFixed(MAX_ALLOWED - wholeNumberLength).replace(/(0)*$/, "");
         }
         return parseFloat(value).toExponential(MAX_ALLOWED - 5);
     }
@@ -202,16 +206,16 @@ export default class Calculator {
             .replace(/\-/g, "minus ")
             .replace(/\./g, "decimal ")
             .replace(/\+/g, "plus ");
-        if(this._isEqualPressed){
+        if (this._isEqualPressed) {
             this._displayEqnDiv.previousElementSibling.innerHTML = "";
-            setTimeout(function(){
+            setTimeout(function () {
                 this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
-            }.bind(this),100);
-        }else {
+            }.bind(this), 100);
+        } else {
             this._displayEqnDiv.previousElementSibling.innerHTML = text.length ? "Expression: " + text : "blank";
         }
     }
-    
+
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
         if ((this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
