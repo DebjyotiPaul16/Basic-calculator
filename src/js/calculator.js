@@ -99,7 +99,7 @@ export default class Calculator {
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         setTimeout(function () {
-            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "negetive").replace(/\./g, "decimal") : "blank";
+            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "negative").replace(/\./g, "decimal") : "blank";
             this._lastFocus = document.activeElement;
         }.bind(this), 500);
     }
