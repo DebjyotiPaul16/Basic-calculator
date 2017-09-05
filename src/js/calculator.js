@@ -10,7 +10,6 @@ export default class Calculator {
         this._isOperatorInserted = false;
         this._isResultUndefined = false;
         this._isEqualPressed = false;
-        this._resultLimit = false;
         this._calculatorSize = "";
         this._isEntryError = false;
     }
@@ -50,16 +49,10 @@ export default class Calculator {
             if (this._isOperatorInserted) {
                 val === "." ? this._eqnArr.push("0" + val) : this._eqnArr.push(val);
             } else {
-                this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1] + val;
+                this._eqnArr[this._eqnArr.length - 1] = (this._eqnArr[this._eqnArr.length - 1] + val).replace(/\-\./, "-0.");
             }
         } else {
             val === "." ? this._eqnArr.push("0" + val) : this._eqnArr.push(val);
-        }
-
-        if (!this._eqnArr.length || !this._isOperatorInserted) {
-            this._result = (this._result === '0' && val !== ".") ? '' + val : this._result + val;
-        } else {
-            this._result = val;
         }
 
         this._renderEqn();
@@ -67,9 +60,6 @@ export default class Calculator {
         this._isEqualPressed = false;
         this._isResultUndefined = false;
         this._isEntryError = false;
-        if (this._result.length === this._restrictResult()) {
-            this._resultLimit = true;
-        }
     }
 
     _shouldPopulateEquation(val) {
@@ -109,7 +99,7 @@ export default class Calculator {
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         setTimeout(function () {
-            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "minus") : "blank";
+            this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "negetive").replace(/\./g, "decimal") : "blank";
             this._lastFocus = document.activeElement;
         }.bind(this), 500);
     }
@@ -148,7 +138,6 @@ export default class Calculator {
         }
 
         this._result = String(result);
-        this._resultLimit = false;
 
         this._renderEqn();
         this._renderResult();
@@ -235,7 +224,6 @@ export default class Calculator {
             this._eqnArr.push(sign);
             this._isOperatorInserted = true;
             this._renderEqn();
-            this._resultLimit = false;
         }
     }
 
@@ -274,7 +262,9 @@ export default class Calculator {
             this._renderEqn();
         } else if (cleartype === "ce") {
             this._eqnArr.pop();
-            this._result = "";
+            if (!this._eqnArr.length || (this._eqnArr.length && this._eqnArr[0].indexOf("ans") === -1)) {
+                this._result = "";
+            }
             this._isOperatorInserted = isNaN(this._getLastElement());
             this._isEqualPressed = false;
             this._renderEqn();
@@ -283,7 +273,6 @@ export default class Calculator {
         } else {
             console.info("invalid clear type");
         }
-        this._resultLimit = false;
     }
 
     getResult() {
