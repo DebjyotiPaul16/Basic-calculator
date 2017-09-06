@@ -66,7 +66,7 @@ export default class Calculator {
     }
 
     _shouldPopulateEquation(val) {
-        return (this._getLastElement() === "0" || this._getLastElement() === "-0") && val === "0";
+        return (this._getLastElement() === "0" || this._getLastElement() === "-0") && val === "0" && !this._isEqualPressed;
     }
 
     _restrictEqn() {
@@ -113,9 +113,7 @@ export default class Calculator {
 
     _evalResult() {
         let result;
-        if ((this._eqnArr[this._eqnArr.length - 1] === '0' || parseFloat(this._eqnArr[this._eqnArr.length - 1]) === 0) &&
-            this._eqnArr[this._eqnArr.length - 2] &&
-            this._eqnArr[this._eqnArr.length - 2] === '/') {
+        if (this._eqnArr.join("").match(/\/(\-)*0(\/|\+|\*|\-|(\.)*(0)*$)/)) {
             this._result = '<span style="font-size: 65%">Cannot divide by zero</span>';
             this._renderError();
             this._isResultUndefined = true;
@@ -198,7 +196,7 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if (((this._restrictEqn() && !this._isOperatorInserted) && !this._isEqualPressed || this._isEntryError)) {
+        if (((this._restrictEqn() && !this._isOperatorInserted) && !this._isEqualPressed || this._isEntryError || this._isResultUndefined)) {
             return;
         }
         if (this._isEqualPressed) {
