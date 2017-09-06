@@ -18,11 +18,11 @@ export default class CalculatorManger {
                             <td colspan="4">
                                     <div class="disp-holder">
                                       <div id="calcForm" class="disp-eqn-outer">
-                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
+                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true">expression colon</span>
                                             <span class="disp_btn" role="none" id="disp_eqn" tabindex="0" aria-label="expression colon type in text" aria-labelledby="hidden-text-equation"></span>
                					      </div>
                						  <div class="disp_btn_outer">
-               						      <span id="hidden-text-result" class="sr-only" aria-live="polite" aria-atomic="true"></span>
+               						      <span id="hidden-text-result" class="sr-only" aria-live="polite" aria-atomic="true">blank</span>
                                           <span class="disp_btn" id="disp" role="none" tabindex="0" aria-label="blank" aria-labelledby="hidden-text-result"></span>
                                       </div>
                                     </div>
@@ -190,6 +190,7 @@ export default class CalculatorManger {
                 calcobj.setValue('.', event);
                 this._getElement("#disp_eqn", true).focus();
             } else if (event.keyCode === 107 || event.keyCode === 109 || event.keyCode === 106 || event.keyCode === 111) {
+                event.stopPropagation();
                 calcobj.setSign(operator[event.keyCode]);
                 this._getElement("#disp_eqn", true).focus();
             } else if (event.keyCode == 13) {

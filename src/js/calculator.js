@@ -171,7 +171,7 @@ export default class Calculator {
             revisedEqnArr.push(digit);
         });
         this._setTextToHiddenSpan(revisedEqnArr);
-        
+
         this._displayEqnDiv.innerHTML = revisedEqnArr.join(" ").replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;");
     }
 
@@ -198,7 +198,7 @@ export default class Calculator {
 
     /*--------- Set operator sign to calculate --------------*/
     setSign(sign) {
-        if ((this._restrictEqn() && !this._isEqualPressed || this._isEntryError)) {
+        if (((this._restrictEqn() && !this._isOperatorInserted) && !this._isEqualPressed || this._isEntryError)) {
             return;
         }
         if (this._isEqualPressed) {

@@ -140,13 +140,13 @@ export default class LoadCalculator {
             windowHeight = $('body').offset().top + $('body').height();
 
         calc.off("keydown").on("keydown", function (e) {
-
-            let calcPosX = parseFloat(calc.css('left')),
-                calcPosY = parseFloat(calc.css('top')),
+            let calcPosX = calc.css('left') === "auto" ? 0 : parseFloat(calc.css('left')),
+                calcPosY = calc.css('top') === "auto" ? 0 : parseFloat(calc.css('top')),
                 canMoveCalculator = self._hasValidParent(e.target),
                 direction = self._getMovementDirection(e);
             switch (direction) {
                 case "left": // left
+                    e.preventDefault();
                     if (calcPosX - 20 > -calcWidth / 2 &&
                         calcPosY + calcHeight < windowHeight + calcHeight / 2 &&
                         canMoveCalculator) {
@@ -154,6 +154,7 @@ export default class LoadCalculator {
                     }
                     break;
                 case "up": // up
+                    e.preventDefault();
                     if (calcPosX + calcWidth < windowWidth + calcWidth / 2 &&
                         calcPosY - 20 > -calcHeight / 2 &&
                         canMoveCalculator) {
@@ -161,6 +162,7 @@ export default class LoadCalculator {
                     }
                     break;
                 case "right": // right
+                    e.preventDefault();
                     if (calcPosX + 20 + calcWidth < windowWidth + calcWidth / 2 &&
                         calcPosY + calcHeight < windowHeight + calcHeight / 2 &&
                         canMoveCalculator) {
@@ -168,6 +170,7 @@ export default class LoadCalculator {
                     }
                     break;
                 case "down": //down
+                    e.preventDefault();
                     if (calcPosX + calcWidth < windowWidth + calcWidth / 2 &&
                         calcPosY + 20 + calcHeight < windowHeight + calcHeight / 2 &&
                         canMoveCalculator) {
