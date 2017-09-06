@@ -35,7 +35,7 @@ export default class Calculator {
         if (this._shouldPopulateEquation(val)) {
             return;
         }
-        if (this._getLastElement() && this._getLastElement().indexOf("ans-") !== -1) {
+        if (this._getLastElement() && this._getLastElement().indexOf("ans$") !== -1) {
             return;
         }
         if (val === "-" && this._isNegationNotAllowed()) {
@@ -76,7 +76,7 @@ export default class Calculator {
             return false;
         }
         for (let i = 0; i < this._eqnArr.length; i++) {
-            if (!!this._eqnArr[i].match(/ans/)) {
+            if (!!this._eqnArr[i].match(/ans\$/)) {
                 totalLength += 3;
             } else if (!!this._eqnArr[i].match(/[0-9]/)) {
                 totalLength += this._eqnArr[i].length;
@@ -95,9 +95,7 @@ export default class Calculator {
     }
 
     _renderResult() {
-        let result,
-            isRoundedUp = !this._isEntryError && !this._isResultUndefined && this._result.length > this._restrictResult();
-        result = isRoundedUp ? this._roundup(this._result) : this._result;
+        let result = !this._isEntryError && !this._isResultUndefined && this._result.length > this._restrictResult() ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         setTimeout(function () {
             this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "negative").replace(/\./g, "decimal") : "blank";
@@ -129,7 +127,7 @@ export default class Calculator {
             this._eqnArr = this._eqnArr.map((elem)=> {
                 return elem.replace(/^(-)*0(?!\.)(?!$)/, "$1");
             });
-            result = eval(this._eqnArr.join(" ").replace("ans-", ""));
+            result = eval(this._eqnArr.join(" ").replace("ans$", ""));
         } catch (e) {
             console.log("ENTRY ERROR");
             this._result = '<span style="font-size: 65%">Entry Error</span>';
@@ -169,7 +167,7 @@ export default class Calculator {
             if (i.length === 2 && i.indexOf(".") === 1 && self._isOperatorInserted && index + 1 !== self._eqnArr.length) {
                 i = self._eqnArr[index] = i.slice(0, -1);
             }
-            digit = i.indexOf("ans") !== -1 ? i.split("-")[0] : i;
+            digit = i.indexOf("ans$") !== -1 ? i.split("$")[0] : i;
             revisedEqnArr.push(digit);
         });
         this._setTextToHiddenSpan(revisedEqnArr);
@@ -205,7 +203,7 @@ export default class Calculator {
         }
         if (this._isEqualPressed) {
             this._eqnArr = [];
-            this._eqnArr.push("ans-" + this._result);
+            this._eqnArr.push("ans$(" + this._result + ")");
             this._isOperatorInserted = true;
             this._eqnArr.push(sign);
             this._renderEqn();
@@ -245,23 +243,26 @@ export default class Calculator {
 
             lastElem = this._getLastElement();
             isNegative = parseInt(lastElem, 10) < 0;
-            lastElem.length !== 1 && lastElem.indexOf("ans") === -1
+            lastElem.length !== 1 && lastElem.indexOf("ans$") === -1
                 ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
                 : this._eqnArr = this._eqnArr.slice(0, -1);
 
-            this._isOperatorInserted = this._getLastElement() && isNaN(this._getLastElement().replace("ans-", "")) && !isNegative;
+            this._isOperatorInserted = this._getLastElement() && this._getLastElement().indexOf("ans$") === -1 && isNaN(this._getLastElement()) && !isNegative;
             this._isEqualPressed = false;
             this._renderEqn();
         } else if (cleartype === "ce") {
             this._eqnArr.pop();
-            if (!this._eqnArr.length || (this._eqnArr.length && this._eqnArr[0].indexOf("ans") === -1)) {
+            if (!this._eqnArr.length
+                || this._isEntryError
+                || this._isResultUndefined
+                || (this._eqnArr.length && this._eqnArr[0].indexOf("ans$") === -1)) {
                 this._result = "";
             }
-            this._isOperatorInserted = this._getLastElement() && isNaN(this._getLastElement().replace(/ans\-/g, ""));
+            this._isOperatorInserted = this._getLastElement() && this._getLastElement().indexOf("ans$") === -1 && isNaN(this._getLastElement());
             this._isEqualPressed = false;
-            this._isEntryError = false;
             this._renderEqn();
             this._renderResult();
+            this._isEntryError = false;
             this._isResultUndefined = false;
         } else {
             console.info("invalid clear type");
@@ -301,7 +302,8 @@ export default class Calculator {
             this._renderEqn();
             return;
         }
-        if (this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1 || this._eqnArr[this._eqnArr.length - 1].indexOf("ans") !== -1) {
+        if (this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1
+            || (this._eqnArr[this._eqnArr.length - 1].indexOf("ans$") !== -1 && this._eqnArr[this._eqnArr.length - 1].indexOf("-") !== 0)) {
             this._eqnArr[this._eqnArr.length - 1] = "-" + this._eqnArr[this._eqnArr.length - 1];
         } else {
             this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].replace("-", "");
