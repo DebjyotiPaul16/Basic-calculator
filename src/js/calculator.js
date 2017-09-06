@@ -181,7 +181,7 @@ export default class Calculator {
     _setTextToHiddenSpan(revisedEqnArr) {
         let text = revisedEqnArr.join("")
             .replace(/ans/g, "answer ") // read answer for ans
-            .replace(/([\+\-\*\/]|^)(\-)/g, "$1negative") //read negetive for any "-" sign after operator or starting of line
+            .replace(/([\+\-\*\/]|^)(\-)/g, "$1negative") //read negative for any "-" sign after operator or starting of line
             .replace(/\//g, "divide ")
             .replace(/\*/g, "multiply ")
             .replace(/\-/g, "minus ")
