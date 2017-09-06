@@ -35,6 +35,9 @@ export default class Calculator {
         if (this._shouldPopulateEquation(val)) {
             return;
         }
+        if (this._getLastElement() && this._getLastElement().indexOf("ans-") !== -1) {
+            return;
+        }
         if (val === "-" && this._isNegationNotAllowed()) {
             return;
         }
@@ -87,15 +90,13 @@ export default class Calculator {
     _restrictResult(value) {
         if (!!value) {
             return (value.indexOf(".") !== -1 || value.indexOf("-") !== -1) ? (value.indexOf(".") !== -1 && value.indexOf("-") !== -1) ? 12 : 11 : 10;
-        } else {
-            return (this._result.indexOf(".") !== -1 || this._result.indexOf("-") !== -1) ? (this._result.indexOf(".") !== -1 && this._result.indexOf("-") !== -1) ? 12 : 11 : 10;
         }
-
+        return (this._result.indexOf(".") !== -1 || this._result.indexOf("-") !== -1) ? (this._result.indexOf(".") !== -1 && this._result.indexOf("-") !== -1) ? 12 : 11 : 10;
     }
 
     _renderResult() {
         let result,
-            isRoundedUp = this._result.length > this._restrictResult();
+            isRoundedUp = !this._isEntryError && !this._isResultUndefined && this._result.length > this._restrictResult();
         result = isRoundedUp ? this._roundup(this._result) : this._result;
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         setTimeout(function () {
@@ -190,10 +191,10 @@ export default class Calculator {
         if (this._isEqualPressed) {
             this._displayEqnDiv.previousElementSibling.innerHTML = "";
             setTimeout(function(){
-                this._displayEqnDiv.previousElementSibling.innerHTML = "Expression: " + text;
+                this._displayEqnDiv.previousElementSibling.innerHTML = "Expression colon " + text;
             }.bind(this),100);
         }else {
-            this._displayEqnDiv.previousElementSibling.innerHTML = "Expression: " + text;
+            this._displayEqnDiv.previousElementSibling.innerHTML = "Expression colon " + text;
         }
     }
 
@@ -256,8 +257,9 @@ export default class Calculator {
             if (!this._eqnArr.length || (this._eqnArr.length && this._eqnArr[0].indexOf("ans") === -1)) {
                 this._result = "";
             }
-            this._isOperatorInserted = isNaN(this._getLastElement());
+            this._isOperatorInserted = this._getLastElement() && isNaN(this._getLastElement().replace(/ans\-/g, ""));
             this._isEqualPressed = false;
+            this._isEntryError = false;
             this._renderEqn();
             this._renderResult();
             this._isResultUndefined = false;
@@ -299,7 +301,7 @@ export default class Calculator {
             this._renderEqn();
             return;
         }
-        if (this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {
+        if (this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1 || this._eqnArr[this._eqnArr.length - 1].indexOf("ans") !== -1) {
             this._eqnArr[this._eqnArr.length - 1] = "-" + this._eqnArr[this._eqnArr.length - 1];
         } else {
             this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].replace("-", "");

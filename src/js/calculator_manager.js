@@ -19,7 +19,7 @@ export default class CalculatorManger {
                                     <div class="disp-holder">
                                       <div id="calcForm" class="disp-eqn-outer">
                                             <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true"></span>
-                                            <span class="disp_btn" role="none" id="disp_eqn" tabindex="0" aria-label="expression:" aria-labelledby="hidden-text-equation"></span>
+                                            <span class="disp_btn" role="none" id="disp_eqn" tabindex="0" aria-label="expression colon type in text" aria-labelledby="hidden-text-equation"></span>
                					      </div>
                						  <div class="disp_btn_outer">
                						      <span id="hidden-text-result" class="sr-only" aria-live="polite" aria-atomic="true"></span>
