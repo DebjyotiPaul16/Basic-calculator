@@ -148,7 +148,7 @@ export default class Calculator {
         const MAX_ALLOWED = 10;
         if (value.indexOf("e") > -1) {
             let ePower = value.split("e")[1];
-            return parseFloat(value).toExponential(MAX_ALLOWED - 1 - ePower.length);
+            return parseFloat(value).toExponential(MAX_ALLOWED - 2 - ePower.length);
         }
         let wholeNumberLength = value.split(".")[0].replace(/\-/, '').length;
         if (value.indexOf(".") !== -1 && wholeNumberLength <= MAX_ALLOWED - 2) {
@@ -284,7 +284,7 @@ export default class Calculator {
         if (this._isResultUndefined || this._isEntryError) {
             return;
         }
-        if (this._restrictEqn() && this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {
+        if (!this._isEqualPressed && this._restrictEqn() && this._eqnArr[this._eqnArr.length - 1].indexOf("-") === -1) {
             return;
         }
         if (this._isOperatorInserted || this._eqnArr.length === 0) {
