@@ -18,7 +18,7 @@ export default class CalculatorManger {
                             <td colspan="4">
                                     <div class="disp-holder">
                                       <div id="calcForm" class="disp-eqn-outer">
-                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true">expression colon</span>
+                                            <span id="hidden-text-equation" class="sr-only" aria-live="assertive" aria-atomic="true">expression colon type in text</span>
                                             <span class="disp_btn" role="none" id="disp_eqn" tabindex="0" aria-label="expression colon type in text" aria-labelledby="hidden-text-equation"></span>
                					      </div>
                						  <div class="disp_btn_outer">
