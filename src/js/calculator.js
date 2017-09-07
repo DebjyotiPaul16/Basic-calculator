@@ -233,6 +233,7 @@ export default class Calculator {
         this._renderEqn();
         this._renderResult();
         this._isResultUndefined = false;
+        this._isOperatorInserted = false;
         this._isEqualPressed = false;
         this._isEntryError = false;
     }
