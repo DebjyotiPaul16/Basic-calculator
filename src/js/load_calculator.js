@@ -104,11 +104,11 @@ export default class LoadCalculator {
     _hasValidParent(target) {
         if (target === null) {
             return false;
-        } else if (target.id && target.id === this._calcManager.calcElem.get(0).id) {
-            return true;
-        } else {
-            return this._hasValidParent(target.parentElement);
         }
+        if (target.id && target.id === this._calcManager.calcElem.get(0).id) {
+            return true;
+        }
+        return this._hasValidParent(target.parentElement);
     }
 
     _getMovementDirection(e) {
@@ -208,7 +208,6 @@ export default class LoadCalculator {
             this._calcManager.calcElem.find("#calc_state").get(0).setAttribute("tabindex", "0");
             this._calcManager.calcElem.find("#calc_state").get(0).innerHTML = "Calculator Maximized ";
             this._calcManager.calcElem.find("#calc_state").focus();
-            // self._calcManager.calcElem.focus();
             setTimeout(function () {
                 self._calcManager.calcElem.find("#calc_state").get(0).setAttribute("aria-hidden", "true");
                 self._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("tabindex");

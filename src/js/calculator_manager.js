@@ -63,9 +63,7 @@ export default class CalculatorManger {
         let elemValue = columnData.value,
             label = (columnData.label) ? 'aria-label="' + columnData.label + '"' : '',
             operation = columnData.operation,
-            id = "btn" + columnData.operation,
-            tabOrder = columnData.tabindex;
-        // return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '"tabindex="' + tabOrder + '">' + columnData.name + '</button><span class="sr-only">&nbsp;</span>';
+            id = "btn" + columnData.operation;
         return '<button type="button" role="button" class="btn opeationButton" ' + label + ' operation="' + operation + '"  value="' + elemValue + '"  id="' + id + '">' + columnData.name + '</button>';
     }
 
@@ -246,7 +244,6 @@ export default class CalculatorManger {
                 self._getElement("#btngetResult").focus();
             }
             if (this._calcInitialOpen) {
-                // this.changeLabel();
                 this._calcInitialOpen = false;
             }
         });
