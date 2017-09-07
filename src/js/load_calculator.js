@@ -204,7 +204,6 @@ export default class LoadCalculator {
                 label.push($(elem).attr("aria-label"));
             }
         });
-        console.log(label.join(" "));
         return label.join(" ");
     }
 
@@ -241,7 +240,6 @@ export default class LoadCalculator {
             if (!this._isCreated && this.retryCount < this.maxRetry) {
                 this.retryCount++;
                 setTimeout(this.showCalculator.bind(this), 1000);
-                console.log(this.retryCount);
             } else {
                 console.error("not possible to open calculator");
             }
