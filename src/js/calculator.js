@@ -187,10 +187,10 @@ export default class Calculator {
         if (this._isEqualPressed) {
             this._displayEqnDiv.previousElementSibling.innerHTML = "";
             setTimeout(function(){
-                this._displayEqnDiv.previousElementSibling.innerHTML = "Expression colon " + text;
+                this._displayEqnDiv.previousElementSibling.innerHTML = "Expression colon " + (text.length ? text : "type in text");
             }.bind(this),100);
         }else {
-            this._displayEqnDiv.previousElementSibling.innerHTML = "Expression colon " + text;
+            this._displayEqnDiv.previousElementSibling.innerHTML = "Expression colon " + (text.length ? text : "type in text");
         }
     }
 
