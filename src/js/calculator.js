@@ -2,15 +2,13 @@
 export default class Calculator {
 
     constructor(displayResultDiv, displayEqnDiv) {
-        this._result = '0';
-        this._lastFocus = "";
+        this._result = '';
         this._displayResultDiv = displayResultDiv;
         this._displayEqnDiv = displayEqnDiv;
         this._eqnArr = [];
         this._isOperatorInserted = false;
         this._isResultUndefined = false;
         this._isEqualPressed = false;
-        this._calculatorSize = "";
         this._isEntryError = false;
     }
 
@@ -99,7 +97,6 @@ export default class Calculator {
         this._displayResultDiv.innerHTML = result.replace(/\//g, "&divide;").replace(/\*/g, "&times;").replace(/\-/g, "&minus;").replace(/\./g, "&#46;");
         setTimeout(function () {
             this._displayResultDiv.previousElementSibling.innerHTML = result.length ? "Equals " + result.replace(/\-/g, "negative").replace(/\./g, "decimal") : "blank";
-            this._lastFocus = document.activeElement;
         }.bind(this), 500);
     }
 
@@ -138,7 +135,6 @@ export default class Calculator {
 
         this._renderEqn();
         this._renderResult();
-        this._lastFocus = document.activeElement;
         this._isOperatorInserted = false;
     }
 
@@ -158,11 +154,10 @@ export default class Calculator {
     _renderEqn() {
         let revisedEqnArr = [],
             digit = 0,
-            expression,
             self = this;
 
         this._eqnArr.forEach(function (i, index) {
-            if (i.match(/\.$/) && (self._isOperatorInserted || self._isEqualPressed)) {
+            if (i.match(/\.$/) && (self._isEqualPressed || self._isOperatorInserted && (index === 0 || index + 1 !== self._eqnArr.length))) {
                 i = self._eqnArr[index] = i.slice(0, -1);
             }
             digit = i.indexOf("ans$") !== -1 ? i.split("$")[0] : i;
@@ -222,59 +217,70 @@ export default class Calculator {
     /*------------------- Clear recent display data --------------------*/
     clearData(cleartype) {
         if (cleartype === 'c') {
-            this._result = '';
-            this._eqnArr = [];
-            this._renderEqn();
-            this._renderResult();
-            this._isResultUndefined = false;
-            this._isEqualPressed = false;
+            this._clearAll();
         } else if (cleartype === "bs") {
-            let lastElem, isNegative;
-            if (this._eqnArr.length === 0) {
-                return;
-            } else if (this._isEqualPressed || this._eqnArr.length === 1) {
-                this._result = "";
-                this._renderResult();
-            }
-            this._isResultUndefined = false;
-            this._isEntryError = false;
-
-            lastElem = this._getLastElement();
-            isNegative = parseInt(lastElem, 10) < 0;
-            lastElem.length !== 1 && lastElem.indexOf("ans$") === -1
-                ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
-                : this._eqnArr = this._eqnArr.slice(0, -1);
-
-            this._isOperatorInserted = this._getLastElement() && this._getLastElement().indexOf("ans$") === -1 && isNaN(this._getLastElement()) && !isNegative;
-            this._isEqualPressed = false;
-            this._renderEqn();
+            this._backSpace();
         } else if (cleartype === "ce") {
-            this._eqnArr.pop();
-            if (!this._eqnArr.length
-                || this._isEntryError
-                || this._isResultUndefined
-                || (this._eqnArr.length && this._eqnArr[0].indexOf("ans$") === -1)) {
-                this._result = "";
-            }
-            this._isOperatorInserted = this._getLastElement() && this._getLastElement().indexOf("ans$") === -1 && isNaN(this._getLastElement());
-            this._isEqualPressed = false;
-            this._renderEqn();
-            this._renderResult();
-            this._isEntryError = false;
-            this._isResultUndefined = false;
+            this._clearEntry();
         } else {
             console.info("invalid clear type");
         }
     }
+
+    _clearAll() {
+        this._result = '';
+        this._eqnArr = [];
+        this._renderEqn();
+        this._renderResult();
+        this._isResultUndefined = false;
+        this._isEqualPressed = false;
+        this._isEntryError = false;
+    }
+
+    _backSpace() {
+        let lastElem, isNegative;
+        if (this._eqnArr.length === 0) {
+            return;
+        } else if (this._isEqualPressed || this._eqnArr.length === 1) {
+            this._result = "";
+            this._renderResult();
+        }
+        this._isResultUndefined = false;
+        this._isEntryError = false;
+
+        lastElem = this._getLastElement();
+        isNegative = parseInt(lastElem, 10) < 0;
+        lastElem.length !== 1 && lastElem.indexOf("ans$") === -1
+            ? this._eqnArr[this._eqnArr.length - 1] = this._eqnArr[this._eqnArr.length - 1].slice(0, -1)
+            : this._eqnArr = this._eqnArr.slice(0, -1);
+
+        this._isOperatorInserted = this._getLastElement() && this._getLastElement().indexOf("ans$") === -1 && isNaN(this._getLastElement()) && !isNegative;
+        this._isEqualPressed = false;
+        this._renderEqn();
+    }
+
+    _clearEntry() {
+        this._eqnArr.pop();
+        if (!this._eqnArr.length
+            || this._isEntryError
+            || this._isResultUndefined
+            || (this._eqnArr.length && this._eqnArr[0].indexOf("ans$") === -1)) {
+            this._result = "";
+        }
+        this._isOperatorInserted = this._getLastElement() && this._getLastElement().indexOf("ans$") === -1 && isNaN(this._getLastElement());
+        this._isEqualPressed = false;
+        this._renderEqn();
+        this._renderResult();
+        this._isEntryError = false;
+        this._isResultUndefined = false;
+    }
+
 
     getResult() {
         if (this._isResultUndefined || this._eqnArr.length === 0) {
             return;
         }
         this._isEqualPressed = true;
-        if (!this._isEqualPressed) {
-            this._lastFocus = document.activeElement;
-        }
         this._evalResult();
     }
 

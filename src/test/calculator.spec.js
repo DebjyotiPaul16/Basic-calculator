@@ -16,7 +16,7 @@ describe("test suite for calculator.js", ()=> {
         calcObj = new Calculator(displayResultDiv, displayEqnDiv);
     });
     it("test suite for calculator constructor", function () {
-        expect(calcObj._result).toEqual('0');
+        expect(calcObj._result).toEqual('');
         expect(calcObj._displayResultDiv).toEqual(displayResultDiv);
         expect(calcObj._displayEqnDiv).toEqual(displayEqnDiv);
         expect(calcObj._eqnArr).toEqual([]);
@@ -67,10 +67,13 @@ describe("test suite for calculator.js", ()=> {
     });
 
     describe("_evalResult method", ()=> {
+        beforeEach(()=> {
+            calcObj._displayEqnDiv.previousElementSibling = {};
+        });
         it("should prevent dividing by zero", ()=> {
             calcObj._eqnArr = ["7", "/", "0"];
             calcObj._evalResult();
-            expect(calcObj._displayResultDiv.innerHTML).toBe('Cannot divide by zero');
+            expect(calcObj._result).toBe('<span style="font-size: 65%">Cannot divide by zero</span>');
         });
         it("should display result properly when no decimal is included", ()=> {
             calcObj._eqnArr = ["1", "+", "3"];
@@ -80,22 +83,26 @@ describe("test suite for calculator.js", ()=> {
         it("should display result properly when decimal is included", ()=> {
             calcObj._eqnArr = ["1", "/", "3"];
             calcObj._evalResult();
-            expect(calcObj._displayResultDiv.innerHTML).toBe('0.333333333');
+            expect(calcObj._displayResultDiv.innerHTML).toBe('0&#46;333333333');
         });
         it("should display result properly when decimal is included", ()=> {
             calcObj._eqnArr = ["14", "/", "3"];
             calcObj._evalResult();
-            expect(calcObj._displayResultDiv.innerHTML).toBe('4.666666667');
+            expect(calcObj._displayResultDiv.innerHTML).toBe('4&#46;666666667');
         });
     });
 
     it("_renderEqn method", ()=> {
+        calcObj._displayEqnDiv.previousElementSibling = {};
         calcObj._eqnArr = ["14", "/", "3"];
         calcObj._renderEqn();
-        expect(calcObj._displayEqnDiv.innerHTML).toBe('14 &divide 3');
+        expect(calcObj._displayEqnDiv.innerHTML).toBe('14 &divide; 3');
     });
 
     describe("setSign method", ()=> {
+        beforeEach(()=> {
+            calcObj._displayEqnDiv.previousElementSibling = {};
+        })
         it("should not perform if result is undefined", ()=> {
             calcObj._isResultUndefined = true;
             expect(calcObj.setSign("+")).toBe(undefined);
@@ -107,17 +114,16 @@ describe("test suite for calculator.js", ()=> {
             expect(calcObj._eqnArr).toEqual(["*"])
         });
         it("should eval the result", ()=> {
-            calcObj._eqnArr = ["7", "+"];
-            calcObj._result = "9";
+            calcObj._eqnArr = ["7", "+", "9"];
             calcObj.setSign("*");
-            expect(calcObj._displayEqnDiv.innerHTML).toBe('7 + 9 &times');
+            expect(calcObj._displayEqnDiv.innerHTML).toBe('7 + 9 &times;');
             expect(calcObj._displayResultDiv.innerHTML).toBe('16');
         });
     });
 
     describe("clearData method", ()=> {
         beforeEach(()=> {
-            spyOn(calcObj, "_resetArrows");
+            calcObj._displayEqnDiv.previousElementSibling = {};
         });
         it("should clear both result and eqn if 'C' is pressed", ()=> {
             calcObj._result = "result";
