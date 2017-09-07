@@ -26,38 +26,60 @@ describe("test suite for calculator.js", ()=> {
     });
 
     describe("setValue method", ()=> {
-        it("should return if result is undefined", ()=> {
+        beforeEach(()=> {
+            calcObj._displayEqnDiv.previousElementSibling = {};
+        });
+
+        it("should return if result is undefined", () => {
+            calcObj._eqnArr = ["7", "/", "0"];
             calcObj._isResultUndefined = true;
-            expect(calcObj.setValue()).toEqual(undefined);
+            expect(calcObj.setValue("8")).toBe(undefined);
         });
-        it("should return if decimal already exists in result", ()=> {
-            calcObj._result = "1.23";
-            expect(calcObj.setValue(".")).toEqual(undefined);
+
+        it("should return if no more equation should be processed", ()=> {
+            calcObj._eqnArr = ["7", "/", "0.0000000000000000012"];
+            calcObj._isResultUndefined = false;
+            expect(calcObj.setValue("8")).toBe(undefined);
         });
-        it("should directly alter the result value if equals after already pressed", ()=> {
-            calcObj._isEqualPressed = true;
-            calcObj._result = "1.234";
-            calcObj.setValue("2.345");
-            expect(calcObj._result).toBe("2.345");
+        it("should return if last element is ans", ()=> {
+            calcObj._eqnArr = ["-ans$2563"];
+            calcObj._isResultUndefined = false;
+            expect(calcObj.setValue("8")).toBe(undefined);
         });
-        it("should directly set the value if operator is added", ()=> {
-            calcObj._eqnArr = ["1", "+"];
+        it("should return if negation is not allowed", ()=> {
+            calcObj._eqnArr = ["2", "*", "-"];
+            calcObj._isResultUndefined = false;
+            expect(calcObj.setValue("-")).toBe(undefined);
+        });
+
+        it("should return if last element is 0", ()=> {
+            calcObj._eqnArr = ["2", "*", "-0"];
+            calcObj._isResultUndefined = false;
+            expect(calcObj.setValue("0")).toBe(undefined);
+        });
+
+        it("should set number as eqn", ()=> {
+            calcObj._eqnArr = ["2", "*"];
             calcObj._isOperatorInserted = true;
-            calcObj._result = "1.234";
-            calcObj.setValue("2.345");
-            expect(calcObj._result).toBe("2.345");
+            calcObj.setValue("8");
+            expect(calcObj._eqnArr).toEqual(["2", "*", "8"]);
         });
-        describe("initial flow", ()=> {
-            it("should alter result directly, if result is set to zero", ()=> {
-                calcObj.setValue("2.345");
-                expect(calcObj._result).toBe("2.345");
-            });
-            it("should append value with result , if result is not zero", ()=> {
-                calcObj._result = "1";
-                calcObj.setValue("2.345");
-                expect(calcObj._result).toBe("12.345");
-            });
+
+        it("should set number as eqn", ()=> {
+            calcObj._eqnArr = ["2"];
+            calcObj._isOperatorInserted = false;
+            calcObj.setValue("8");
+            expect(calcObj._eqnArr).toEqual(["28"]);
         });
+
+        it("should set number as decimal", ()=> {
+            calcObj._eqnArr = [];
+            calcObj._isOperatorInserted = false;
+            calcObj.setValue(".");
+            expect(calcObj._eqnArr).toEqual(["0."]);
+        });
+        
+        
     });
 
     it("_renderResult should add result to html", ()=> {
@@ -90,6 +112,24 @@ describe("test suite for calculator.js", ()=> {
             calcObj._evalResult();
             expect(calcObj._displayResultDiv.innerHTML).toBe('4&#46;666666667');
         });
+        it("should throw entry error", function () {
+            calcObj._eqnArr = ["14", "/", "-"];
+            calcObj._evalResult();
+            expect(calcObj._result).toBe('<span style="font-size: 65%">Entry Error</span>');
+        });
+
+        it("should round up large numbers", ()=> {
+            calcObj._eqnArr = ["12345678901234567890123456789"];
+            calcObj._evalResult();
+            expect(calcObj._result).toBe('1.2345678901234568e+28');
+        });
+
+        it("should round up large numbers", ()=> {
+            calcObj._eqnArr = ["12345678901234567.789"];
+            calcObj._evalResult();
+            expect(calcObj._result).toBe('12345678901234568');
+        })
+
     });
 
     it("_renderEqn method", ()=> {
@@ -111,14 +151,16 @@ describe("test suite for calculator.js", ()=> {
             calcObj._isOperatorInserted = true;
             calcObj._eqnArr = ["+"];
             calcObj.setSign("*");
-            expect(calcObj._eqnArr).toEqual(["*"])
+            expect(calcObj._eqnArr).toEqual(["*"]);
         });
-        it("should eval the result", ()=> {
-            calcObj._eqnArr = ["7", "+", "9"];
-            calcObj.setSign("*");
-            expect(calcObj._displayEqnDiv.innerHTML).toBe('7 + 9 &times;');
-            expect(calcObj._displayResultDiv.innerHTML).toBe('16');
+        it("should include ans$ in eqnArr", ()=> {
+            calcObj._result = "5";
+            calcObj._isEqualPressed = true;
+            calcObj._eqnArr = ["2", "+", "3"];
+            calcObj.setSign("+");
+            expect(calcObj._eqnArr).toEqual(["ans$(5)", "+"]);
         });
+
     });
 
     describe("clearData method", ()=> {
@@ -130,7 +172,7 @@ describe("test suite for calculator.js", ()=> {
             calcObj._eqnArr = ["eqn"];
             calcObj.clearData("c");
             expect(calcObj._displayEqnDiv.innerHTML).toBe('');
-            expect(calcObj._displayResultDiv.innerHTML).toBe('0');
+            expect(calcObj._displayResultDiv.innerHTML).toBe('');
         });
 
         it("should return if backspace is pressed and result is undefined", ()=> {
@@ -139,21 +181,21 @@ describe("test suite for calculator.js", ()=> {
         });
 
         it("should delete the last of result", ()=> {
-            calcObj._result = "23";
+            calcObj._eqnArr = ["23", "*"];
             calcObj.clearData('bs');
-            expect(calcObj._displayResultDiv.innerHTML).toBe('2');
+            expect(calcObj._eqnArr).toEqual(["23"]);
         });
         it("should update result to zero", ()=> {
-            calcObj._result = "2";
+            calcObj._eqnArr = ["23"];
             calcObj.clearData('bs');
-            expect(calcObj._displayResultDiv.innerHTML).toBe('0');
+            expect(calcObj._result).toEqual('');
         });
-        it("should clear only result if 'CE' is pressed", ()=> {
+        it("should clear only last entry if 'CE' is pressed", ()=> {
             calcObj._result = "result";
             calcObj._eqnArr = ["eqn"];
             calcObj.clearData("ce");
-            expect(calcObj._eqnArr).toEqual(["eqn"]);
-            expect(calcObj._displayResultDiv.innerHTML).toBe('0');
+            expect(calcObj._eqnArr).toEqual([]);
+            expect(calcObj._result).toBe('');
         });
 
         it("should return if any other than 'C','CE','bs' is pressed", ()=> {
@@ -163,18 +205,17 @@ describe("test suite for calculator.js", ()=> {
 
     describe("getResult method", ()=> {
         beforeEach(()=> {
-            spyOn(calcObj, "_resetArrows");
+            calcObj._displayEqnDiv.previousElementSibling = {};
         });
         it("should return if result is undefined", ()=> {
             calcObj._isResultUndefined = true;
             expect(calcObj.getResult()).toEqual(undefined);
         });
         it("should eval the result", ()=> {
-            calcObj._eqnArr = ["7", "+"];
-            calcObj._result = "9";
+            calcObj._eqnArr = ["7", "+", "9"];
             calcObj.getResult();
-            expect(calcObj._displayEqnDiv.innerHTML).toBe('');
-            expect(calcObj._displayResultDiv.innerHTML).toBe('16');
+            expect(calcObj._displayEqnDiv.innerHTML).toBe('7 + 9');
+            expect(calcObj._result).toBe('16');
         });
     });
 
@@ -184,9 +225,15 @@ describe("test suite for calculator.js", ()=> {
             expect(calcObj.negateValue()).toEqual(undefined);
         });
         it("should negate the result", ()=> {
+            calcObj._displayEqnDiv.previousElementSibling = {};
+            calcObj._eqnArr = ["3", "*", "4"];
             calcObj._result = "12";
+            calcObj._isEqualPressed = true;
+            calcObj._isResultUndefined = false;
+            calcObj._isOperatorInserted = false;
+            calcObj._isEntryError = false;
             calcObj.negateValue();
-            expect(calcObj._displayResultDiv.innerHTML).toBe('-12');
+            expect(calcObj._result).toBe('-12');
         });
     });
 

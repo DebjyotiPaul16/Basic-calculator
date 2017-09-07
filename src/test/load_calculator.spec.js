@@ -26,7 +26,7 @@ describe("test suite for load calculator", function () {
         loadCalcObj._calcManager = {
             calcElem: {
                 css: jasmine.createSpy("css"),
-                find: jasmine.createSpy("find"),
+                find: jasmine.createSpy("find").and.returnValue({each: jasmine.createSpy("each")}),
                 focus: jasmine.createSpy("focus"),
                 offset: jasmine.createSpy("offset"),
                 get:jasmine.createSpy("get")
@@ -36,6 +36,7 @@ describe("test suite for load calculator", function () {
             },
             closeCalculator: jasmine.createSpy("closeCalculator"),
             handleWithKeyboard: jasmine.createSpy("handleWithKeyboard"),
+            _getElement: jasmine.createSpy("_getElement").and.returnValue({focus: jasmine.createSpy("focus")}),
             _calcInitialOpen:false
         };
         findObj.get.and.returnValue(getObj);

@@ -216,9 +216,6 @@ export default class LoadCalculator {
             if (this._calcPosition !== null) {
                 this.setPosition(this._calcPosition);
             }
-            // if (this._top != null && this._left != null) {
-            //     this.setPosition(this._top, this._left);
-            // }
             this._calcManager.handleWithKeyboard(this._calcManager.calcobj);
             this._calcManager.calcElem.css("display", "block");
             this._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("aria-hidden");
