@@ -157,7 +157,7 @@ export default class Calculator {
             self = this;
 
         this._eqnArr.forEach(function (i, index) {
-            if (i.match(/\.$/) && (self._isOperatorInserted || self._isEqualPressed)) {
+            if (i.match(/\.$/) && (self._isEqualPressed || self._isOperatorInserted && (index === 0 || index + 1 !== self._eqnArr.length))) {
                 i = self._eqnArr[index] = i.slice(0, -1);
             }
             digit = i.indexOf("ans$") !== -1 ? i.split("$")[0] : i;
