@@ -3,7 +3,7 @@ import {
     calculator_data
 } from './calculator_config.js';
 export default class CalculatorManger {
-    createCalculator() {
+    createCalculator(dom) {
         let calculatordiv =
             `<div id="calculator-680e55ef-24d9-4b9c-9390-ad2c6a09af6f" tabindex="0" role="application">
                 <div id="drag">                
@@ -39,7 +39,7 @@ export default class CalculatorManger {
                 </div>
             </div>`;
 
-        this.calcElem = this._attachCalculatorBody(calculatordiv);
+        this.calcElem = this._attachCalculatorBody(calculatordiv, dom);
         let _displayResult = this.calcElem.find("#disp").get(0),
             _displayEqn = this.calcElem.find("#disp_eqn").get(0);
         this.calcobj = new Calculator(_displayResult, _displayEqn);
@@ -52,10 +52,15 @@ export default class CalculatorManger {
         this._calcInitialOpen = false;
     }
 
-    _attachCalculatorBody(calculatorStr) {
+    _attachCalculatorBody(calculatorStr, dom) {
         let calculatorElm = $(calculatorStr);
         calculatorElm.find('table').css('display', 'block');
-        $('body').prepend(calculatorElm);
+        if (!!dom) {
+            $(dom).prepend(calculatorElm);
+        } else {
+            $('body').prepend(calculatorElm);
+        }
+
         return calculatorElm;
     }
 
@@ -84,7 +89,7 @@ export default class CalculatorManger {
             } else {
                 calcobj.clearData($this.val());
             }
-            
+
         });
     }
 
@@ -99,6 +104,7 @@ export default class CalculatorManger {
             cancel: false,
             start: () => {
                 calcElem.find('#calc_icon').removeClass('maximize');
+                // calcElem.css({right: "auto", bottom: "auto"})
             },
             drag: (event, ui) => {
 
@@ -260,12 +266,12 @@ export default class CalculatorManger {
         });
 
 
-       this._getElement("#calcForm input", true).keydown(function (e) {
-           if (e.keyCode !== 9) {
+        this._getElement("#calcForm input", true).keydown(function (e) {
+            if (e.keyCode !== 9) {
                 e.preventDefault();
                 return false;
             }
-       });
+        });
     }
 
     _setEndOfContenteditable(contentEditableElement) {

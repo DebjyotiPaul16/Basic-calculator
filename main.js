@@ -6,13 +6,15 @@ var btnShow = document.getElementById("show-calc"),
     small = document.getElementById("small"),
     medium = document.getElementById("medium"),
     large = document.getElementById("large"),
-    setPos = document.getElementById("setPosition");
+    setPos = document.getElementById("setPosition"),
+    containerDom = document.getElementById("container");
 
 
-var basicCalculator = new Calculator.createCalculator();
+var basicCalculator = new Calculator.createCalculator(containerDom);
 
 btnShow.addEventListener("click", function () {
     // basicCalculator = new Calculator.createCalculator();
+    basicCalculator.setPosition({top: 100, left: 100});
     basicCalculator.showCalculator();
 }, false);
 
@@ -46,6 +48,7 @@ large.addEventListener("click", function () {
     basicCalculator.setSize("large");
 }, false);
 
-// setPos.addEventListener("click", function () {
-//     basicCalculator.setPosition(100, 100);
-// }, false);
+setPos.addEventListener("click", function () {
+    basicCalculator.setPosition({top: 100, left: 100});
+    console.log(basicCalculator.getCalculatorDom());
+}, false);

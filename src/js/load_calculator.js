@@ -1,15 +1,17 @@
 import CalculatorManger from "./calculator_manager.js";
 
 export default class LoadCalculator {
-    constructor() {
+    constructor(dom) {
         this._arrCount = 0;
         this._firstTimeOpen = true;
         this._calcManager = null;
         this._top = null;
         this._left = null;
+        this._calcPosition = null;
         this._isCreated = false;
         this.retryCount = 0;
         this.maxRetry = 10;
+        this._dom = dom;
         this._depArr = [{
             'jQuery': 'https://code.jquery.com/jquery-1.12.4.min.js'
         }, {
@@ -41,20 +43,20 @@ export default class LoadCalculator {
                 }
                 if (typeof objDep !== "undefined") {
                     this._arrCount++;
-                    self._loadDependencyAndCreate();
+                    self._loadDependencyAndCreate(self._dom);
                 }
             }
         } else {
-            self._createCalculator();
+            self._createCalculator(self._dom);
             this._moveCalculator();
             this._calcManager.calcElem.css("display", "none");
             this._isCreated = true;
         }
     }
 
-    _createCalculator() {
+    _createCalculator(dom) {
         this._calcManager = new CalculatorManger();
-        this._calcManager.createCalculator();
+        this._calcManager.createCalculator(dom);
     }
 
     getDisplayState() {
@@ -67,6 +69,8 @@ export default class LoadCalculator {
 
     setSize(size) {
         this._calcManager.calcElem.find("#drag").attr("class", size);
+        this.setPosition();
+        this._calcManager._getElement("#disp_eqn",true).focus();
     }
 
     hideCalculator() {
@@ -81,24 +85,34 @@ export default class LoadCalculator {
         return this._calcManager.calcElem.offset();
     };
 
-    setPosition(top, left) {
+    getCalculatorDom() {
+        return this._calcManager.calcElem;
+    }
+
+    setPosition(cssObj) {
         let calc = $(this._calcManager.calcElem),
             calcWidth = calc.width(),
             calcHeight = calc.height(),
             windowWidth = $('body').offset().left + $('body').width(),
-            windowHeight = $('body').offset().top + $('body').height();
-
-        if (left + calcWidth < windowWidth && top + calcHeight < windowHeight) {
-            console.log("open");
-            this._top = top;
-            this._left = left;
-            calc.css({
-                "top": top + "px",
-                "left": left + "px"
-            });
+            windowHeight = $('body').offset().top + $('body').height(),
+            css = {};
+        if (!!cssObj) {
+            if (cssObj.right) {
+                css.left = windowWidth - calcWidth - cssObj.right;
+            } else {
+                css.left = cssObj.left;
+            }
+            if (cssObj.bottom) {
+                css.top = windowHeight - calcHeight - cssObj.bottom;
+            } else {
+                css.top = cssObj.top;
+            }
         } else {
-            console.log("dont open");
+            css = !!this._calcPosition ? this._calcPosition : {left: 0, right: 0};
         }
+        
+        this._calcPosition = !!this._calcPosition ? this._calcPosition : css;
+        calc.css(css);
     }
 
     _hasValidParent(target) {
@@ -199,9 +213,12 @@ export default class LoadCalculator {
         if (!!this._calcManager) {
             this._calcManager._calcInitialOpen = true;
 
-            if (this._top != null && this._left != null) {
-                this.setPosition(this._top, this._left);
+            if (this._calcPosition !== null) {
+                this.setPosition(this._calcPosition);
             }
+            // if (this._top != null && this._left != null) {
+            //     this.setPosition(this._top, this._left);
+            // }
             this._calcManager.handleWithKeyboard(this._calcManager.calcobj);
             this._calcManager.calcElem.css("display", "block");
             this._calcManager.calcElem.find("#calc_state").get(0).removeAttribute("aria-hidden");
