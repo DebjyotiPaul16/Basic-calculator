@@ -77,7 +77,7 @@ export default class CalculatorManger {
             let $this = $(e.currentTarget),
                 operation = $this.attr('operation');
             if (operation === "setValue") {
-                calcobj.setValue($this.val(), e);
+                calcobj.setValue($this.val());
             } else if (operation === "setSign") {
                 calcobj.setSign($this.val());
             } else if (operation === "getResult") {
@@ -189,9 +189,9 @@ export default class CalculatorManger {
             };
             if (!isNaN(event.key) && event.keyCode !== 32) {
                 this._getElement("#disp_eqn", true).focus();
-                calcobj.setValue(event.key, event);
+                calcobj.setValue(event.key);
             } else if (event.keyCode === 110) {
-                calcobj.setValue('.', event);
+                calcobj.setValue('.');
                 this._getElement("#disp_eqn", true).focus();
             } else if (event.keyCode === 107 || event.keyCode === 109 || event.keyCode === 106 || event.keyCode === 111) {
                 event.stopPropagation();
@@ -261,35 +261,9 @@ export default class CalculatorManger {
         this.calcElem.children().on("mouseover", (event) => {
             this._setActive(event.target);
         });
-
-
-        this._getElement("#calcForm input", true).keydown(function (e) {
-            if (e.keyCode !== 9) {
-                e.preventDefault();
-                return false;
-            }
-        });
+        
     }
-
-    _setEndOfContenteditable(contentEditableElement) {
-        var range, selection;
-        if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
-        {
-            range = document.createRange();//Create a range (a range is a like the selection but invisible)
-            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
-            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-            selection = window.getSelection();//get the selection object (allows you to change selection)
-            selection.removeAllRanges();//remove any selections already made
-            selection.addRange(range);//make the range you have just created the visible selection
-        }
-        else if (document.selection)//IE 8 and lower
-        {
-            range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
-            range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
-            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-            range.select();//Select the range (make it the visible selection
-        }
-    }
+    
 
     _setActive(elem) {
         let containsActive = this._getElement(".active");

@@ -142,28 +142,59 @@ describe("calculatorManager", ()=> {
         $.fn.focus.and.callThrough();
     });
 
-    it("should trigger click on seekLeft", ()=> {
-        spyOn($.fn, "css");
-        eventFire($(".seekLeft").get(0), 'click');
-        expect($.fn.css).toHaveBeenCalled();
-        $.fn.css.and.callThrough();
-    });
-    it("should trigger click on seekRight", ()=> {
-        spyOn($.fn, "css").and.returnValue({
-            right: "-1"
-        });
-        eventFire($(".seekRight").get(0), 'click');
-        expect($.fn.css).toHaveBeenCalled();
-        $.fn.css.and.callThrough();
-    });
 
     it("should trigger keydown if first time open", ()=> {
         calcMgr._calcInitialOpen = true;
         spyOn(Element.prototype, "getAttribute").and.returnValue("");
         eventFire($(document).get(0), 'keydown');
-        expect(calcMgr._calcInitialOpen).toBe(false);
+        expect(calcMgr._calcInitialOpen).toBe(true);
         Element.prototype.getAttribute.and.callThrough();
+    });
+    describe("should test keypress of any button", ()=> {
+        it("should test keypress of any button when keycode is 13", ()=> {
+            calcMgr._calcInitialOpen = true;
+            eventFire($(".btn").get(0), 'keypress', 13);
+            expect(calcMgr._calcInitialOpen).toBe(true);
+        });
+        it("should test keypress of any button when keycode is not 13", ()=> {
+            calcMgr._calcInitialOpen = false;
+            eventFire($(".btn").get(0), 'keypress', 30);
+            expect(calcMgr._calcInitialOpen).toBe(false);
+        });
+    });
+
+
+    describe("should test click of any children", ()=> {
+        it("should test keypress of any button when keycode is 13", ()=> {
+            calcMgr._calcInitialOpen = true;
+            eventFire($(".btn").get(0), 'click');
+            expect(calcMgr._calcInitialOpen).toBe(false);
+        });
+    });
+
+    it("should test for mouseover on any children of calculator", function () {
+        spyOn(calcMgr, "_setActive");
+        eventFire($(".btn").get(0), 'mouseover');
+        expect(calcMgr._setActive).toHaveBeenCalled();
+    });
+
+    it("", function () {
+        let elem = {
+            tagName: "",
+            classList: {
+                add: jasmine.createSpy("add")
+            }
+        };
+        spyOn(calcMgr, "_getElement").and.returnValue(
+            [{
+                classList: {
+                    remove: jasmine.createSpy("remove")
+                }
+            }]
+        );
+        calcMgr._setActive(elem);
 
     });
+
 });
 
