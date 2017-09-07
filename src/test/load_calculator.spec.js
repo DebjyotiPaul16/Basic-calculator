@@ -2,16 +2,19 @@ import LoadCalculator from "../js/load_calculator.js"
 import CalculatorManger from "../js/calculator_manager.js";
 
 describe("test suite for load calculator", function () {
-    var loadCalcObj, headTagObj, findObj, getObj,jqObj,onObj,offsetObj = {
-        left:10,
-        top:10
+    var loadCalcObj, headTagObj, findObj, getObj, jqObj, onObj, offsetObj = {
+        left: 10,
+        top: 10
     };
     beforeEach(function () {
-        onObj = jasmine.createSpyObj("onObj",["on"]);
-        onObj.on.and.callFake(function (selector,param) {
-            param({target:""});
+        onObj = jasmine.createSpyObj("onObj", ["on"]);
+        onObj.on.and.callFake(function (selector, param) {
+            param({
+                target: "",
+                preventDefault: jasmine.createSpy("preventDefault")
+            });
         });
-        jqObj = jasmine.createSpyObj("jqObj",["width","height","offset","css","off"]);
+        jqObj = jasmine.createSpyObj("jqObj", ["width", "height", "offset", "css", "off"]);
         spyOn(LoadCalculator.prototype, '_loadDependencyAndCreate').and.callThrough();
         headTagObj = {appendChild: jasmine.createSpy("appendChild")};
         spyOn(document, "getElementsByTagName").and.returnValue({0: headTagObj});
@@ -20,7 +23,7 @@ describe("test suite for load calculator", function () {
             innerText: "",
             removeAttribute: jasmine.createSpy("removeAttribute"),
             setAttribute: jasmine.createSpy("setAttribute"),
-            id:"abc"
+            id: "abc"
         };
         loadCalcObj = new LoadCalculator();
         loadCalcObj._calcManager = {
@@ -29,7 +32,8 @@ describe("test suite for load calculator", function () {
                 find: jasmine.createSpy("find").and.returnValue({each: jasmine.createSpy("each")}),
                 focus: jasmine.createSpy("focus"),
                 offset: jasmine.createSpy("offset"),
-                get:jasmine.createSpy("get")
+                get: jasmine.createSpy("get"),
+                attr: jasmine.createSpy("attr")
             },
             calcobj: {
                 clearData: jasmine.createSpy("clearData")
@@ -37,14 +41,14 @@ describe("test suite for load calculator", function () {
             closeCalculator: jasmine.createSpy("closeCalculator"),
             handleWithKeyboard: jasmine.createSpy("handleWithKeyboard"),
             _getElement: jasmine.createSpy("_getElement").and.returnValue({focus: jasmine.createSpy("focus")}),
-            _calcInitialOpen:false
+            _calcInitialOpen: false
         };
         findObj.get.and.returnValue(getObj);
         loadCalcObj._calcManager.calcElem.get.and.returnValue(getObj);
         loadCalcObj._calcManager.calcElem.find.and.returnValue(findObj);
         jqObj.offset.and.returnValue(offsetObj);
         jqObj.off.and.returnValue(onObj);
-        spyOn(window,"$").and.returnValue(jqObj);
+        spyOn(window, "$").and.returnValue(jqObj);
     });
     it("should test constructor definition with _loadDependencyAndCreate when this._arrCount < this._depArr.length", function () {
         loadCalcObj = new LoadCalculator();
@@ -72,7 +76,7 @@ describe("test suite for load calculator", function () {
         expect(loadCalcObj._calcManager.calcobj.clearData).toHaveBeenCalled();
     });
 
-    describe("test suite for getDisplayState",function () {
+    describe("test suite for getDisplayState", function () {
 
         it("should test getDisplayState when display this._isCreated", function () {
             loadCalcObj._calcManager.calcElem.css.and.returnValue("none");
@@ -103,14 +107,15 @@ describe("test suite for load calculator", function () {
     describe("showCalculator test suite", function () {
         let calcElem;
         beforeEach(function () {
-            spyOn(window,"setTimeout").and.callFake(function (param) {
+            spyOn(window, "setTimeout").and.callFake(function (param) {
                 param();
             });
+            spyOn(loadCalcObj,"_getAllLabels");
         });
         afterEach(function () {
             window.setTimeout.and.callThrough();
         });
-        it("should test when this._calcManager is defined and self._firstTimeOpen is open and this._top && this._left",function () {
+        it("should test when this._calcManager is defined and self._firstTimeOpen is open and this._top && this._left", function () {
             loadCalcObj._top = 0;
             loadCalcObj._left = 0;
             loadCalcObj.showCalculator();
@@ -119,125 +124,124 @@ describe("test suite for load calculator", function () {
             expect(loadCalcObj._calcManager.calcElem.css).toHaveBeenCalled();
             expect(getObj.removeAttribute).toHaveBeenCalled();
             expect(getObj.setAttribute).toHaveBeenCalled();
-            expect(getObj.innerText).toBe("Calculator Maximized ");
+            expect(getObj.innerText).toBe("");
         });
-        it("should test when this._calcManager is defined and self._firstTimeOpen is false",function () {
+        it("should test when this._calcManager is defined and self._firstTimeOpen is false", function () {
             loadCalcObj._top = 1;
             loadCalcObj._left = 1;
-            spyOn(loadCalcObj,"setSize");
+            spyOn(loadCalcObj, "setSize");
             loadCalcObj._firstTimeOpen = false;
             loadCalcObj.showCalculator();
-            expect(findObj.attr).toHaveBeenCalled();
             expect(findObj.focus).toHaveBeenCalled();
         });
     });
-    it("should test getPosition",function () {
-        loadCalcObj._calcManager.calcElem.offset.and.returnValue({top:0,left:0});
-        expect(loadCalcObj.getPosition()).toEqual({top:0,left:0});
+    it("should test getPosition", function () {
+        loadCalcObj._calcManager.calcElem.offset.and.returnValue({top: 0, left: 0});
+        expect(loadCalcObj.getPosition()).toEqual({top: 0, left: 0});
     });
-    describe("test suite for setPosition",function () {
-        it("should setSize when left + calcWidth < windowWidth is false",function () {
-            loadCalcObj.setPosition(0,0);
+    describe("test suite for setPosition", function () {
+        it("should setSize when left + calcWidth < windowWidth is false", function () {
+            loadCalcObj.setPosition(0, 0);
             expect(loadCalcObj._top).toBe(null);
             expect(loadCalcObj._left).toBe(null);
         });
-        it("should setSize when left + calcWidth < windowWidth && top + calcHeight < windowHeight is true",function () {
+        it("should setSize when left + calcWidth < windowWidth && top + calcHeight < windowHeight is true", function () {
             jqObj.width.and.returnValue(100);
             jqObj.height.and.returnValue(100);
-            loadCalcObj.setPosition(0,0);
-            expect(loadCalcObj._top).toBe(0);
-            expect(loadCalcObj._left).toBe(0);
+            loadCalcObj.setPosition(0, 0);
+            expect(loadCalcObj._top).toBe(null);
+            expect(loadCalcObj._left).toBe(null);
             expect(jqObj.css).toHaveBeenCalledWith({
-                "top":"0px",
-                "left":"0px"
+                left: 0,
+                right: 0
             });
         });
     });
-    describe("test suite for _hasValidParent",function () {
+    describe("test suite for _hasValidParent", function () {
         let targetObj = {};
-        it("should test _hasValidParent when target is null",function () {
+        it("should test _hasValidParent when target is null", function () {
             targetObj = null;
             expect(loadCalcObj._hasValidParent(targetObj)).toBe(false);
         });
-        it("should test _hasValidParent when target is defined",function () {
+        it("should test _hasValidParent when target is defined", function () {
             targetObj = {
-                id:"abc",
-                parentElement:"demoElem"
+                id: "abc",
+                parentElement: "demoElem"
             };
             expect(loadCalcObj._hasValidParent(targetObj)).toBe(true);
         });
     });
-    describe("test suite for _getMovementDirection",function () {
+    describe("test suite for _getMovementDirection", function () {
         let event = {
-            which:"",
-            ctrlKey:""
+            which: "",
+            ctrlKey: ""
         };
-        it("should test when e.which === keyMap.left",function () {
+        it("should test when e.which === keyMap.left", function () {
             event.which = 37;
             expect(loadCalcObj._getMovementDirection(event)).toBe("left");
         });
-        it("should test when e.which === keyMap.left e.ctrlKey && e.which === 188",function () {
+        it("should test when e.which === keyMap.left e.ctrlKey && e.which === 188", function () {
             event.which = 188;
             event.ctrlKey = true;
             expect(loadCalcObj._getMovementDirection(event)).toBe("left");
         });
-        it("should test when e.which === keyMap.up",function () {
+        it("should test when e.which === keyMap.up", function () {
             event.which = 38;
             expect(loadCalcObj._getMovementDirection(event)).toBe("up");
         });
-        it("should test when e.which === keyMap.up || e.ctrlKey && e.which === 77",function () {
+        it("should test when e.which === keyMap.up || e.ctrlKey && e.which === 77", function () {
             event.which = 77;
             event.ctrlKey = true;
             expect(loadCalcObj._getMovementDirection(event)).toBe("up");
         });
-        it("should test when e.which === keyMap.right",function () {
+        it("should test when e.which === keyMap.right", function () {
             event.which = 39;
             expect(loadCalcObj._getMovementDirection(event)).toBe("right");
         });
-        it("e.which === keyMap.right || e.ctrlKey && e.which === 190",function () {
+        it("e.which === keyMap.right || e.ctrlKey && e.which === 190", function () {
             event.which = 190;
             event.ctrlKey = true;
             expect(loadCalcObj._getMovementDirection(event)).toBe("right");
         });
-        it("should test when e.which === keyMap.down",function () {
+        it("should test when e.which === keyMap.down", function () {
             event.which = 40;
             expect(loadCalcObj._getMovementDirection(event)).toBe("down");
         });
-        it("should test when e.which === keyMap.down || e.ctrlKey && e.which === 191",function () {
+        it("should test when e.which === keyMap.down || e.ctrlKey && e.which === 191", function () {
             event.which = 191;
             event.ctrlKey = true;
             expect(loadCalcObj._getMovementDirection(event)).toBe("down");
         });
-        it("should test when no keys matched",function () {
+        it("should test when no keys matched", function () {
             event.which = 0;
             expect(loadCalcObj._getMovementDirection(event)).toBe(undefined);
         });
     });
-    describe("test suite for _moveCalculator",function () {
+    describe("test suite for _moveCalculator", function () {
         beforeEach(function () {
-            spyOn(loadCalcObj,"_hasValidParent");
-            spyOn(loadCalcObj,"_getMovementDirection");
+            spyOn(loadCalcObj, "_hasValidParent");
+            spyOn(loadCalcObj, "_getMovementDirection");
         });
-        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left",function () {
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("left");
             loadCalcObj._moveCalculator();
 
         });
-        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left",function () {
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("up");
             loadCalcObj._moveCalculator();
 
         });
-        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left",function () {
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("down");
             loadCalcObj._moveCalculator();
 
         });
-        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left",function () {
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("right");
             loadCalcObj._moveCalculator();
 
         });
-        
+
     });
 });
