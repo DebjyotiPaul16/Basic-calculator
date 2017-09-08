@@ -1,4 +1,4 @@
-import LoadCalculator from "../js/load_calculator.js"
+import LoadCalculator from "../js/load_calculator.js";
 import CalculatorManger from "../js/calculator_manager.js";
 
 describe("test suite for load calculator", function () {
@@ -36,7 +36,8 @@ describe("test suite for load calculator", function () {
                 attr: jasmine.createSpy("attr")
             },
             calcobj: {
-                clearData: jasmine.createSpy("clearData")
+                clearData: jasmine.createSpy("clearData"),
+                _result: ""
             },
             closeCalculator: jasmine.createSpy("closeCalculator"),
             handleWithKeyboard: jasmine.createSpy("handleWithKeyboard"),
@@ -110,7 +111,7 @@ describe("test suite for load calculator", function () {
             spyOn(window, "setTimeout").and.callFake(function (param) {
                 param();
             });
-            spyOn(loadCalcObj,"_getAllLabels");
+            spyOn(loadCalcObj, "_getAllLabels");
         });
         afterEach(function () {
             window.setTimeout.and.callThrough();
@@ -153,9 +154,95 @@ describe("test suite for load calculator", function () {
             expect(loadCalcObj._left).toBe(null);
             expect(jqObj.css).toHaveBeenCalledWith({
                 left: 0,
-                right: 0
+                top: 0
             });
         });
+        it("should set position when cssobj is there with right and bottom",function () {
+            jqObj.css.and.returnValue(100);
+            jqObj.width.and.returnValue(50);
+            jqObj.height.and.returnValue(500);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
+            loadCalcObj.setPosition({right:100,bottom:100});
+            expect(jqObj.css).toHaveBeenCalledWith({left:100,top:100});
+        });
+        it("should set position when cssobj is there with left and top",function () {
+            jqObj.css.and.returnValue(100);
+            jqObj.width.and.returnValue(50);
+            jqObj.height.and.returnValue(500);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
+            loadCalcObj.setPosition({left:150,top:150});
+            expect(jqObj.css).toHaveBeenCalledWith({left:150,top:150});
+        });
+        it("should throw error empty object",()=>{
+           let testData={};
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).toThrow(new Error("Invalid arguments"));
+            expect(jqObj.css).not.toHaveBeenCalled();
+        });
+        it("should handle empty ARGUMENT",()=>{
+           let testData={};
+            loadCalcObj.setPosition();
+            expect(jqObj.css).toHaveBeenCalledWith({left:0,top:0});
+        });
+        it("should throw error for invalid object",()=>{
+           let testData={
+               left:100
+           };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).toThrowError();
+            expect(jqObj.css).not.toHaveBeenCalled();
+        });
+        it("should throw error for invalid object",()=>{
+           let testData={
+               left:100,
+               right:100
+           };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).toThrowError();
+            expect(jqObj.css).not.toHaveBeenCalled();
+
+        });
+        it("should throw error for invalid object",()=>{
+           let testData={
+               top:100
+           };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).toThrowError();
+            expect(jqObj.css).not.toHaveBeenCalled();
+
+        });
+        it("should throw error for invalid object",()=>{
+           let testData={
+               top:100,
+           };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).toThrowError();
+            expect(jqObj.css).not.toHaveBeenCalled();
+
+        });
+        it("should throw error for invalid object",()=>{
+           let testData={
+               top:100,
+               bottom:100
+           };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).toThrowError();
+            expect(jqObj.css).not.toHaveBeenCalled();
+
+        });
+        it("should throw error for valid object",()=>{
+           let testData={
+               top:100,
+               right:250
+           };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).not.toThrowError();
+            expect(jqObj.css).toHaveBeenCalled();
+
+        });
+        it("should throw error for valid object",()=>{
+            let testData={
+                top:0,
+                right:0
+            };
+            expect(loadCalcObj.setPosition.bind(loadCalcObj,testData)).not.toThrowError();
+            expect(jqObj.css).toHaveBeenCalled();
+
+        });
+        
     });
     describe("test suite for _hasValidParent", function () {
         let targetObj = {};
@@ -224,24 +311,100 @@ describe("test suite for load calculator", function () {
         });
         it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("left");
+            loadCalcObj._hasValidParent.and.returnValue(true);
+            jqObj.css.and.returnValue(100);
+            jqObj.width.and.returnValue(50);
+            jqObj.height.and.returnValue(0);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
             loadCalcObj._moveCalculator();
-
+            expect(jqObj.css).toHaveBeenCalledWith("left", 180);
         });
         it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("up");
+            loadCalcObj._hasValidParent.and.returnValue(true);
+            jqObj.css.and.returnValue(100);
+            jqObj.width.and.returnValue(50);
+            jqObj.height.and.returnValue(500);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
             loadCalcObj._moveCalculator();
-
+            expect(jqObj.css).toHaveBeenCalledWith("top", 180);
         });
         it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("down");
+            loadCalcObj._hasValidParent.and.returnValue(true);
+            jqObj.css.and.returnValue(100);
+            jqObj.width.and.returnValue(50);
+            jqObj.height.and.returnValue(500);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
             loadCalcObj._moveCalculator();
-
+            expect(jqObj.css).toHaveBeenCalledWith("top", 210);
         });
         it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
             loadCalcObj._getMovementDirection.and.returnValue("right");
+            loadCalcObj._hasValidParent.and.returnValue(true);
+            jqObj.css.and.returnValue(100);
+            jqObj.width.and.returnValue(50);
+            jqObj.height.and.returnValue(500);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
             loadCalcObj._moveCalculator();
-
+            expect(jqObj.css).toHaveBeenCalledWith("left", 210);
+        });
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
+            loadCalcObj._getMovementDirection.and.returnValue("left");
+            loadCalcObj._hasValidParent.and.returnValue(false);
+            jqObj.css.and.returnValue(1000);
+            jqObj.width.and.returnValue(50000);
+            jqObj.height.and.returnValue(0);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
+            loadCalcObj._moveCalculator();
+            expect(jqObj.css).not.toHaveBeenCalledWith("left", 180);
+        });
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
+            loadCalcObj._getMovementDirection.and.returnValue("up");
+            loadCalcObj._hasValidParent.and.returnValue(false);
+            jqObj.css.and.returnValue(1000);
+            jqObj.width.and.returnValue(50000);
+            jqObj.height.and.returnValue(0);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
+            loadCalcObj._moveCalculator();
+            expect(jqObj.css).not.toHaveBeenCalledWith("top", 180);
         });
 
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
+            loadCalcObj._getMovementDirection.and.returnValue("down");
+            loadCalcObj._hasValidParent.and.returnValue(false);
+            jqObj.css.and.returnValue(1000);
+            jqObj.width.and.returnValue(50000);
+            jqObj.height.and.returnValue(0);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
+            loadCalcObj._moveCalculator();
+            expect(jqObj.css).not.toHaveBeenCalledWith("top", 180);
+        });
+        it("shoudl test when calcPosX - 20 > -calcWidth / 2 and direction is left", function () {
+            loadCalcObj._getMovementDirection.and.returnValue("right");
+            loadCalcObj._hasValidParent.and.returnValue(false);
+            jqObj.css.and.returnValue(1000);
+            jqObj.width.and.returnValue(50000);
+            jqObj.height.and.returnValue(0);
+            jqObj.offset.and.returnValue({left: 200, top: 200});
+            loadCalcObj._moveCalculator();
+            expect(jqObj.css).not.toHaveBeenCalledWith("left", 180);
+        });
+
+    });
+
+    it("should test getCalculatorValue exposed function", ()=> {
+        loadCalcObj._calcManager.calcobj._result = "50";
+        loadCalcObj._calcManager.calcobj._displayResultDiv = {
+            previousElementSibling: {
+                innerHTML: ""
+            }
+        };
+        expect(loadCalcObj.getCalculatorValue()).toBe("50");
+    });
+
+    it("should test getCalculatorDom esposed function", function () {
+        loadCalcObj._calcManager.calcElem = "calculator div";
+        expect(loadCalcObj.getCalculatorDom()).toBe("calculator div");
     });
 });

@@ -95,20 +95,26 @@ export default class LoadCalculator {
             calcHeight = calc.height(),
             windowWidth = $('body').offset().left + $('body').width(),
             windowHeight = $('body').offset().top + $('body').height(),
-            css = {};
+            css = {left: 0, top: 0};
+        
+        if(cssObj && (((!cssObj.left && cssObj.left !== 0) && (!cssObj.right && cssObj.right !== 0))
+            || ((!cssObj.top && cssObj.top !== 0) && (!cssObj.bottom && cssObj.bottom !== 0)))){
+            throw new Error("Invalid arguments");
+        }
+        
         if (!!cssObj) {
-            if (cssObj.right) {
+            if (cssObj.right !== null && cssObj.right !== undefined) {
                 css.left = windowWidth - calcWidth - cssObj.right;
             } else {
                 css.left = cssObj.left;
             }
-            if (cssObj.bottom) {
+            if (cssObj.bottom !== null && cssObj.bottom !== undefined) {
                 css.top = windowHeight - calcHeight - cssObj.bottom;
             } else {
                 css.top = cssObj.top;
             }
         } else {
-            css = !!this._calcPosition ? this._calcPosition : {left: 0, right: 0};
+            css = !!this._calcPosition ? this._calcPosition : {left: 0, top: 0};
         }
         
         this._calcPosition = !!this._calcPosition ? this._calcPosition : css;
