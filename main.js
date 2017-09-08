@@ -16,11 +16,6 @@ btnShow.addEventListener("click", function () {
     // basicCalculator = new Calculator.createCalculator();
     basicCalculator.setPosition({top: 100, left: 100});
     basicCalculator.showCalculator();
-    // setTimeout(function () {
-    //     basicCalculator.setPosition({top: 100, left: 400});
-    // },2000); // setTimeout(function () {
-    //     basicCalculator.setPosition({top: 100, left: 400});
-    // },2000);
 }, false);
 
 clearCalc.addEventListener("click", function () {
